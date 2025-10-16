@@ -24,6 +24,12 @@ class OffresVente
     #[ORM\Column]
     private ?\DateTimeImmutable $date_modification = null;
 
+    #[ORM\ManyToOne(inversedBy: 'offresVentes')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'offresVentes')]
+    private ?Bien $bien = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +67,30 @@ class OffresVente
     public function setDateModification(\DateTimeImmutable $date_modification): static
     {
         $this->date_modification = $date_modification;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getBien(): ?Bien
+    {
+        return $this->bien;
+    }
+
+    public function setBien(?Bien $bien): static
+    {
+        $this->bien = $bien;
 
         return $this;
     }

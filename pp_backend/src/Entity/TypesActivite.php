@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TypesActiviteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypesActiviteRepository::class)]
@@ -17,6 +19,24 @@ class TypesActivite
     #[ORM\Column(length: 255)]
     private ?string $type_activite = null;
 
+    /**
+     * @var Collection<int, Bien>
+     */
+    #[ORM\OneToMany(targetEntity: Bien::class, mappedBy: 'typeActivite')]
+    private Collection $biens;
+
+    /**
+     * @var Collection<int, Recherche>
+     */
+    #[ORM\OneToMany(targetEntity: Recherche::class, mappedBy: 'typeActivite')]
+    private Collection $recherches;
+
+    public function __construct()
+    {
+        $this->biens = new ArrayCollection();
+        $this->recherches = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -30,6 +50,66 @@ class TypesActivite
     public function setTypeActivite(string $type_activite): static
     {
         $this->type_activite = $type_activite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bien>
+     */
+    public function getBiens(): Collection
+    {
+        return $this->biens;
+    }
+
+    public function addBien(Bien $bien): static
+    {
+        if (!$this->biens->contains($bien)) {
+            $this->biens->add($bien);
+            $bien->setTypeActivite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBien(Bien $bien): static
+    {
+        if ($this->biens->removeElement($bien)) {
+            // set the owning side to null (unless already changed)
+            if ($bien->getTypeActivite() === $this) {
+                $bien->setTypeActivite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recherche>
+     */
+    public function getRecherches(): Collection
+    {
+        return $this->recherches;
+    }
+
+    public function addRecherch(Recherche $recherch): static
+    {
+        if (!$this->recherches->contains($recherch)) {
+            $this->recherches->add($recherch);
+            $recherch->setTypeActivite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecherch(Recherche $recherch): static
+    {
+        if ($this->recherches->removeElement($recherch)) {
+            // set the owning side to null (unless already changed)
+            if ($recherch->getTypeActivite() === $this) {
+                $recherch->setTypeActivite(null);
+            }
+        }
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -56,6 +58,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?\DateTimeImmutable $date_modification = null;
+
+    /**
+     * @var Collection<int, Bien>
+     */
+    #[ORM\OneToMany(targetEntity: Bien::class, mappedBy: 'user')]
+    private Collection $biens;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
+    private Collection $reservations;
+
+    /**
+     * @var Collection<int, OffresVente>
+     */
+    #[ORM\OneToMany(targetEntity: OffresVente::class, mappedBy: 'user')]
+    private Collection $offresVentes;
+
+    /**
+     * @var Collection<int, Recherche>
+     */
+    #[ORM\OneToMany(targetEntity: Recherche::class, mappedBy: 'user')]
+    private Collection $recherches;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Emplacement $emplacement = null;
+
+    public function __construct()
+    {
+        $this->biens = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->offresVentes = new ArrayCollection();
+        $this->recherches = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -230,6 +267,138 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateModification(\DateTimeImmutable $date_modification): static
     {
         $this->date_modification = $date_modification;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bien>
+     */
+    public function getBiens(): Collection
+    {
+        return $this->biens;
+    }
+
+    public function addBien(Bien $bien): static
+    {
+        if (!$this->biens->contains($bien)) {
+            $this->biens->add($bien);
+            $bien->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBien(Bien $bien): static
+    {
+        if ($this->biens->removeElement($bien)) {
+            // set the owning side to null (unless already changed)
+            if ($bien->getUser() === $this) {
+                $bien->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OffresVente>
+     */
+    public function getOffresVentes(): Collection
+    {
+        return $this->offresVentes;
+    }
+
+    public function addOffresVente(OffresVente $offresVente): static
+    {
+        if (!$this->offresVentes->contains($offresVente)) {
+            $this->offresVentes->add($offresVente);
+            $offresVente->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffresVente(OffresVente $offresVente): static
+    {
+        if ($this->offresVentes->removeElement($offresVente)) {
+            // set the owning side to null (unless already changed)
+            if ($offresVente->getUser() === $this) {
+                $offresVente->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recherche>
+     */
+    public function getRecherches(): Collection
+    {
+        return $this->recherches;
+    }
+
+    public function addRecherch(Recherche $recherch): static
+    {
+        if (!$this->recherches->contains($recherch)) {
+            $this->recherches->add($recherch);
+            $recherch->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecherch(Recherche $recherch): static
+    {
+        if ($this->recherches->removeElement($recherch)) {
+            // set the owning side to null (unless already changed)
+            if ($recherch->getUser() === $this) {
+                $recherch->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEmplacement(): ?Emplacement
+    {
+        return $this->emplacement;
+    }
+
+    public function setEmplacement(?Emplacement $emplacement): static
+    {
+        $this->emplacement = $emplacement;
 
         return $this;
     }

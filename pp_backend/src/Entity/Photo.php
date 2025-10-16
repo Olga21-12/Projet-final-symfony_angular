@@ -17,6 +17,9 @@ class Photo
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'photos')]
+    private ?Bien $bien = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -30,6 +33,18 @@ class Photo
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getBien(): ?Bien
+    {
+        return $this->bien;
+    }
+
+    public function setBien(?Bien $bien): static
+    {
+        $this->bien = $bien;
 
         return $this;
     }

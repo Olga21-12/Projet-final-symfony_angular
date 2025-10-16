@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RechercheRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RechercheRepository::class)]
@@ -34,6 +36,33 @@ class Recherche
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ville = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recherches')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recherches')]
+    private ?Emplacement $emplacement = null;
+
+    /**
+     * @var Collection<int, TypesDeBien>
+     */
+    #[ORM\ManyToMany(targetEntity: TypesDeBien::class, inversedBy: 'recherches')]
+    private Collection $typesDeBien;
+
+    /**
+     * @var Collection<int, Confort>
+     */
+    #[ORM\ManyToMany(targetEntity: Confort::class, inversedBy: 'recherches')]
+    private Collection $confort;
+
+    #[ORM\ManyToOne(inversedBy: 'recherches')]
+    private ?TypesActivite $typeActivite = null;
+
+    public function __construct()
+    {
+        $this->typesDeBien = new ArrayCollection();
+        $this->confort = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +149,90 @@ class Recherche
     public function setVille(?string $ville): static
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEmplacement(): ?Emplacement
+    {
+        return $this->emplacement;
+    }
+
+    public function setEmplacement(?Emplacement $emplacement): static
+    {
+        $this->emplacement = $emplacement;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TypesDeBien>
+     */
+    public function getTypesDeBien(): Collection
+    {
+        return $this->typesDeBien;
+    }
+
+    public function addTypesDeBien(TypesDeBien $typesDeBien): static
+    {
+        if (!$this->typesDeBien->contains($typesDeBien)) {
+            $this->typesDeBien->add($typesDeBien);
+        }
+
+        return $this;
+    }
+
+    public function removeTypesDeBien(TypesDeBien $typesDeBien): static
+    {
+        $this->typesDeBien->removeElement($typesDeBien);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Confort>
+     */
+    public function getConfort(): Collection
+    {
+        return $this->confort;
+    }
+
+    public function addConfort(Confort $confort): static
+    {
+        if (!$this->confort->contains($confort)) {
+            $this->confort->add($confort);
+        }
+
+        return $this;
+    }
+
+    public function removeConfort(Confort $confort): static
+    {
+        $this->confort->removeElement($confort);
+
+        return $this;
+    }
+
+    public function getTypeActivite(): ?TypesActivite
+    {
+        return $this->typeActivite;
+    }
+
+    public function setTypeActivite(?TypesActivite $typeActivite): static
+    {
+        $this->typeActivite = $typeActivite;
 
         return $this;
     }
