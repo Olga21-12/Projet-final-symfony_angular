@@ -53,6 +53,39 @@ Lancer le serveur :
 symfony serve
 npm start
 
+🧭 Comment utiliser le site
+
+👑 Administrateur
+Dispose de tous les droits sur le site.
+Peut ajouter, modifier et supprimer les utilisateurs et les logements.
+Responsable de la gestion des données, de la communication et du respect des règles du site.
+
+🏰 Propriétaire
+Peut gérer ses propres annonces (ajout, modification, suppression).
+Peut consulter la liste et les détails des logements, échanger des messages et laisser des avis.
+Doit garantir la véracité des informations publiées.
+
+💼 Client
+Peut consulter, réserver ou faire une offre sur les logements.
+Peut modifier son profil et contacter les propriétaires.
+Doit respecter les règles et la courtoisie du site.
+
+🌿 Visiteur
+Peut consulter une partie des logements (hors catégorie luxe).
+Peut contacter l’administrateur via la page de contact.
+Peut s’inscrire pour devenir propriétaire ou client.
+
+📝 Inscription
+
+L’utilisateur doit indiquer :
+Nom, prénom, pseudonyme, email, mot de passe (et confirmation), pays, ville, adresse.
+Téléphone (obligatoire pour propriétaires).
+Date de naissance.
+
+🔑 Connexion
+
+Se fait via email et mot de passe.
+
 ----------------------------------------------------------------------
 
 🇬🇧 Project: Real Estate Rental and Sales Platform 🏘️
@@ -166,3 +199,36 @@ php bin/console doctrine:migrations:migrate
 
 symfony serve
 npm start
+
+🧭 Як користуватись сайтом
+
+👑 Адміністратор
+Має повний доступ до сайту.
+Може додавати, редагувати та видаляти користувачів і оголошення.
+Відповідає за керування даними, комунікацію та дотримання правил сайту.
+
+🏰 Власник
+Може керувати лише власними оголошеннями (додавати, редагувати, видаляти).
+Може переглядати список і деталі житла, надсилати повідомлення, залишати відгуки.
+Несе відповідальність за достовірність інформації.
+
+💼 Клієнт
+Може переглядати, бронювати або робити пропозиції щодо житла.
+Може змінювати свій профіль і спілкуватися з власниками.
+Повинен дотримуватись правил та етикету спілкування.
+
+🌿 Відвідувач
+Може переглядати лише частину оголошень (крім «люксових»).
+Може зв’язатися з адміністратором через сторінку контактів.
+Може зареєструватися, щоб отримати більше можливостей.
+
+📝 Реєстрація
+
+Під час реєстрації потрібно вказати:
+Ім’я, прізвище, псевдонім, email, пароль (і підтвердження), країну, місто, адресу.
+Телефон (обов’язковий для власників).
+Дату народження.
+
+🔑 Вхід
+
+Для входу потрібні email і пароль.
