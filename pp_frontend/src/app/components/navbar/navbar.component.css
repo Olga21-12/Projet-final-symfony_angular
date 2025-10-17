@@ -1,0 +1,42 @@
+.logo-img {
+    height: 40px;
+    width: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgb(3, 218, 218);
+}
+
+.navbar-brand {
+  color: rgb(3, 218, 218);
+  font-size: 1.6rem;
+  font-family: 'Nunito Sans', 'Segoe UI', Roboto, sans-serif;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.1);
+}
+
+.navbar .nav-link{
+    color: teal;
+    font-size: large;
+    font-weight: normal;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar-nav {
+    margin-right: 2rem; /* можно увеличить до 2rem */
+}
+
+.nav-link.active {
+    color:#ffffff;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.navbar .nav-link:hover,
+.footer-link:hover {
+    color:  rgb(3, 218, 218);
+    text-decoration: underline;
+}
