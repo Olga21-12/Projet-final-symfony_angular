@@ -22,7 +22,7 @@ class Recherche
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $mot_cle = null;
 
     #[ORM\Column(nullable: true)]
@@ -41,6 +41,7 @@ class Recherche
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Emplacement $emplacement = null;
 
     /**
@@ -56,6 +57,7 @@ class Recherche
     private Collection $confort;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?TypesActivite $typeActivite = null;
 
     public function __construct()

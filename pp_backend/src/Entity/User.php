@@ -86,6 +86,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?Emplacement $emplacement = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $telephone = null;
+
     public function __construct()
     {
         $this->biens = new ArrayCollection();
@@ -399,6 +402,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmplacement(?Emplacement $emplacement): static
     {
         $this->emplacement = $emplacement;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): static
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }
