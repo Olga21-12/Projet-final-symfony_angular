@@ -7,12 +7,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
+use App\Entity\Traits\Timestampable;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[Vich\Uploadable]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: "users")]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -21,6 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 8)]
+    #[Assert\Email()]
     private ?string $email = null;
 
     /**
@@ -36,28 +49,83 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2, max: 35)]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2, max: 70)]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 2, max: 150)]
     private ?string $surnom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $date_de_naissance = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 5, max: 150)]
     private ?string $adresse = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $photo = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_inscription = null;
+    #[Vich\UploadableField(mapping: 'user', fileNameProperty: 'imageName', size: 'imageSize')]
+    private ?File $imageFile = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_modification = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $imageSize = null;
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName ?? 'sans_photo.png';
+    }
+
+    public function setImageSize(?int $imageSize): void
+    {
+        $this->imageSize = $imageSize;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
+    }
 
     /**
      * @var Collection<int, Bien>
@@ -87,7 +155,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Emplacement $emplacement = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(min: 5, max: 150)]
     private ?string $telephone = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     public function __construct()
     {
@@ -96,6 +168,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->offresVentes = new ArrayCollection();
         $this->recherches = new ArrayCollection();
     }
+
+    use Timestampable;
 
     public function getId(): ?int
     {
@@ -131,10 +205,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_CLIENT';
 
         return array_unique($roles);
     }
+
+    public function getRoleName(): string
+{
+        $roles = $this->getRoles();
+            if (in_array('ROLE_ADMIN', $roles, true)) {
+        return 'Admin';
+    }
+            if (in_array('ROLE_PROPRIETAIRE', $roles, true)) {
+        return 'Propriétaire';
+    }
+        return 'Client';
+}
 
     /**
      * @param list<string> $roles
@@ -246,30 +332,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto(string $photo): static
     {
         $this->photo = $photo;
-
-        return $this;
-    }
-
-    public function getDateInscription(): ?\DateTimeImmutable
-    {
-        return $this->date_inscription;
-    }
-
-    public function setDateInscription(\DateTimeImmutable $date_inscription): static
-    {
-        $this->date_inscription = $date_inscription;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeImmutable
-    {
-        return $this->date_modification;
-    }
-
-    public function setDateModification(\DateTimeImmutable $date_modification): static
-    {
-        $this->date_modification = $date_modification;
 
         return $this;
     }
@@ -414,6 +476,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
