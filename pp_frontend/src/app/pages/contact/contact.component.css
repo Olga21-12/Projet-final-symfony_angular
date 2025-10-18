@@ -1,0 +1,24 @@
+.custom-alert {
+  animation: fadeInOut 4s ease;
+  border-radius: 10px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1.1rem;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
