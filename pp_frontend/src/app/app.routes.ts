@@ -6,9 +6,9 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'contact', component: ContactComponent },
-    { path: 'faq', component: FaqComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
+    { path: '', component: HomeComponent, title: 'Accueil' },
+    { path: 'contact', component: ContactComponent, title: 'Contacts' },
+    { path: 'faq', component: FaqComponent, title: 'FAQ' },
+    { path: 'login', component: LoginComponent, title: 'Login' },
+    { path: 'register', component: RegisterComponent, title: 'S\'inscrire' },
 ];

@@ -4,3 +4,17 @@ body{
   padding: 0;
   background-color: #fff7f2;
 }
+
+.btn {
+  background-color: teal;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: darkcyan;
+}

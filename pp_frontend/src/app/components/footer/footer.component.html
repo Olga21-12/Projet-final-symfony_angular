@@ -4,17 +4,18 @@
       <!-- Left column - links -->
       <div class="col-md-4 mb-3 mb-md-0">
         <ul class="list-unstyled">
-          <li><a class="footer-link" routerLink="/">Accueil</a></li>
-          <li><a class="footer-link" routerLink="/contact">Contact</a></li>
-          <li><a class="footer-link" routerLink="/faq">FAQ</a></li>
-          <li><a class="footer-link" routerLink="/login">Connexion</a></li>
-          <li><a class="footer-link" routerLink="/register">Inscription</a></li>
+          <li routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"><a class="footer-link" routerLink="/">Accueil</a></li>
+          <li routerLinkActive="active"><a class="footer-link" routerLink="/contact">Contact</a></li>
+          <li routerLinkActive="active"><a class="footer-link" routerLink="/faq">FAQ</a></li>
+          <li routerLinkActive="active"><a class="footer-link" routerLink="/login">Connexion</a></li>
+          <li routerLinkActive="active"><a class="footer-link" routerLink="/register">Inscription</a></li>
         </ul>
       </div>
 
       <!-- Central column - logo -->
       <div class="col-md-4 mb-3 mb-md-0 text-center">
-        <a routerLink="/" class="d-inline-block">
+        <a  class="d-inline-block" routerLink="/">
           <img
             src="assets/images/logo/cat-logo.jpg"
             alt="Logo"

@@ -30,10 +30,12 @@
     margin-right: 2rem; /* можно увеличить до 2rem */
 }
 
-.nav-link.active {
-    color:#ffffff;
-    font-weight: bold;
+.nav-item.active > .nav-link {
+    color: rgb(3, 218, 218);
     text-decoration: underline;
+    text-underline-offset: 4px; /* делает подчёркивание чуть ниже */
+    text-shadow: 0 0 4px #ffffffcc; /* лёгкое белое свечение */
+    -webkit-text-stroke: 0.4px #ffffff; /* псевдоутолщение текста */
 }
 
 .navbar .nav-link:hover,
@@ -42,3 +44,4 @@
     text-decoration: underline;
     cursor: pointer;
 }
+

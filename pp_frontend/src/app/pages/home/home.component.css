@@ -12,7 +12,7 @@
 .content-box {
   background-color: rgba(255, 250, 245, 0.9);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px 4px rgba(0, 0, 0, 0.1);
   max-width: 1400px;
   color: #3b2e2a;
   position: relative;
