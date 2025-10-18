@@ -24,7 +24,6 @@ class UserController extends AbstractController
             'surnom' => $u->getSurnom(),
             'adresse' => $u->getAdresse(),
             'telephone' => $u->getTelephone(),
-            'date_inscription' => $u->getDateInscription()?->format('Y-m-d'),
             'emplacement' => $u->getEmplacement()?->getVille() ?? null,
 
         ], $users);
@@ -81,9 +80,7 @@ class UserController extends AbstractController
         $user->setAdresse($body['adresse'] ?? '');
         $user->setTelephone($body['telephone'] ?? null);
         $user->setPassword(password_hash($body['password'], PASSWORD_BCRYPT));
-        $user->setDateInscription(new \DateTimeImmutable());
-        $user->setDateModification(new \DateTimeImmutable());
-
+        
         $em->persist($user);
         $em->flush();
 
