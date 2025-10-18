@@ -8,8 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use App\Entity\Traits\Timestampable;
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: BienRepository::class)]
 #[ORM\Table(name: "biens")]
+#[UniqueEntity(fields: ['adresse'], message: 'Ce bien existe déjà à cette adresse.')]
+#[ORM\HasLifecycleCallbacks]
 class Bien
 {
     #[ORM\Id]
@@ -18,12 +24,16 @@ class Bien
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 8)]
+    #[Assert\Email()]
     private ?string $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank()]
     private ?float $prix = null;
 
     #[ORM\Column]
@@ -38,11 +48,7 @@ class Bien
     #[ORM\Column]
     private ?bool $luxe = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    use Timestampable;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
     private ?User $user = null;
@@ -173,30 +179,6 @@ class Bien
     public function setLuxe(bool $luxe): static
     {
         $this->luxe = $luxe;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -361,5 +343,10 @@ class Bien
         $this->typeActivite = $typeActivite;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->adresse ?? 'Bien #' . $this->id;
     }
 }
