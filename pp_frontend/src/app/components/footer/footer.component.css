@@ -9,6 +9,7 @@
 
 .footer-link:hover {
   color: rgb(3, 218, 218);
+  cursor: pointer;
 }
 
 .footer-logo {
@@ -21,6 +22,7 @@
 
 .footer-logo:hover {
   transform: scale(1.1);
+  cursor: pointer;
 }
 
 .social-icons a {
@@ -33,6 +35,7 @@
 .social-icons a:hover {
   color: #ffffff;
   transform: scale(1.2);
+  cursor: pointer;
 }
 
 .text-teal {

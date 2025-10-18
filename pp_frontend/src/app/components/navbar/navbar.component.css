@@ -14,6 +14,7 @@
 
 .navbar-brand:hover {
   transform: scale(1.1);
+  cursor: pointer;
 }
 
 .navbar .nav-link{
@@ -39,4 +40,5 @@
 .footer-link:hover {
     color:  rgb(3, 218, 218);
     text-decoration: underline;
+    cursor: pointer;
 }
