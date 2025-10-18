@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OffresVenteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\Timestampable;
 
 #[ORM\Entity(repositoryClass: OffresVenteRepository::class)]
 #[ORM\Table(name: "offres_vente")]
@@ -15,15 +16,11 @@ class OffresVente
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $date_offre = null;
-
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_modification = null;
-
+    use Timestampable;
+    
     #[ORM\ManyToOne(inversedBy: 'offresVentes')]
     private ?User $user = null;
 
@@ -35,18 +32,6 @@ class OffresVente
         return $this->id;
     }
 
-    public function getDateOffre(): ?\DateTime
-    {
-        return $this->date_offre;
-    }
-
-    public function setDateOffre(\DateTime $date_offre): static
-    {
-        $this->date_offre = $date_offre;
-
-        return $this;
-    }
-
     public function getStatut(): ?string
     {
         return $this->statut;
@@ -55,18 +40,6 @@ class OffresVente
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeImmutable
-    {
-        return $this->date_modification;
-    }
-
-    public function setDateModification(\DateTimeImmutable $date_modification): static
-    {
-        $this->date_modification = $date_modification;
 
         return $this;
     }

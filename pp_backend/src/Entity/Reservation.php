@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestampable;
 use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,11 +22,7 @@ class Reservation
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $date_fin = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_creation = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_modification = null;
+    use Timestampable;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?User $user = null;
@@ -58,30 +55,6 @@ class Reservation
     public function setDateFin(?\DateTime $date_fin): static
     {
         $this->date_fin = $date_fin;
-
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeImmutable
-    {
-        return $this->date_creation;
-    }
-
-    public function setDateCreation(\DateTimeImmutable $date_creation): static
-    {
-        $this->date_creation = $date_creation;
-
-        return $this;
-    }
-
-    public function getDateModification(): ?\DateTimeImmutable
-    {
-        return $this->date_modification;
-    }
-
-    public function setDateModification(\DateTimeImmutable $date_modification): static
-    {
-        $this->date_modification = $date_modification;
 
         return $this;
     }
