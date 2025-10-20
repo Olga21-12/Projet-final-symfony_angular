@@ -1,4 +1,9 @@
-<form (ngSubmit)="onSubmit()">
+<!--  Message de confirmation -->
+  <div *ngIf="messageSent" class="alert alert-success mt-3 custom-alert text-center">
+    🐾 Votre message a été envoyé avec succès !
+  </div>
+
+<form (ngSubmit)="onSubmit()" #contactForm="ngForm" novalidate> <!-- ngForm  → pour gérer un formulaire complet -->
   <div class="mb-3">
     <label for="name" class="form-label">Votre Nom et Prénom</label>
     <input type="text" class="form-control" id="name" name="name" ngModel placeholder="Votre nom et prénom" />
@@ -14,7 +19,12 @@
     <textarea class="form-control" id="message" name="message" rows="4" ngModel placeholder="Votre message"></textarea>
   </div>
 
-  <button type="submit" class="btn">Envoyer</button>
+  <button type="button" class="btn" (click)="onSubmit()">Envoyer</button>
+
 </form>
+
+
+    
+
 
 

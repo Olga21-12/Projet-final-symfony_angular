@@ -1,5 +1,5 @@
-<div class="container contact-container">
-  <h2>Contactez-nous</h2>
+<div class="content-box container mt-5" style="width: 95%;">
+  <h2 class="title">Contactez-nous</h2>
 
   <div class="contact-info">
     <p><strong>Téléphone :</strong> +32 478 123 456</p>
@@ -19,6 +19,8 @@
         </iframe>
         </div>
 
+        <hr>
+
   <p class="text">
     <strong
       >Si vous avez des questions, n'hésitez pas à nous envoyer un message. Notre
@@ -26,10 +28,7 @@
     >
   </p>
 
-  <!-- Важно! -->
+  <!-- Important! -->
   <app-contact-form (formSubmitted)="onSubmit()"></app-contact-form>
 
-  <div *ngIf="messageSent" class="alert alert-success mt-3 custom-alert text-center">
-    💌🐾 Votre message a été envoyé avec succès !
-  </div>
-</div>
+  

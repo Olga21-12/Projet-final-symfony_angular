@@ -1,0 +1,12 @@
+.custom-alert {
+  animation: fadeInOut 4s ease-in-out;
+  background-color: #e7f8ee;
+  border-color: #a1e3b0;
+  color: #256029;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
