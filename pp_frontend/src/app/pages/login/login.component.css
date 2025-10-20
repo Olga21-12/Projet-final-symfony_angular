@@ -18,3 +18,15 @@
   text-align: center;
   letter-spacing: 1px;
 }
+
+.container p a{
+  color: #3b2e2a;
+  text-decoration: none;
+  font-size: 1.3rem;
+}
+
+.container p a:hover{
+  color: #a67c72;
+  text-decoration: underline;
+
+}
