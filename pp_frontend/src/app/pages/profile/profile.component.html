@@ -1,7 +1,11 @@
-<div class="container mt-5">
-  <h2>Bienvenue, {{ user?.surnom }} </h2>
+<div class="container content-box mt-5">
+  <h2 class="title">Bienvenue, {{ user?.surnom }} </h2>
   <p>Nom : {{ user?.nom }}</p>
   <p>Prénom : {{ user?.prenom }}</p>
   <p>Email : {{ user?.email }}</p>
-  <p>Rôle : {{ user?.role }}</p>
+  <p>Rôle : {{ user?.role }}</p>  
+  <p>Age : {{ user?.age }}</p>
+  <p>Pays, Ville : {{ user?.pays }}, {{ user?.ville }}</p>
+  <p>Adresse : {{ user?.adresse }}</p>
+  <p>Téléphone : {{ user?.telephone }}</p>
 </div>
