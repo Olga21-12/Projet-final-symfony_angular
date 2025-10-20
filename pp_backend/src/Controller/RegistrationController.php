@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
                 $user->setRoles([$selectedRole]);
 
             $entityManager->persist($user);
-            
+
             $entityManager->flush();
 
             // generate a signed url and email it to the user
@@ -91,7 +91,7 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_login');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates

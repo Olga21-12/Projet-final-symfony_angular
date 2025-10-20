@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router'; // Le "Router" d’Angular permet de naviguer entre les pages
 
 @Component({
   selector: 'app-register',
@@ -36,7 +37,7 @@ export class RegisterComponent implements OnInit {
 
   agreeTerms = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
   // Charger la liste des pays
@@ -114,7 +115,12 @@ onPaysChange(event: any): void {
       next: (res: any) => {
         this.message = res.message;
         this.error = '';
-      },
+      
+      // Petite attente avant redirection
+      setTimeout(() => {
+        this.router.navigate(['/login']); // vers la page de connexion (/login).
+      }, 2000); // 2 secondes
+    },
       error: (err) => {
         this.error = err.error.error || 'Erreur inconnue';
         this.message = '';
