@@ -1,8 +1,15 @@
-.custom-alert {
-  animation: fadeInOut 4s ease-in-out;
+.fixed-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
   background-color: #e7f8ee;
-  border-color: #a1e3b0;
+  border: 1px solid #a1e3b0;
   color: #256029;
+  font-weight: 500;
+  padding: 1rem;
+  animation: fadeInOut 4s ease-in-out;
 }
 
 @keyframes fadeInOut {

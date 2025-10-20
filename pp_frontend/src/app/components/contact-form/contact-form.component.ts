@@ -16,7 +16,7 @@ export class ContactFormComponent {
   onSubmit() {
     this.messageSent = true;
 
-    // 🔹 Le message disparaît automatiquement après 4 secondes
+  // 🔹 Le message disparaît automatiquement après 4 secondes
     setTimeout(() => (this.messageSent = false), 4000);
   }
 }
