@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -29,7 +30,20 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', TextType::class, [
                 'label' => 'Email'
-                ])            
+                ])  
+            ->add('surnom', TextType::class,[
+                'label' => 'Surnom'
+            ])     
+            ->add('role', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'Vous êtes :',
+                    'choices' => [
+                        'Client' => 'ROLE_CLIENT',
+                        'Propriétaire' => 'ROLE_PROPRIETAIRE',
+                    ],
+                'expanded' => true, // boutons radio
+                'multiple' => false,
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'J\'accepte les termes et conditions',

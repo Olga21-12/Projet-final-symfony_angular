@@ -18,31 +18,48 @@ export class RegisterComponent implements OnInit {
   prenom = '';
   surnom = '';
   date_de_naissance = '';
+  pays = '';
   ville = '';
   adresse = '';
   telephone = '';
   photo: File | null = null;
 
+  role = 'ROLE_CLIENT';
+
   message = '';
   error = '';
 
+  paysList: string[] = [];
   villes: any[] = [];
+  selectedPays: string = '';
+  selectedVille: string = '';
+
+  agreeTerms = false;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+  // Charger la liste des pays
+  this.http.get('https://127.0.0.1:8000/api/pays').subscribe({
+    next: (res: any) => this.paysList = res,
+    error: (err) => console.error('Erreur chargement pays', err)
+  });
+}
 
-    // Méthode appelée automatiquement au moment où le composant est initialisé.
-    // Elle s’exécute une seule fois, quand la page est chargée.
-    // Ici, on l’utilise pour charger la liste des villes depuis l’API Symfony.
-    this.http.get('https://127.0.0.1:8000/api/villes').subscribe({
+// Quand l’utilisateur choisit un pays, on charge les villes correspondantes
+onPaysChange(event: any): void {
+  const pays = event.target.value;
+  this.selectedPays = pays;
+  this.villes = []; // on réinitialise la liste
+  this.selectedVille = '';
 
-      // Envoie une requête GET vers le backend (Symfony).
-      // L’API doit renvoyer un tableau JSON contenant les villes disponibles.
+  if (pays) {
+    this.http.get(`https://127.0.0.1:8000/api/villes?pays=${encodeURIComponent(pays)}`).subscribe({
       next: (res: any) => this.villes = res,
       error: (err) => console.error('Erreur chargement villes', err)
     });
   }
+}
 
   // traitement de sélection de fichiers
   onFileChange(event: any): void {
@@ -60,6 +77,11 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    if (!this.agreeTerms) {
+      this.error = 'Veuillez accepter les conditions générales.';
+      return;
+    }
+
     const formData = new FormData();
 
     // On crée un objet FormData, très pratique pour envoyer des fichiers + du texte.
@@ -74,7 +96,11 @@ export class RegisterComponent implements OnInit {
     formData.append('date_de_naissance', this.date_de_naissance);
     formData.append('adresse', this.adresse);
     formData.append('telephone', this.telephone);
-    formData.append('ville', this.ville);
+    formData.append('ville', this.selectedVille);
+    formData.append('pays', this.selectedPays);
+    formData.append('role', this.role);
+    formData.append('agreeTerms', this.agreeTerms ? '1' : '0');
+    
 
     if (this.photo) formData.append('photo', this.photo);
     // Si l’utilisateur a téléchargé une photo, on l’ajoute également.

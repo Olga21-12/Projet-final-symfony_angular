@@ -45,8 +45,13 @@ class RegistrationApiController extends AbstractController
          * Si certains champs essentiels sont absents (email ou mot de passe),
          * on renvoie une erreur 400 (mauvaise requête).
          */
-        if (!isset($data['email'], $data['password'])) {
+        if (!isset($data['email'], $data['password'], $data['agreeTerms'])) {
             return $this->json(['error' => 'Les champs requis sont manquants.'], 400);
+        }
+
+        // Vérifie que l'utilisateur a accepté les conditions
+        if ($data['agreeTerms'] != '1') {
+            return $this->json(['error' => 'Les conditions générales doivent être acceptées.'], 400);
         }
 
         /**
@@ -63,7 +68,7 @@ class RegistrationApiController extends AbstractController
 
         $user = new User();
         $user->setEmail($data['email']);
-        $user->setRoles(['ROLE_CLIENT']);
+        $user->setRoles([$data['role'] ?? 'ROLE_CLIENT']);
         $user->setPassword($hasher->hashPassword($user, $data['password']));
         $user->setNom($data['nom'] ?? '');
         $user->setPrenom($data['prenom'] ?? '');
@@ -76,10 +81,7 @@ class RegistrationApiController extends AbstractController
                 : null
         );
 
-        /**
-         * 🔹 Étape 5 — Association avec la ville (Emplacement)
-         * On cherche la ville sélectionnée par son ID envoyé depuis Angular.
-         */
+        // 🔹 Étape 5 — Association avec la ville et pays
         if (!empty($data['ville'])) {
             $emplacement = $em->getRepository(Emplacement::class)->find($data['ville']);
             if ($emplacement) {

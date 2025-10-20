@@ -19,14 +19,31 @@
     </div>
 
     <div class="mb-3">
+      <label>Vous êtes :</label>
+      <select [(ngModel)]="role" name="role" class="form-select" required>
+        <option value="ROLE_CLIENT">Client</option>
+        <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
+      </select>
+    </div>
+
+
+    <div class="mb-3">
       <label>Date de Naissance</label>
       <input type="date" [(ngModel)]="date_de_naissance" name="date_de_naissance" class="form-control" required />
     </div>
 
     <div class="mb-3">
+      <label>Pays</label>
+      <select [(ngModel)]="selectedPays" name="pays" class="form-select" required (change)="onPaysChange($event)">
+        <option value="">Sélectionnez votre pays</option>
+        <option *ngFor="let p of paysList" [value]="p">{{ p }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3" *ngIf="selectedPays">
       <label>Ville</label>
-      <select [(ngModel)]="ville" name="ville" class="form-select" required>
-        <option value="">Sélectionnez une ville</option>
+      <select [(ngModel)]="selectedVille" name="ville" class="form-select" required>
+        <option value="">Sélectionnez votre ville</option>
         <option *ngFor="let v of villes" [value]="v.id">{{ v.ville }}</option>
       </select>
     </div>
@@ -59,6 +76,20 @@
     <div class="mb-3">
       <label>Photo de profil</label>
       <input type="file" (change)="onFileChange($event)" accept="image/*" class="form-control" />
+    </div>
+
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="agreeTerms"
+        [(ngModel)]="agreeTerms"
+        name="agreeTerms"
+        required
+      />
+      <label for="agreeTerms" class="form-check-label">
+        J'accepte les conditions générales d'utilisation
+      </label>
     </div>
 
     <button class="btn w-100" type="submit">S’inscrire</button>
