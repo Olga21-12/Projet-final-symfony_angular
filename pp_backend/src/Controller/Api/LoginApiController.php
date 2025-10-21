@@ -48,6 +48,7 @@ class LoginApiController extends AbstractController
                 'email' => $user->getEmail(),
                 'role' => $user->getRoleName(),
                 'surnom' => $user->getSurnom(),
+                'photo' => $user->getImageName() ?? 'sans_photo.png'
             ]
         ]);
     }

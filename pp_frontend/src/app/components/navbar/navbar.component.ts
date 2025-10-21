@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 
 @Component({
@@ -9,14 +9,17 @@ import { Router, RouterLinkActive, RouterModule } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
 user: any = null;
 
   constructor(private router: Router) {}
 
-  ngOnInit() {
-    this.loadUser();
+  ngOnInit(): void {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser){
+      this.user = JSON.parse(storedUser);
+    }
   }
 
   loadUser() {

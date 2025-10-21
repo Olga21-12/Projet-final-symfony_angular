@@ -19,7 +19,7 @@
       <div class="d-flex align-items-center justify-content-center flex-grow-1">
         <ng-container *ngIf="user">
           <a class="navbar-brand d-flex align-items-center" routerLink="/profile">
-          <img [src]="'/uploads/profiles/' + user.imageName"
+          <img [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user?.photo || 'sans_photo.png')" 
                alt="Avatar"
                class="rounded-circle me-2"
                width="40" height="40">

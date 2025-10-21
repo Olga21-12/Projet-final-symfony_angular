@@ -1,0 +1,15 @@
+.profile-photo {
+  width: 100%;
+  max-width: 260px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info p {
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+  font-size: 1rem;
+  color: #333;
+}

@@ -1,32 +1,30 @@
-<div class="container content-box mt-5" *ngIf="user; else loading">
+<div class="container content-box mt-5 text-center" *ngIf="user; else loading">
   <h2 class="text-center title mb-4">Bienvenue, {{ user.surnom }} 🐾</h2>
 
-  <div class="row">
-    <!-- Фото -->
-    <div class="col-md-4 text-center">
-      <img [src]="'/uploads/profiles/' + user.photo"
+  <div class="row justify-content-center align-items-center profile-layout">
+    <!-- Photo -->
+    <div class="col-md-4 justify-content-center">
+      <img [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user?.photo || 'sans_photo.png')"
            alt="Photo de profil"
-           class="img-fluid rounded-circle shadow-sm mb-3"
-           width="180">
+           class="profile-photo">           
     </div>
 
-    <!-- Информация -->
-    <div class="col-md-8">
+    <!-- Information -->
+    <div class="col-md-6 profile-info">
       <p><strong>Nom :</strong> {{ user.nom }}</p>
       <p><strong>Prénom :</strong> {{ user.prenom }}</p>
       <p><strong>Rôle :</strong> {{ user.role }}</p>
       <p><strong>Email :</strong> {{ user.email }}</p>
-      <p><strong>Pays :</strong> {{ user.pays }}</p>
-      <p><strong>Ville :</strong> {{ user.ville }}</p>
+      <p><strong>Pays et Ville :</strong> {{ user.pays }}, {{ user.ville }}</p>
       <p><strong>Adresse :</strong> {{ user.adresse }}</p>
       <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
       <p><strong>Âge :</strong> {{ user.age }} ans</p>
       <p><strong>Date d'inscription :</strong> {{ user.date_inscription }}</p>
       <p><strong>Dernière modification :</strong> {{ user.date_modification }}</p>
 
-      <div class="mt-4">
-        <button class="btn btn-outline-primary me-2" (click)="editProfile()">Modifier</button>
-        <button class="btn btn-outline-danger" (click)="deleteProfile()">Supprimer le compte</button>
+      <div class="mt-4 text-center">
+        <button class="btn me-2" (click)="editProfile()">✏️ Modifier mon compte</button>
+        <button class="btn" (click)="deleteProfile()">🗑️ Supprimer mon compte</button>
       </div>
     </div>
   </div>
