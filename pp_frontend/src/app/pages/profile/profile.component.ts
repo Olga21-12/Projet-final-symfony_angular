@@ -46,9 +46,24 @@ export class ProfileComponent implements OnInit{
   }
 
   deleteProfile() {
-    if (confirm('Voulez-vous vraiment supprimer votre profil ?')) {
-      localStorage.clear();
-      this.router.navigate(['/register']);
-    }
+  if (confirm('Voulez-vous vraiment supprimer votre profil ?')) {
+    const storedUser = localStorage.getItem('user');
+
+    if (!storedUser) return;
+
+    const user = JSON.parse(storedUser);
+
+    this.userService.deleteUser(user.id).subscribe({
+      next: () => {
+        alert('Profil supprimé avec succès.');
+        localStorage.clear();
+        this.router.navigate(['/register']);
+      },
+      error: (err) => {
+        console.error('Erreur suppression profil:', err);
+        alert("Une erreur est survenue lors de la suppression du profil.");
+      }
+    });
   }
-}  
+}
+  
