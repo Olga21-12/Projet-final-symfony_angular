@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 
 @Component({
@@ -35,5 +35,13 @@ user: any = null;
 
     // Redirection vers la page de connexion
     this.router.navigate(['/login']);
+  }
+
+  scrolled = false;
+
+  // слушаем событие прокрутки окна
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.scrolled = window.scrollY > 50;
   }
 }
