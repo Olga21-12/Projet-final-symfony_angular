@@ -50,7 +50,11 @@ class LoginApiController extends AbstractController
                 'nom' => $user->getNom(),
                 'prenom' => $user->getPrenom(),
                 'email' => $user->getEmail(),
-                'role' => $user->getRoleName()
+                'role' => $user->getRoleName(),
+                'surnom' => $user->getSurnom(),
+            'adresse' => $user->getAdresse(),
+            'telephone' => $user->getTelephone(),
+            'date_inscription' => $user->getDateInscription()?->format('Y-m-d')
             ]
         ]);
     }

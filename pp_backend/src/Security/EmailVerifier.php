@@ -7,8 +7,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Model\SignatureComponents;
+
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
+
 
 class EmailVerifier
 {
@@ -49,5 +55,22 @@ class EmailVerifier
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+    }
+
+    public function generateSignedUrl(string $routeName, User $user): string
+    {
+        $signatureComponents = $this->verifyEmailHelper->generateSignature(
+            $routeName,
+            (string) $user->getId(),
+            (string) $user->getEmail(),
+            ['id' => $user->getId()]
+        );
+
+        return $signatureComponents->getSignedUrl();
+    }
+
+    public function sendEmail(TemplatedEmail $email): void
+    {
+        $this->mailer->send($email);
     }
 }

@@ -14,11 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[Route('/api', name: 'api_')]
 class RegistrationApiController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    public function __construct(private EmailVerifier $emailVerifier,
+                                private MailerInterface $mailer)
     {
     }
 
@@ -30,18 +32,18 @@ class RegistrationApiController extends AbstractController
     ): JsonResponse {
 
         /**
-         * 🔹 Étape 1 — Récupération des données du formulaire
+         *  Étape 1 — Récupération des données du formulaire
          * Ici on utilise $request->request->all() au lieu de json_decode(),
          * car Angular envoie les données sous format FormData (multipart/form-data),
          * et non pas en JSON.
          */
         $data = $request->request->all();
 
-        // 🔹 Récupération du fichier photo, s’il existe
+        //  Récupération du fichier photo, s’il existe
         $file = $request->files->get('photo');
 
         /**
-         * 🔹 Étape 2 — Vérification des champs obligatoires
+         *  Étape 2 — Vérification des champs obligatoires
          * Si certains champs essentiels sont absents (email ou mot de passe),
          * on renvoie une erreur 400 (mauvaise requête).
          */
@@ -55,7 +57,7 @@ class RegistrationApiController extends AbstractController
         }
 
         /**
-         * 🔹 Étape 3 — Vérification si un utilisateur avec le même email existe déjà
+         *  Étape 3 — Vérification si un utilisateur avec le même email existe déjà
          */
         $existingUser = $em->getRepository(User::class)->findOneBy(['email' => $data['email']]);
         if ($existingUser) {
@@ -63,7 +65,7 @@ class RegistrationApiController extends AbstractController
         }
 
         /**
-         * 🔹 Étape 4 — Création de l’objet User et remplissage des données
+         *  Étape 4 — Création de l’objet User et remplissage des données
          */
 
         $user = new User();
@@ -81,7 +83,7 @@ class RegistrationApiController extends AbstractController
                 : null
         );
 
-        // 🔹 Étape 5 — Association avec la ville et pays
+        //  Étape 5 — Association avec la ville et pays
         if (!empty($data['ville'])) {
             $emplacement = $em->getRepository(Emplacement::class)->find($data['ville']);
             if ($emplacement) {
@@ -90,7 +92,7 @@ class RegistrationApiController extends AbstractController
         }
 
         /**
-         * 🔹 Étape 6 — Gestion du fichier photo
+         *  Étape 6 — Gestion du fichier photo
          * Si une photo a été téléchargée, on la déplace dans le dossier public/uploads/profiles.
          * Sinon, on attribue l’image par défaut "sans_photo.png".
          */
@@ -109,28 +111,32 @@ class RegistrationApiController extends AbstractController
         }
 
         /**
-         * 🔹 Étape 7 — Enregistrement de l’utilisateur dans la base de données
+         *  Étape 7 — Enregistrement de l’utilisateur dans la base de données
          */
         $em->persist($user);
         $em->flush();
 
         /**
-         * 🔹 Étape 8 — Envoi d’un email de confirmation
-         * Grâce au bundle symfonycasts/verify-email-bundle,
-         * on génère un lien de vérification et on l’envoie à l’utilisateur.
+         *  Étape 8 — Envoi d’un email de confirmation
+         * On génère le lien de vérification, mais on le redirige vers le FRONT (Angular).
          */
-        $this->emailVerifier->sendEmailConfirmation(
-            'app_verify_email',
-            $user,
-            (new TemplatedEmail())
+        $signedUrl = $this->emailVerifier->generateSignedUrl('app_verify_email', $user);
+            $frontendUrl = 'http://localhost:4200/verify-email?token=' . urlencode($signedUrl);
+
+            $email = (new TemplatedEmail())
                 ->from(new Address('admin@purrpalace.com', 'PurrPalace'))
                 ->to($user->getEmail())
                 ->subject('✨ Confirmez votre adresse email')
                 ->htmlTemplate('registration/confirmation_email.html.twig')
-        );
+                ->context([
+                    'verifyUrl' => $frontendUrl,
+                    'user' => $user,
+                ]);
+
+            $this->mailer->send($email);
 
         /**
-         * 🔹 Étape 9 — Réponse finale envoyée à Angular
+         * Étape 9 — Réponse finale envoyée à Angular
          * Si tout s’est bien passé, on renvoie un code HTTP 201 (créé)
          * et un message de succès en JSON.
          */
@@ -139,4 +145,51 @@ class RegistrationApiController extends AbstractController
             'message' => 'Inscription réussie ! Veuillez vérifier votre email pour confirmer votre compte.'
         ], 201);
     }
+
+    #[Route('/verify-email', name: 'api_verify_email', methods: ['GET'])]
+        public function verifyUserEmail(Request $request, EntityManagerInterface $em): JsonResponse
+        {
+    $tokenUrl = $request->query->get('token');
+
+    if (!$tokenUrl) {
+        return $this->json(['error' => 'Lien de vérification invalide.'], 400);
+    }
+
+    /**
+ * SymfonyCasts VerifyEmailBundle — extrait le vrai token depuis l’URL signée.
+ * Le token généré par EmailVerifier est une URL complète encodée dans notre paramètre.
+ */
+$decodedUrl = urldecode($tokenUrl);
+
+// 🔹 Извлекаем ID пользователя из токена (из параметра id=)
+parse_str(parse_url($decodedUrl, PHP_URL_QUERY), $queryParams);
+$userId = $queryParams['id'] ?? null;
+
+if (!$userId) {
+    return $this->json(['error' => 'Utilisateur non trouvé dans le lien.'], 400);
+}
+
+$user = $em->getRepository(User::class)->find($userId);
+if (!$user) {
+    return $this->json(['error' => 'Utilisateur introuvable.'], 404);
+}
+
+try {
+    // ✅ Передаём реального пользователя, найденного по ID
+    $this->emailVerifier->handleEmailConfirmation(
+        $request->duplicate([], null, ['REQUEST_URI' => $decodedUrl]),
+        $user
+    );
+} catch (\Exception $e) {
+    return $this->json(['error' => 'Le lien de vérification est invalide ou expiré.'], 400);
+}
+
+
+    // Si tout s’est bien passé
+    return $this->json([
+        'status' => 'success',
+        'message' => 'Votre adresse e-mail a été vérifiée avec succès ! 🎉'
+    ]);
+}
+
 }
