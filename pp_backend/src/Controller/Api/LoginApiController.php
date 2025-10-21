@@ -33,15 +33,11 @@ class LoginApiController extends AbstractController
 
         $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        if (!$user) {
-            return $this->json(['error' => 'Utilisateur non trouvé.'], 404);
+        if (!$user || !$hasher->isPasswordValid($user, $password)) {
+            return $this->json(['error' => 'Identifiants invalides. Veuillez vérifier vos informations.'], 404);
         }
-
-        if (!$hasher->isPasswordValid($user, $password)) {
-            return $this->json(['error' => 'Mot de passe incorrect.'], 401);
-        }
-
-        // Если всё хорошо
+      
+        // Si tout va bien
         return $this->json([
             'status' => 'success',
             'message' => 'Connexion réussie !',

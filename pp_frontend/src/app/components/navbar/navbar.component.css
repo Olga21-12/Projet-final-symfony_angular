@@ -27,19 +27,18 @@
 }
 
 .navbar-nav {
-    margin-right: 2rem; /* можно увеличить до 2rem */
+    margin-right: 2rem; 
 }
 
 .nav-item.active > .nav-link {
     color: rgb(3, 218, 218);
     text-decoration: underline;
-    text-underline-offset: 4px; /* делает подчёркивание чуть ниже */
-    text-shadow: 0 0 4px #ffffffcc; /* лёгкое белое свечение */
-    -webkit-text-stroke: 0.4px #ffffff; /* псевдоутолщение текста */
+    text-underline-offset: 4px; 
+    text-shadow: 0 0 4px #ffffffcc; 
+    -webkit-text-stroke: 0.4px #ffffff; 
 }
 
-.navbar .nav-link:hover,
-.footer-link:hover {
+.navbar .nav-link:hover {
     color:  rgb(3, 218, 218);
     text-decoration: underline;
     cursor: pointer;
