@@ -41,7 +41,7 @@ class LoginApiController extends AbstractController
             return $this->json(['error' => 'Mot de passe incorrect.'], 401);
         }
 
-        // 🔹 Если всё хорошо
+        // Если всё хорошо
         return $this->json([
             'status' => 'success',
             'message' => 'Connexion réussie !',
@@ -52,9 +52,6 @@ class LoginApiController extends AbstractController
                 'email' => $user->getEmail(),
                 'role' => $user->getRoleName(),
                 'surnom' => $user->getSurnom(),
-            'adresse' => $user->getAdresse(),
-            'telephone' => $user->getTelephone(),
-            'date_inscription' => $user->getDateInscription()?->format('Y-m-d')
             ]
         ]);
     }

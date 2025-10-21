@@ -24,18 +24,31 @@
       >Accueil</a>
   </li>
 
+  <!-- Si l'utilisateur est connecté -->
+      <ng-container *ngIf="user; else guestLinks">
+        <img [src]="'/uploads/profiles/' + user.imageName" 
+             alt="Avatar" class="rounded-circle me-2" width="35" height="35">
+        <span class="me-3">{{ user.prenom }}</span>
+        
+      
+
   <li class="nav-item" routerLinkActive="active">
     <a class="nav-link" routerLink="/profile">Profil</a>
   </li>
-
-  <li class="nav-item" routerLinkActive="active">
+  <button class="btn btn-outline-danger btn-sm" (click)="logout()">Déconnexion</button>
+</ng-container>
+  
+<!-- Si l'utilisateur n'est pas connecté -->
+      <ng-template #guestLinks>
+<li class="nav-item" routerLinkActive="active">
     <a class="nav-link" routerLink="/login">Se connecter</a>
   </li>
 
   <li class="nav-item" routerLinkActive="active">
     <a class="nav-link" routerLink="/register">S'inscrire</a>
   </li>
-  
+</ng-template>
+
   <li class="nav-item" routerLinkActive="active">
     <a class="nav-link" routerLink="/faq">FAQ</a>
   </li>
