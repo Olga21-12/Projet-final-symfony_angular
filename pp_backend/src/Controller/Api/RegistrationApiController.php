@@ -161,7 +161,7 @@ class RegistrationApiController extends AbstractController
  */
 $decodedUrl = urldecode($tokenUrl);
 
-// 🔹 Извлекаем ID пользователя из токена (из параметра id=)
+// Extraire l'ID utilisateur du jeton (à partir du paramètre id=)
 parse_str(parse_url($decodedUrl, PHP_URL_QUERY), $queryParams);
 $userId = $queryParams['id'] ?? null;
 
@@ -175,7 +175,7 @@ if (!$user) {
 }
 
 try {
-    // ✅ Передаём реального пользователя, найденного по ID
+    // transférons un véritable utilisateur trouvé par ID
     $this->emailVerifier->handleEmailConfirmation(
         $request->duplicate([], null, ['REQUEST_URI' => $decodedUrl]),
         $user
@@ -183,7 +183,6 @@ try {
 } catch (\Exception $e) {
     return $this->json(['error' => 'Le lien de vérification est invalide ou expiré.'], 400);
 }
-
 
     // Si tout s’est bien passé
     return $this->json([
