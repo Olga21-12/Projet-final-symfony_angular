@@ -41,15 +41,29 @@ class UserController extends AbstractController
             return $this->json(['error' => 'Utilisateur non trouvé'], 404);
         }
 
+        // nous calculons l'âge
+            $age = null;
+            if ($user->getDateDeNaissance()) {
+                $now = new \DateTime();
+                $age = $now->diff($user->getDateDeNaissance())->y;
+            }
+
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'nom' => $user->getNom(),
             'prenom' => $user->getPrenom(),
             'surnom' => $user->getSurnom(),
+            'role' => $user->getRoleName(),
             'adresse' => $user->getAdresse(),
             'telephone' => $user->getTelephone(),
-            'date_inscription' => $user->getDateInscription()?->format('Y-m-d'),
+            'pays' => $user->getEmplacement()?->getPays(),
+            'ville' => $user->getEmplacement()?->getVille(),
+            'date_naissance' => $user->getDateDeNaissance()?->format('Y-m-d'),
+            'age' => $age,
+            'date_inscription' => $user->getCreatedAt()?->format('Y-m-d'),
+            'date_modification' => $user->getUpdatedAt()?->format('Y-m-d'),
+            'photo' => $user->getImageName() ?? 'sans_photo.png',
         ];
 
         return $this->json($data);
@@ -80,7 +94,7 @@ class UserController extends AbstractController
         $user->setAdresse($body['adresse'] ?? '');
         $user->setTelephone($body['telephone'] ?? null);
         $user->setPassword(password_hash($body['password'], PASSWORD_BCRYPT));
-        
+
         $em->persist($user);
         $em->flush();
 

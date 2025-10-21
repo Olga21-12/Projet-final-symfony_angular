@@ -1,11 +1,39 @@
-<div class="container content-box mt-5">
-  <h2 class="title">Bienvenue, {{ user?.surnom }} </h2>
-  <p>Nom : {{ user?.nom }}</p>
-  <p>Prénom : {{ user?.prenom }}</p>
-  <p>Email : {{ user?.email }}</p>
-  <p>Rôle : {{ user?.role }}</p>  
-  <p>Age : {{ user?.age }}</p>
-  <p>Pays, Ville : {{ user?.pays }}, {{ user?.ville }}</p>
-  <p>Adresse : {{ user?.adresse }}</p>
-  <p>Téléphone : {{ user?.telephone }}</p>
+<div class="container content-box mt-5" *ngIf="user; else loading">
+  <h2 class="text-center title mb-4">Bienvenue, {{ user.surnom }} 🐾</h2>
+
+  <div class="row">
+    <!-- Фото -->
+    <div class="col-md-4 text-center">
+      <img [src]="'/uploads/profiles/' + user.photo"
+           alt="Photo de profil"
+           class="img-fluid rounded-circle shadow-sm mb-3"
+           width="180">
+    </div>
+
+    <!-- Информация -->
+    <div class="col-md-8">
+      <p><strong>Nom :</strong> {{ user.nom }}</p>
+      <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+      <p><strong>Rôle :</strong> {{ user.role }}</p>
+      <p><strong>Email :</strong> {{ user.email }}</p>
+      <p><strong>Pays :</strong> {{ user.pays }}</p>
+      <p><strong>Ville :</strong> {{ user.ville }}</p>
+      <p><strong>Adresse :</strong> {{ user.adresse }}</p>
+      <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
+      <p><strong>Âge :</strong> {{ user.age }} ans</p>
+      <p><strong>Date d'inscription :</strong> {{ user.date_inscription }}</p>
+      <p><strong>Dernière modification :</strong> {{ user.date_modification }}</p>
+
+      <div class="mt-4">
+        <button class="btn btn-outline-primary me-2" (click)="editProfile()">Modifier</button>
+        <button class="btn btn-outline-danger" (click)="deleteProfile()">Supprimer le compte</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<ng-template #loading>
+  <div class="text-center mt-5">
+    <p>Chargement du profil...</p>
+  </div>
+</ng-template>
