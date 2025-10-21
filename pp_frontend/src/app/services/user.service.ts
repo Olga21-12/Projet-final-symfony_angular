@@ -16,8 +16,28 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
+  updateUser(id: number, data: Partial<User>): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
   deleteUser(id: number): Observable<any> {
   return this.http.delete(`${this.apiUrl}/${id}`);
+}
+
+updateUserWithPhoto(id: number, data: any, photoFile?: File): Observable<any> {
+  const formData = new FormData();
+
+  for (const key in data) {
+    if (data[key] !== null && data[key] !== undefined) {
+      formData.append(key, data[key]);
+    }
+  }
+
+  if (photoFile) {
+    formData.append('photo', photoFile);
+  }
+
+  return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
 }
 
 }

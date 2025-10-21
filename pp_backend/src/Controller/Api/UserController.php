@@ -116,19 +116,53 @@ class UserController extends AbstractController
             return $this->json(['error' => 'Utilisateur non trouvé'], 404);
         }
 
-        $body = json_decode($request->getContent(), true);
+        // Déterminer le type de données (FormData ou JSON)
+        $data = $request->getContentTypeFormat() === 'json'
+            ? json_decode($request->getContent(), true)
+            : $request->request->all();
 
-        $user->setNom($body['nom'] ?? $user->getNom());
-        $user->setPrenom($body['prenom'] ?? $user->getPrenom());
-        $user->setSurnom($body['surnom'] ?? $user->getSurnom());
-        $user->setAdresse($body['adresse'] ?? $user->getAdresse());
-        $user->setTelephone($body['telephone'] ?? $user->getTelephone());
+        $user->setNom($data['nom'] ?? $user->getNom());
+        $user->setPrenom($data['prenom'] ?? $user->getPrenom());
+        $user->setSurnom($data['surnom'] ?? $user->getSurnom());
+        $user->setAdresse($data['adresse'] ?? $user->getAdresse());
+        $user->setTelephone($data['telephone'] ?? $user->getTelephone());
+        
+        // (client / propriétaire)
+        if (!empty($data['role'])) {
+            $user->setRoles([$data['role'] === 'ROLE_PROPRIETAIRE' ? 'ROLE_PROPRIETAIRE' : 'ROLE_CLIENT']);
+        }
+
+        // Mise à jour d'une photo
+        $file = $request->files->get('photo');
+        if ($file) {
+            $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/profiles';
+            $newFilename = uniqid() . '.' . $file->guessExtension();
+
+            try {
+                $file->move($uploadsDir, $newFilename);
+                $user->setImageName($newFilename);
+            } catch (\Exception $e) {
+                return $this->json(['error' => 'Erreur lors du téléchargement de la photo.'], 500);
+            }
+        }    
+        
+        
+        
         $user->setDateModification(new \DateTimeImmutable());
 
         $em->flush();
 
-        return $this->json(['message' => 'Utilisateur mis à jour avec succès']);
-    }
+        return $this->json([
+        'message' => 'Profil mis à jour avec succès ✅',
+        'user' => [
+            'id' => $user->getId(),
+            'nom' => $user->getNom(),
+            'prenom' => $user->getPrenom(),
+            'role' => $user->getRoleName(),
+            'photo' => $user->getImageName()
+        ]
+    ]);
+}
 
     // --- DELETE: suppression d’un utilisateur ---
     #[Route('/{id}', methods: ['DELETE'])]
