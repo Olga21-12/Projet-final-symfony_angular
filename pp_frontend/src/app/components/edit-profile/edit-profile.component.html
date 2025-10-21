@@ -6,6 +6,18 @@
 
   <form (ngSubmit)="saveProfile()" #editForm="ngForm">
 
+     <!-- Photo -->
+  <div class="mb-3 text-center">
+    <img
+      [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user.photo || 'sans_photo.png')"
+      alt="Photo de profil"
+      class="rounded shadow-sm mb-2"
+      width="160"
+      height="160"
+    />
+    <input type="file" (change)="onPhotoSelected($event)" class="form-control mt-2" />
+  </div>
+
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Nom :</label>
@@ -22,9 +34,18 @@
         <input type="text" [(ngModel)]="user.surnom" name="surnom" class="form-control" />
       </div>
 
-      <div class="col-md-6 mb-3">
-        <label>Role :</label>
-        <input type="text" [(ngModel)]="user.role" name="role" class="form-control" />
+      <div class="mb-3">
+        <label for="role" class="form-label">Rôle :</label>
+        <select
+          id="role"
+          class="form-select"
+          [(ngModel)]="user.role"
+          name="role"
+          required
+        >
+          <option value="ROLE_CLIENT">Client</option>
+          <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
+        </select>
       </div>
 
       <div class="col-md-6 mb-3">
@@ -53,12 +74,7 @@
       </div>
     </div>
 
-      <div class="mb-3">
-        <label>Photo de profil :</label>
-        <input type="file" (change)="onPhotoSelected($event)" class="form-control" />
-      </div>
-
-    <div class="text-center mt-4">
+          <div class="text-center mt-4">
       <button type="submit" class="btn me-2">💾 Enregistrer</button>
       <button type="button" class="btn" (click)="cancelEdit()">Annuler</button>
     </div>
