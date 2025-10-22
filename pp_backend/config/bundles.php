@@ -16,4 +16,6 @@ return [
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle::class => ['all' => true],
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
+    Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
+    Knp\Bundle\TimeBundle\KnpTimeBundle::class => ['all' => true],
 ];
