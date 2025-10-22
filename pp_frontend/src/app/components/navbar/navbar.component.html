@@ -38,6 +38,10 @@
           >Accueil</a>
       </li>
 
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/bien-list">Liste des Biens</a>
+      </li>
+
       <!-- Si l'utilisateur est connecté -->
 
       <ng-container *ngIf="user; else guestLinks">
