@@ -37,10 +37,11 @@
       <div class="col-md-6 mb-3">
         <label for="role" class="form-label">Rôle :</label>
         <!-- la valeur actuelle se sélectionne automatiquement -->
-          <select [(ngModel)]="user.role" name="role" class="form-select" required>
-            <option value="ROLE_CLIENT">Client</option>
-            <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
+          <select [(ngModel)]="user.role" name="role" class="form-select">
+            <option value="Client">Client</option>
+            <option value="Proprietaire">Propriétaire</option>
           </select>
+
       </div>
 
       <div class="col-md-6 mb-3">

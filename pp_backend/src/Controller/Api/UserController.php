@@ -48,6 +48,11 @@ class UserController extends AbstractController
                 $age = $now->diff($user->getDateDeNaissance())->y;
             }
 
+            // Extraire pays et ville depuis Emplacement
+            $emplacement = $user->getEmplacement();
+            $pays = $emplacement?->getPays() ?? '';
+            $ville = $emplacement?->getVille() ?? '';
+
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -57,8 +62,8 @@ class UserController extends AbstractController
             'role' => $user->getRoleName(),
             'adresse' => $user->getAdresse(),
             'telephone' => $user->getTelephone(),
-            'pays' => $user->getEmplacement()?->getPays(),
-            'ville' => $user->getEmplacement()?->getVille(),
+            'pays' => $pays,
+            'ville' => $ville,
             'date_naissance' => $user->getDateDeNaissance()?->format('Y-m-d'),
             'age' => $age,
             'date_inscription' => $user->getCreatedAt()?->format('Y-m-d'),
@@ -108,7 +113,7 @@ class UserController extends AbstractController
     }
 
     // --- PUT: mise à jour d’un utilisateur ---
-    #[Route('/{id}', methods: ['PUT', 'PATCH'])]
+    #[Route('/{id}', methods: ['PUT', 'PATCH', 'POST'])]
     public function update(Request $request, UserRepository $repo, EntityManagerInterface $em, int $id): JsonResponse
     {
         $user = $repo->find($id);
@@ -121,6 +126,7 @@ class UserController extends AbstractController
             ? json_decode($request->getContent(), true)
             : $request->request->all();
 
+            // Mise à jour des informations de base
         $user->setNom($data['nom'] ?? $user->getNom());
         $user->setPrenom($data['prenom'] ?? $user->getPrenom());
         $user->setSurnom($data['surnom'] ?? $user->getSurnom());
@@ -129,7 +135,19 @@ class UserController extends AbstractController
         
         // (client / propriétaire)
         if (!empty($data['role'])) {
-            $user->setRoles([$data['role'] === 'ROLE_PROPRIETAIRE' ? 'ROLE_PROPRIETAIRE' : 'ROLE_CLIENT']);
+            $role = strtoupper($data['role']);
+            if (!str_starts_with($role, 'ROLE_')) {
+                $role = 'ROLE_' . $role;
+            }
+            $user->setRoles([$role]);
+        }
+
+        // 🔹 Mise à jour du pays et de la ville
+        if (!empty($data['ville'])) {
+            $emplacement = $em->getRepository(\App\Entity\Emplacement::class)->find($data['ville']);
+            if ($emplacement) {
+                $user->setEmplacement($emplacement);
+            }
         }
 
         // Mise à jour d'une photo
@@ -146,7 +164,7 @@ class UserController extends AbstractController
             }
         }    
         
-        $user->setDateModification(new \DateTimeImmutable());
+        $user->setUpdatedAt(new \DateTimeImmutable());
 
         $em->flush();
 
