@@ -40,18 +40,30 @@ user!: User;
       return;
     }
 
-    this.user = JSON.parse(storedUser);
+    const parsedUser = JSON.parse(storedUser);
 
-    // Chargement d'une liste de pays
-    this.emplacementService.getPays().subscribe({
-      next: (res) => {
-        this.paysList = res;
-        this.selectedPays = this.user.pays ?? '';
-        if (this.selectedPays) this.loadVilles(this.selectedPays);
-      },
-      error: () => (this.error = 'Erreur lors du chargement des pays.')
-    });
-  }
+  // Chargement de nouvelles données utilisateur à partir de l'API
+  this.userService.getUserById(parsedUser.id).subscribe({
+    next: (userData) => {
+      this.user = userData;
+
+      // Chargement de tous les pays
+      this.emplacementService.getPays().subscribe({
+        next: (paysList) => {
+          this.paysList = paysList;
+          this.selectedPays = this.user.pays || '';
+
+          // Chargement des villes du pays sélectionné
+          if (this.selectedPays) {
+            this.loadVilles(this.selectedPays);
+          }
+        },
+        error: () => (this.error = 'Erreur lors du chargement des pays.')
+      });
+    },
+    error: () => this.router.navigate(['/login'])
+  });
+}
 
   loadVilles(pays: string): void {
     this.emplacementService.getVilles(pays).subscribe({
