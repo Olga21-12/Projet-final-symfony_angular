@@ -26,7 +26,6 @@ class Bien
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 8)]
-    #[Assert\Email()]
     private ?string $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

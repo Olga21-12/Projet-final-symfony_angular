@@ -1,1 +1,33 @@
-<p>bien-list works!</p>
+<div class="container mt-5">
+  <h2 class="title text-center mb-4">Nos logements</h2>
+
+  <div *ngIf="loading" class="text-center mt-5">
+    <div class="spinner-border text-info" role="status"></div>
+    <p class="mt-3">Chargement des biens...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <div class="row" *ngIf="!loading && !error">
+    <div class="col-md-4 mb-4" *ngFor="let bien of biens">
+      <div class="card h-100 shadow-sm">
+        <img
+          *ngIf="bien.photos && bien.photos.length"
+          [src]="'https://127.0.0.1:8000' + bien.photos[0]"
+          class="card-img-top"
+          alt="Photo du bien"
+        />
+        <div class="card-body">
+          <h5 class="card-title text-info">{{ bien.type }} — {{ bien.activite }}</h5>
+          <p class="card-text">{{ bien.description }}</p>
+          <p><strong>{{ bien.prix | currency:'EUR' }}</strong></p>
+          <p>
+            {{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}<br />
+            {{ bien.surface }} m² • {{ bien.nombre_de_chambres }} chambres
+          </p>
+          <a [routerLink]="['/biens', bien.id]" class="btn btn-outline-info w-100">Voir plus</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
