@@ -7,6 +7,7 @@ use App\Entity\TypesDeBien;
 use App\Entity\Confort;
 use App\Entity\Emplacement;
 use App\Entity\TypesActivite;
+use App\Repository\BienRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,13 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/api/biens', name: 'api_biens_')]
+
 class BienApiController extends AbstractController
 {
     // 1. LISTE DE TOUS LES BIENS
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em): JsonResponse
+    public function index(EntityManagerInterface $em,
+                          BienRepository $repo): JsonResponse
     {
-        $biens = $em->getRepository(Bien::class)->findAll();
+
+        $biens = $repo->findAll();
 
         $data = array_map(function (Bien $bien) {
             return [
@@ -37,9 +41,18 @@ class BienApiController extends AbstractController
                 'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
                 'type' => $bien->getType()?->getTypeDeBien(),
                 'activite' => $bien->getTypeActivite()?->getTypeActivite(),
-                'emplacement' => $bien->getEmplacement()?->getVille() . ', ' . $bien->getEmplacement()?->getPays(),
-                'conforts' => array_map(fn(Confort $c) => $c->getName(), $bien->getConforts()->toArray()),
-                'photos' => array_map(fn($p) => '/uploads/biens/' . $p->getImageName(), $bien->getPhotos()->toArray()),
+                'emplacement' => [
+                    'pays' => $bien->getEmplacement()?->getPays(),
+                    'ville' => $bien->getEmplacement()?->getVille(),
+                ],
+                'conforts' => array_map(
+                    fn(Confort $c) => $c->getName(),
+                    $bien->getConfort()->toArray()
+                ),
+                'photos' => array_map(
+                    fn($photo) => '/uploads/biens/' . $photo->getImageName(),
+                    $bien->getPhotos()->toArray()
+                ),
             ];
         }, $biens);
 
