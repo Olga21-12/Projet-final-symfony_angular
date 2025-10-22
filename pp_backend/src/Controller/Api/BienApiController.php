@@ -41,6 +41,8 @@ class BienApiController extends AbstractController
                 'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
                 'type' => $bien->getType()?->getTypeDeBien(),
                 'activite' => $bien->getTypeActivite()?->getTypeActivite(),
+                'proprietaire' => $bien->getUser()?->getSurnom() ?? 'Anonyme',
+                'created_ago' => $bien->getCreatedAt()?->diff(new \DateTime())->days,
                 'emplacement' => [
                     'pays' => $bien->getEmplacement()?->getPays(),
                     'ville' => $bien->getEmplacement()?->getVille(),

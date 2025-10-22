@@ -12,3 +12,11 @@
   object-fit: cover;
   border-radius: 10px 10px 0 0;
 }
+
+.card-title{
+  font-family: "Chelsea Market", system-ui;
+  font-size: 1rem;
+  color: #3b2e2a important;
+  text-align: center;
+  letter-spacing: 1px;
+}
