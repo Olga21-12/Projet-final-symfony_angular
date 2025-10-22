@@ -7,15 +7,15 @@
   <form (ngSubmit)="saveProfile()" #editForm="ngForm">
 
      <!-- Photo -->
-  <div class="mb-3 text-center">
+  <div class="mb-4 text-center">
     <img
       [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user.photo || 'sans_photo.png')"
       alt="Photo de profil"
-      class="rounded shadow-sm mb-2"
+      class="profile-photo mb-3"
       width="160"
       height="160"
     />
-    <input type="file" (change)="onPhotoSelected($event)" class="form-control mt-2" />
+    <input type="file" (change)="onPhotoSelected($event)" class="form-control" />
   </div>
 
     <div class="row">
@@ -34,18 +34,13 @@
         <input type="text" [(ngModel)]="user.surnom" name="surnom" class="form-control" />
       </div>
 
-      <div class="mb-3">
+      <div class="col-md-6 mb-3">
         <label for="role" class="form-label">Rôle :</label>
-        <select
-          id="role"
-          class="form-select"
-          [(ngModel)]="user.role"
-          name="role"
-          required
-        >
-          <option value="ROLE_CLIENT">Client</option>
-          <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
-        </select>
+        <!-- la valeur actuelle se sélectionne automatiquement -->
+          <select [(ngModel)]="user.role" name="role" class="form-select" required>
+            <option value="ROLE_CLIENT">Client</option>
+            <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
+          </select>
       </div>
 
       <div class="col-md-6 mb-3">
@@ -64,20 +59,37 @@
       </div>
 
       <div class="col-md-6 mb-3">
-        <label>Ville :</label>
-        <input type="text" [(ngModel)]="user.ville" name="ville" class="form-control" />
+        <label>Pays</label>
+        <select
+          [(ngModel)]="selectedPays"
+          name="pays"
+          class="form-select"
+          (change)="onPaysChange($event)"
+          required
+        >
+          <option value="">Sélectionnez votre pays</option>
+          <option *ngFor="let p of paysList" [value]="p">{{ p }}</option>
+        </select>
       </div>
 
-      <div class="col-md-6 mb-3">
-        <label>Pays :</label>
-        <input type="text" [(ngModel)]="user.pays" name="pays" class="form-control" />
+      <div class="col-md-6 mb-3" *ngIf="selectedPays">
+        <label>Ville</label>
+        <select
+          [(ngModel)]="selectedVille"
+          name="ville"
+          class="form-select"
+          required
+        >
+          <option value="">Sélectionnez votre ville</option>
+          <option *ngFor="let v of villes" [value]="v.id">{{ v.ville }}</option>
+        </select>
       </div>
-    </div>
 
           <div class="text-center mt-4">
       <button type="submit" class="btn me-2">💾 Enregistrer</button>
       <button type="button" class="btn" (click)="cancelEdit()">Annuler</button>
     </div>
+  </div>
   </form>
 </div>
 

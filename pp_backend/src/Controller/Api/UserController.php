@@ -146,8 +146,6 @@ class UserController extends AbstractController
             }
         }    
         
-        
-        
         $user->setDateModification(new \DateTimeImmutable());
 
         $em->flush();
