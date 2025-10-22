@@ -11,21 +11,33 @@
   <div class="row" *ngIf="!loading && !error">
     <div class="col-md-4 mb-4" *ngFor="let bien of biens">
       <div class="card h-100 shadow-sm">
+        
+        <h5 class="card-title">{{ bien.type }} — {{ bien.activite }}</h5>
+        
         <img
-          *ngIf="bien.photos && bien.photos.length"
-          [src]="'https://127.0.0.1:8000' + bien.photos[0]"
+          [src]="'https://127.0.0.1:8000' + (bien.photos && bien.photos.length ? bien.photos[0] : '/uploads/biens/sans_photo.png')"
           class="card-img-top"
           alt="Photo du bien"
         />
+
         <div class="card-body">
-          <h5 class="card-title text-info">{{ bien.type }} — {{ bien.activite }}</h5>
-          <p class="card-text">{{ bien.description }}</p>
+          
+          <p class="card-text">{{ bien.description | truncate:60:true:'...' }}</p>
           <p><strong>{{ bien.prix | currency:'EUR' }}</strong></p>
           <p>
             {{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}<br />
             {{ bien.surface }} m² • {{ bien.nombre_de_chambres }} chambres
           </p>
-          <a [routerLink]="['/biens', bien.id]" class="btn btn-outline-info w-100">Voir plus</a>
+
+          <!-- PROPRIÉTAIRE -->
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <small class="text-secondary">
+              🧍 {{ bien.proprietaire }}<br />
+              ⏱ ajouté il y a {{ bien.created_ago }} jour{{ bien.created_ago > 1 ? 's' : '' }}
+            </small>
+          </div>
+          
+          <a [routerLink]="['/biens', bien.id]" class="btn w-100">Voir plus</a>
         </div>
       </div>
     </div>

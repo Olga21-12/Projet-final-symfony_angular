@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BienService, Bien } from '../../services/bien.service';
-import { HttpClientModule } from '@angular/common/http';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 @Component({
   selector: 'app-bien-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule, TruncatePipe],
   templateUrl: './bien-list.component.html',
   styleUrls: ['./bien-list.component.css']
 })

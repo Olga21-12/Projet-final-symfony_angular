@@ -21,6 +21,8 @@ export interface Bien {
   photos: string[];
   created_at: string;
   updated_at: string;
+  proprietaire: string;
+  created_ago: number;
 }
 
 @Injectable({ providedIn: 'root' })
