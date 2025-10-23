@@ -92,8 +92,14 @@ class BienApiController extends AbstractController
             'luxe' => $bien->isLuxe(),
             'created_at' => $bien->getCreatedAt()?->format('Y-m-d'),
             'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
-            'type' => $bien->getType()?->getTypeDeBien(),
-            'activite' => $bien->getTypeActivite()?->getNom(),
+            'type' => [
+                'id' => $bien->getType()?->getId(),
+                'type_de_bien' => $bien->getType()?->getTypeDeBien(),
+            ],
+            'activite' => [
+                'id' => $bien->getTypeActivite()?->getId(),
+                'type_activite' => $bien->getTypeActivite()?->getNom(),
+            ],
             'emplacement' => [
             'pays' => $bien->getEmplacement()?->getPays(),
             'ville' => $bien->getEmplacement()?->getVille(),
@@ -342,5 +348,7 @@ foreach ($files as $idx => $file) {
 
     return $this->json(['message' => 'Bien mis à jour avec succès ✅', 'id' => $bien->getId()]);
     }
+
+    
 
 }
