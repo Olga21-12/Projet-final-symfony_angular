@@ -137,9 +137,15 @@ export class BienFormComponent implements OnInit {
 
   // ------------------ PHOTOS ------------------
   onPhotosSelected(event: any): void {
-    const files = Array.from(event.target.files) as File[];
-    this.photos = files.slice(0, 4);
-  }
+  const files = Array.from(event.target.files) as File[];
+  // можно сразу отсечь не-изображения и большие файлы, чтобы не бить по серверу
+  const allowed = ['image/jpeg','image/png','image/webp'];
+  const maxPerFileBytes = 8 * 1024 * 1024;
+
+  this.photos = files
+    .filter(f => allowed.includes(f.type) && f.size <= maxPerFileBytes)
+    .slice(0, 4);
+}
 
   // ------------------ SOUMISSION FORMULAIRE ------------------
   onSubmit(): void {
@@ -186,7 +192,7 @@ export class BienFormComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/biens']), 1500);
       },
       error: (err) => {
-        console.error(err);
+        console.error('ERREUR SERVEUR:', err);
         this.error = err.error?.error || 'Erreur lors de la mise à jour du bien.';
       }
     });

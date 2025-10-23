@@ -75,21 +75,25 @@ export class BienService {
   }
 
   updateBien(id: number, data: any, photos: File[]): Observable<any> {
-    const formData = new FormData();
+  const formData = new FormData();
 
-    for (const key in data) {
-      if (data[key] !== undefined && data[key] !== null) {
-        if (Array.isArray(data[key])) {
-          data[key].forEach((val) => formData.append(`${key}[]`, val));
-        } else {
-          formData.append(key, data[key]);
-        }
+  for (const key in data) {
+    if (data[key] !== undefined && data[key] !== null) {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((val) => formData.append(`${key}[]`, val));
+      } else {
+        formData.append(key, data[key]);
       }
     }
-
-    photos.forEach((photo) => formData.append('photos[]', photo));
-
-    return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
   }
+
+  (photos || []).slice(0, 4).forEach((file) => {
+    formData.append('photos[]', file, file.name); // 👈 важно передать имя
+  });
+
+  // Можно остаться на POST + _method, если роут разрешает methods: ['PUT','POST']
+  return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
+  // или: return this.http.put(`${this.apiUrl}/${id}`, formData);
+}
 }
 
