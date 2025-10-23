@@ -68,7 +68,7 @@
   <div class="text-center mt-4">
     <button class="btn me-2" (click)="goBack()">⬅ Retour à la liste</button>
 
-    <!-- Кнопки редактирования и удаления видны только автору -->
+    <!-- Les boutons modifier et supprimer ne sont visibles que par l'auteur -->
     <button *ngIf="bien.proprietaire?.id === userId" class="btn me-2" (click)="editBien()">✏️ Modifier</button>
     <button *ngIf="bien.proprietaire?.id === userId" class="btn " (click)="deleteBien()">🗑 Supprimer</button>
   </div>

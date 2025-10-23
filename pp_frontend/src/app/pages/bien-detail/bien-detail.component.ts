@@ -47,12 +47,30 @@ export class BienDetailComponent implements OnInit {
     if (this.bien) this.router.navigate(['/biens/edit', this.bien.id]);
   }
 
-  deleteBien(): void {
-    if (!confirm('Supprimer ce logement ?')) return;
-    alert('Suppression simulée ici. (À implémenter ensuite)');
-  }
-
   goBack(): void {
     this.router.navigate(['/biens']);
   }
+
+  deleteBien(): void {
+  if (!this.bien) return;
+
+  const confirmDelete = confirm('Voulez-vous vraiment supprimer ce logement ?');
+  if (!confirmDelete) return;
+
+  this.bienService.deleteBien(this.bien.id).subscribe({
+    next: (res) => {
+      alert(res.message || 'Le logement a été supprimé.');
+      this.router.navigate(['/biens']);
+    },
+    error: (err) => {
+      console.error(err);
+      if (err.status === 403)
+        alert("Vous n'avez pas la permission de supprimer ce logement.");
+      else if (err.status === 404)
+        alert("Le logement n'existe plus.");
+      else
+        alert("Erreur lors de la suppression du logement.");
+    }
+  });
+}
 }

@@ -197,9 +197,16 @@ class BienApiController extends AbstractController
             return $this->json(['error' => 'Bien introuvable'], 404);
         }
 
+         //  Vérification : Seul le propriétaire peut supprimer
+        $user = $this->getUser();
+        if (!$user || $bien->getProprietaire() !== $user) {
+            return $this->json(['error' => 'Accès refusé — vous n’êtes pas le propriétaire.'], 403);
+        }
+
+    // Supprimé de la base de données (les photos restent dans /uploads/biens)
         $em->remove($bien);
         $em->flush();
 
-        return $this->json(['message' => 'Bien supprimé avec succès 🗑️']);
+        return $this->json(['message' => 'Le logement a été supprimé avec succès ✅']);
     }
 }
