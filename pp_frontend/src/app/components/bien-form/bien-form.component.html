@@ -29,16 +29,16 @@
 
       <div class="col-md-6 mb-3">
         <label>Type</label>
-        <select [(ngModel)]="bien.type" name="type" class="form-select" required>
-        <option *ngFor="let t of types" [value]="t.id">{{ t.type_de_bien }}</option>
-      </select>
+        <select [(ngModel)]="selectedTypeId" name="type" class="form-select" required>
+          <option *ngFor="let t of types" [value]="t.id">{{ t.type_de_bien }}</option>
+        </select>
       </div>
 
       <div class="col-md-6 mb-3">
         <label>Activité</label>
-        <select [(ngModel)]="bien.activite" name="activite" class="form-select" required>
-        <option *ngFor="let a of activites" [value]="a.id">{{ a.type_activite }}</option>
-      </select>
+        <select [(ngModel)]="selectedActiviteId" name="activite" class="form-select" required>
+          <option *ngFor="let a of activites" [value]="a.id">{{ a.type_activite }}</option>
+        </select>
       </div>
     </div>
 

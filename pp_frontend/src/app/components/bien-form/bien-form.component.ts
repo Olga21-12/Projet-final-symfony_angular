@@ -25,8 +25,8 @@ export class BienFormComponent implements OnInit {
     nombre_de_chambres: 0,
     disponibilite: true,
     luxe: false,
-    type: '',
-    activite: '',
+    type: { id: 0, type_de_bien: '' },
+    activite: { id: 0, type_activite: '' },
     emplacement: { pays: '', ville: '' },
     conforts: [],
     photos: [],
@@ -51,6 +51,10 @@ export class BienFormComponent implements OnInit {
   selectedPays = '';
   selectedVille = '';
 
+  // ✅ новые безопасные поля для ID типа и активности
+  selectedTypeId: number | null = null;
+  selectedActiviteId: number | null = null;
+
   constructor(
     private bienService: BienService,
     private router: Router,
@@ -61,20 +65,24 @@ export class BienFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // если редактирование — подставляем данные
-    if (this.isEditMode && this.bien.emplacement) {
-      this.selectedPays = this.bien.emplacement.pays || '';
-      this.selectedVille = this.bien.emplacement.ville || '';
-    }
-
+    // заполняем страны / типы / активности / комфорты
     this.loadPays();
     this.loadTypes();
     this.loadActivites();
     this.loadConforts();
 
-    if (this.selectedPays) {
-      this.loadVilles(this.selectedPays);
+    // если редактирование — подставляем страну / город / id
+    if (this.isEditMode && this.bien.emplacement) {
+      this.selectedPays = this.bien.emplacement.pays || '';
+      this.selectedVille = this.bien.emplacement.ville || '';
+      if (this.selectedPays) this.loadVilles(this.selectedPays);
     }
+
+    // ✅ приводим type и activite к ID
+    this.selectedTypeId =
+      typeof this.bien.type === 'object' ? this.bien.type.id : (this.bien.type as number);
+    this.selectedActiviteId =
+      typeof this.bien.activite === 'object' ? this.bien.activite.id : (this.bien.activite as number);
   }
 
   // ------------------ PAYS & VILLES ------------------
@@ -127,7 +135,7 @@ export class BienFormComponent implements OnInit {
       this.bien.conforts = this.bien.conforts.filter((c) => c !== id);
     }
   }
-  
+
   loadConforts(): void {
     this.confortService.getConforts().subscribe({
       next: (res) => (this.conforts = res),
@@ -137,17 +145,16 @@ export class BienFormComponent implements OnInit {
 
   // ------------------ PHOTOS ------------------
   onPhotosSelected(event: any): void {
-  const files = Array.from(event.target.files) as File[];
-  // можно сразу отсечь не-изображения и большие файлы, чтобы не бить по серверу
-  const allowed = ['image/jpeg','image/png','image/webp'];
-  const maxPerFileBytes = 8 * 1024 * 1024;
+    const files = Array.from(event.target.files) as File[];
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxPerFileBytes = 8 * 1024 * 1024;
 
-  this.photos = files
-    .filter(f => allowed.includes(f.type) && f.size <= maxPerFileBytes)
-    .slice(0, 4);
-}
+    this.photos = files
+      .filter(f => allowed.includes(f.type) && f.size <= maxPerFileBytes)
+      .slice(0, 4);
+  }
 
-  // ------------------ SOUMISSION FORMULAIRE ------------------
+  // ------------------ ENVOI DU FORMULAIRE ------------------
   onSubmit(): void {
     this.error = '';
     this.message = '';
@@ -159,6 +166,8 @@ export class BienFormComponent implements OnInit {
 
     const payload = {
       ...this.bien,
+      type: this.selectedTypeId,
+      activite: this.selectedActiviteId,
       pays: this.selectedPays,
       ville: this.selectedVille,
     };
@@ -198,4 +207,3 @@ export class BienFormComponent implements OnInit {
     });
   }
 }
-
