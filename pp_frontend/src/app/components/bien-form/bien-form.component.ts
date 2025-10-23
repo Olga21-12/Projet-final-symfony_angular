@@ -120,6 +120,14 @@ export class BienFormComponent implements OnInit {
   }
 
   // ------------------ CONFORTS ------------------
+  onConfortChange(event: any, id: number): void {
+    if (event.target.checked) {
+      this.bien.conforts.push(id);
+    } else {
+      this.bien.conforts = this.bien.conforts.filter((c) => c !== id);
+    }
+  }
+  
   loadConforts(): void {
     this.confortService.getConforts().subscribe({
       next: (res) => (this.conforts = res),
