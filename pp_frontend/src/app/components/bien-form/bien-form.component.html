@@ -1,1 +1,90 @@
-<p>bien-form works!</p>
+<div class="container mt-4 mb-5">
+  <h2 class="text-center mb-4">{{ isEditMode ? 'Modifier le logement' : 'Ajouter un logement' }}</h2>
+
+  <div *ngIf="message" class="alert alert-success text-center">{{ message }}</div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <form (ngSubmit)="onSubmit()" #bienForm="ngForm">
+    <h4 class="mt-3">📍 Informations principales</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Adresse</label>
+        <input type="text" [(ngModel)]="bien.adresse" name="adresse" class="form-control" required />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Prix (€)</label>
+        <input type="number" [(ngModel)]="bien.prix" name="prix" class="form-control" required />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Surface (m²)</label>
+        <input type="number" [(ngModel)]="bien.surface" name="surface" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Nombre de chambres</label>
+        <input type="number" [(ngModel)]="bien.nombre_de_chambres" name="nombre_de_chambres" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Type</label>
+        <select [(ngModel)]="bien.type" name="type" class="form-select" required>
+          <option *ngFor="let t of types" [value]="t.id">{{ t.type }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Activité</label>
+        <select [(ngModel)]="bien.activite" name="activite" class="form-select" required>
+          <option *ngFor="let a of activites" [value]="a.id">{{ a.type_activite }}</option>
+        </select>
+      </div>
+    </div>
+
+    <h4 class="mt-3">🌍 Emplacement</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Pays</label>
+        <select [(ngModel)]="selectedPays" name="pays" class="form-select" (change)="onPaysChange($event)" required>
+          <option value="">Sélectionnez votre pays</option>
+          <option *ngFor="let p of paysList" [value]="p">{{ p }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3" *ngIf="selectedPays">
+        <label>Ville</label>
+        <select [(ngModel)]="selectedVille" name="ville" class="form-select" required>
+          <option value="">Sélectionnez votre ville</option>
+          <option *ngFor="let v of villes" [value]="v.id">{{ v.ville }}</option>
+        </select>
+      </div>
+    </div>
+
+    <h4 class="mt-3">🛋 Confort</h4>
+    <div class="col-12 mb-3">
+      <div class="form-check form-check-inline" *ngFor="let c of conforts">
+        <input class="form-check-input" type="checkbox" [value]="c.id" [(ngModel)]="bien.conforts" name="conforts" />
+        <label class="form-check-label">{{ c.name }}</label>
+      </div>
+    </div>
+
+    <h4 class="mt-3">📸 Photos</h4>
+    <div class="col-12 mb-3">
+      <input type="file" (change)="onPhotosSelected($event)" multiple class="form-control" accept="image/*" />
+      <small class="text-muted">Maximum 4 photos</small>
+    </div>
+
+    <h4 class="mt-3">📝 Description</h4>
+    <div class="col-12 mb-3">
+      <textarea [(ngModel)]="bien.description" name="description" rows="4" class="form-control"></textarea>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-info">
+        {{ isEditMode ? '💾 Enregistrer' : '➕ Ajouter le bien' }}
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" routerLink="/biens">Annuler</button>
+    </div>
+  </form>
+</div>

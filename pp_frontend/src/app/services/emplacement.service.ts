@@ -6,6 +6,7 @@ import { Emplacement } from '../models/emplacement';
 @Injectable({
   providedIn: 'root'
 })
+
 export class EmplacementService {
   private baseUrl = 'https://127.0.0.1:8000/api';
 

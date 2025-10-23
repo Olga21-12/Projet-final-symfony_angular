@@ -51,5 +51,45 @@ export class BienService {
   getBienById(id: number): Observable<Bien> {
     return this.http.get<Bien>(`${this.apiUrl}/${id}`);
   }
+
+  deleteBien(id: number): Observable<any> {
+    return this.http.delete(`${(this.apiUrl)}/${id}`);
+  }
+
+  createBien(data: any, photos: File[]): Observable<any> {
+  const formData = new FormData();
+
+  for (const key in data) {
+    if (data[key] !== undefined && data[key] !== null) {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((val) => formData.append(`${key}[]`, val));
+      } else {
+        formData.append(key, data[key]);
+      }
+    }
+  }
+
+    photos.forEach((photo) => formData.append('photos[]', photo));
+
+    return this.http.post(`${this.apiUrl}`, formData);
+  }
+
+  updateBien(id: number, data: any, photos: File[]): Observable<any> {
+    const formData = new FormData();
+
+    for (const key in data) {
+      if (data[key] !== undefined && data[key] !== null) {
+        if (Array.isArray(data[key])) {
+          data[key].forEach((val) => formData.append(${key}[], val));
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+    }
+
+    photos.forEach((photo) => formData.append('photos[]', photo));
+
+    return this.http.post(${this.apiUrl}/${id}?_method=PUT, formData);
+  }
 }
 
