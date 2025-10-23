@@ -9,6 +9,8 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { BienListComponent } from './pages/bien-list/bien-list.component';
 import { BienDetailComponent } from './pages/bien-detail/bien-detail.component';
+import { BienEditComponent } from './pages/bien-edit/bien-edit.component';
+import { BienCreeComponent } from './pages/bien-cree/bien-cree.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, title: 'Accueil' },
@@ -20,6 +22,7 @@ export const routes: Routes = [
     { path: 'verify-email', component: VerifyEmailComponent, title: 'Vérification Email' },
     { path: 'edit-profile', component: EditProfileComponent, title: 'Modifier le profil' },
     { path: 'biens', component: BienListComponent, title: 'Liste des Biens' },
-    { path: 'biens/:id', component: BienDetailComponent, title: 'Détails du Bien' }
-
+    { path: 'biens/:id', component: BienDetailComponent, title: 'Détails du Bien' },
+    { path: 'biens/:id/edit', component: BienEditComponent, title: 'Modifier le Bien' },
+    { path: 'biens/create', component: BienCreeComponent, title: 'Créer le Bien' }
 ];
