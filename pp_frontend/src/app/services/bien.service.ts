@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Bien {
   id: number;
@@ -21,7 +22,13 @@ export interface Bien {
   photos: string[];
   created_at: string;
   updated_at: string;
-  proprietaire: string;
+  proprietaire?: {
+    id: number;
+    nom: string;
+    prenom: string;
+    surnom: string;
+    email: string;
+  };
   created_ago: number;
 }
 
@@ -33,6 +40,16 @@ export class BienService {
 
   getAllBiens(): Observable<Bien[]> {
     return this.http.get<Bien[]>(this.apiUrl);
+  }
+
+  getTotalBiens(): Observable<number>{
+    return this.http.get<{ total: number }>(`${this.apiUrl}/count`).pipe(
+      map(response => response.total)
+    );
+  }
+
+  getBienById(id: number): Observable<Bien> {
+    return this.http.get<Bien>(`${this.apiUrl}/${id}`);
   }
 }
 

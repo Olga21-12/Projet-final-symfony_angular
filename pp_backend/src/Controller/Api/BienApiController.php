@@ -2,13 +2,16 @@
 
 namespace App\Controller\Api;
 
+
 use App\Entity\Bien;
 use App\Entity\TypesDeBien;
 use App\Entity\Confort;
 use App\Entity\Emplacement;
 use App\Entity\TypesActivite;
+use App\Model\SearchData;
 use App\Repository\BienRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,12 +22,10 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class BienApiController extends AbstractController
 {
-    // 1. LISTE DE TOUS LES BIENS
+   // 1. LISTE DE TOUS LES BIENS
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em,
-                          BienRepository $repo): JsonResponse
+    public function index(BienRepository $repo): JsonResponse
     {
-
         $biens = $repo->findAll();
 
         $data = array_map(function (Bien $bien) {
@@ -37,10 +38,8 @@ class BienApiController extends AbstractController
                 'nombre_de_chambres' => $bien->getNombreDeChambres(),
                 'disponibilite' => $bien->isDisponibilite(),
                 'luxe' => $bien->isLuxe(),
-                'created_at' => $bien->getCreatedAt()?->format('Y-m-d'),
-                'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
                 'type' => $bien->getType()?->getTypeDeBien(),
-                'activite' => $bien->getTypeActivite()?->getTypeActivite(),
+                'activite' => $bien->getTypeActivite()?->getNom(),
                 'proprietaire' => $bien->getUser()?->getSurnom() ?? 'Anonyme',
                 'created_ago' => $bien->getCreatedAt()?->diff(new \DateTime())->days,
                 'emplacement' => [
@@ -55,11 +54,21 @@ class BienApiController extends AbstractController
                     fn($photo) => '/uploads/biens/' . $photo->getImageName(),
                     $bien->getPhotos()->toArray()
                 ),
+                'created_at' => $bien->getCreatedAt()?->format('Y-m-d'),
+                'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
             ];
         }, $biens);
 
         return $this->json($data);
     }
+
+    // 2. COMPTE DES BIENS
+    #[Route('/count', name: 'count', methods: ['GET'])]
+        public function count(BienRepository $repo): JsonResponse
+        {
+            $count = $repo->count([]);
+            return $this->json(['total' => $count]);
+        }
 
     //  AFFICHAGE D’UN SEUL BIEN
     #[Route('/{id}', name: 'show', methods: ['GET'])]
@@ -82,11 +91,21 @@ class BienApiController extends AbstractController
             'luxe' => $bien->isLuxe(),
             'created_at' => $bien->getCreatedAt()?->format('Y-m-d'),
             'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
-            'type' => $bien->getType()?->getName(),
-            'activite' => $bien->getActivite()?->getName(),
-            'emplacement' => $bien->getEmplacement()?->getVille() . ', ' . $bien->getEmplacement()?->getPays(),
-            'conforts' => array_map(fn(Confort $c) => $c->getName(), $bien->getConforts()->toArray()),
+            'type' => $bien->getType()?->getTypeDeBien(),
+            'activite' => $bien->getTypeActivite()?->getNom(),
+            'emplacement' => [
+            'pays' => $bien->getEmplacement()?->getPays(),
+            'ville' => $bien->getEmplacement()?->getVille(),
+            ],
+            'conforts' => array_map(fn($c) => $c->getName(), $bien->getConfort()->toArray()),
             'photos' => array_map(fn($p) => '/uploads/biens/' . $p->getImageName(), $bien->getPhotos()->toArray()),
+            'proprietaire' => [
+                'id' => $bien->getUser()?->getId(),
+                'nom' => $bien->getUser()?->getNom(),
+                'prenom' => $bien->getUser()?->getPrenom(),
+                'surnom' => $bien->getUser()?->getSurnom(),
+                'email' => $bien->getUser()?->getEmail(),
+            ],
         ];
 
         return $this->json($data);

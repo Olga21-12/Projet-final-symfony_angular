@@ -37,11 +37,11 @@ user: any = null;
     this.router.navigate(['/login']);
   }
 
-  scrolled = false;
+ // scrolled = false;
 
   // слушаем событие прокрутки окна
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.scrolled = window.scrollY > 50;
-  }
+//  @HostListener('window:scroll', [])
+//  onWindowScroll() {
+//    this.scrolled = window.scrollY > 50;
+//  }
 }

@@ -1,5 +1,10 @@
 <div class="container mt-5">
   <h2 class="title text-center mb-4">Nos logements</h2>
+  <small class="text-muted">{{ totalBiens }} annonces trouvées</small>
+ <!-- 
+  Barre de recherche et Filtres
+ <app-bien-filter (filtersChange)="onFiltersChange($event)" (searchChange)="onSearch($event)"></app-bien-filter>-->
+
 
   <div *ngIf="loading" class="text-center mt-5">
     <div class="spinner-border text-info" role="status"></div>
@@ -11,9 +16,9 @@
   <div class="row" *ngIf="!loading && !error">
     <div class="col-md-4 mb-4" *ngFor="let bien of biens">
       <div class="card h-100 shadow-sm">
-        
+
         <h5 class="card-title">{{ bien.type }} — {{ bien.activite }}</h5>
-        
+
         <img
           [src]="'https://127.0.0.1:8000' + (bien.photos && bien.photos.length ? bien.photos[0] : '/uploads/biens/sans_photo.png')"
           class="card-img-top"
@@ -21,7 +26,7 @@
         />
 
         <div class="card-body">
-          
+
           <p class="card-text">{{ bien.description | truncate:60:true:'...' }}</p>
           <p><strong>{{ bien.prix | currency:'EUR' }}</strong></p>
           <p>
@@ -36,10 +41,19 @@
               ⏱ ajouté il y a {{ bien.created_ago }} jour{{ bien.created_ago > 1 ? 's' : '' }}
             </small>
           </div>
-          
+
           <a [routerLink]="['/biens', bien.id]" class="btn w-100">Voir plus</a>
         </div>
       </div>
     </div>
   </div>
+
+    <!-- 📄 Pagination
+    <app-paginator
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="changePage($event)">
+    </app-paginator>-->
+
+
 </div>

@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Bien;
+use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Bien>
@@ -16,28 +18,82 @@ class BienRepository extends ServiceEntityRepository
         parent::__construct($registry, Bien::class);
     }
 
-    //    /**
-    //     * @return Bien[] Returns an array of Bien objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Retourne une requête filtrée selon les paramètres donnés (pour la pagination)
+     */
+    public function searchBiensQuery(SearchData $data): Query
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.emplacement', 'e')->addSelect('e')
+            ->leftJoin('b.type', 't')->addSelect('t')
+            ->leftJoin('b.typeActivite', 'a')->addSelect('a')
+            ->leftJoin('b.confort', 'c')->addSelect('c')
+            ->leftJoin('b.photos', 'p')->addSelect('p')
+            ->leftJoin('b.user', 'u')->addSelect('u')
+            ->orderBy('b.createdAt', 'DESC');
 
-    //    public function findOneBySomeField($value): ?Bien
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        // Recherche textuelle (adresse ou description)
+        if (!empty($data->q)) {
+            $qb->andWhere('b.adresse LIKE :q OR b.description LIKE :q')
+               ->setParameter('q', '%' . $data->q . '%');
+        }
+
+        // Type (appartement, maison, etc.)
+        if (!empty($data->type)) {
+            $qb->andWhere('t.typeDeBien = :type')
+               ->setParameter('type', $data->type);
+        }
+
+        // Activité (location_courte, vente, etc.)
+        if (!empty($data->activite)) {
+            $qb->andWhere('a.typeActivite = :activite')
+               ->setParameter('activite', $data->activite);
+        }
+
+        // Pays
+        if (!empty($data->pays)) {
+            $qb->andWhere('e.pays = :pays')
+               ->setParameter('pays', $data->pays);
+        }
+
+        // Ville
+        if (!empty($data->ville)) {
+            $qb->andWhere('e.ville = :ville')
+               ->setParameter('ville', $data->ville);
+        }
+
+        // Chambres
+        if ($data->chambres > 0) {
+            $qb->andWhere('b.nombreDeChambres >= :chambres')
+               ->setParameter('chambres', $data->chambres);
+        }
+
+        // Prix
+        if (!empty($data->prixMin)) {
+            $qb->andWhere('b.prix >= :prixMin')
+               ->setParameter('prixMin', $data->prixMin);
+        }
+        if (!empty($data->prixMax)) {
+            $qb->andWhere('b.prix <= :prixMax')
+               ->setParameter('prixMax', $data->prixMax);
+        }
+
+        // Surface
+        if (!empty($data->surfaceMin)) {
+            $qb->andWhere('b.surface >= :surfaceMin')
+               ->setParameter('surfaceMin', $data->surfaceMin);
+        }
+        if (!empty($data->surfaceMax)) {
+            $qb->andWhere('b.surface <= :surfaceMax')
+               ->setParameter('surfaceMax', $data->surfaceMax);
+        }
+
+        // Conforts (TV, Internet, etc.)
+        if (!empty($data->conforts)) {
+            $qb->andWhere('c.name IN (:conforts)')
+                ->setParameter('conforts', $data->conforts);
+        }
+
+        return $qb->getQuery();
+    }
 }

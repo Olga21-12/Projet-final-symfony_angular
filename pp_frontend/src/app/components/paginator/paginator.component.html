@@ -1,0 +1,5 @@
+<div class="d-flex justify-content-center mt-4">
+  <button class="btn btn-outline-info me-2" (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1">◀</button>
+  <span class="align-self-center">Page {{ currentPage }} / {{ totalPages }}</span>
+  <button class="btn btn-outline-info ms-2" (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages">▶</button>
+</div>

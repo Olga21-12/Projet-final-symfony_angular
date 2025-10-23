@@ -42,7 +42,7 @@ class TypesActivite
         return $this->id;
     }
 
-    public function getTypeActivite(): ?string
+    public function getNom(): ?string
     {
         return $this->type_activite;
     }
