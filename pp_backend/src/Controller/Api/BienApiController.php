@@ -209,4 +209,98 @@ class BienApiController extends AbstractController
 
         return $this->json(['message' => 'Le logement a été supprimé avec succès ✅']);
     }
+
+#[Route('/{id}', name: 'update', methods: ['PUT','POST', 'GET'])]
+public function update(int $id, Request $request, EntityManagerInterface $em): JsonResponse
+{
+    /** @var Bien|null $bien */
+    $bien = $em->getRepository(Bien::class)->find($id);
+    if (!$bien) {
+        return $this->json(['error' => 'Bien introuvable'], 404);
+    }
+
+    $data  = $request->request->all();
+    $files = $request->files->all();
+
+    // --- Champs scalaires ---
+    if (isset($data['adresse']))               { $bien->setAdresse((string)$data['adresse']); }
+    if (isset($data['description']))           { $bien->setDescription($data['description'] !== '' ? (string)$data['description'] : null); }
+    if (isset($data['prix']) && is_numeric($data['prix']))                 { $bien->setPrix((float)$data['prix']); }
+    if (isset($data['surface']) && is_numeric($data['surface']))           { $bien->setSurface((float)$data['surface']); }
+    if (isset($data['nombre_de_chambres']) && is_numeric($data['nombre_de_chambres'])) {
+        $bien->setNombreDeChambres((int)$data['nombre_de_chambres']);
+    }
+    if (isset($data['disponibilite']))         { $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL)); }
+    if (isset($data['luxe']))                  { $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL)); }
+
+    // --- Relations: Type de bien ---
+    if (array_key_exists('type', $data)) {
+        if ($data['type'] === '' || $data['type'] === null) {
+            $bien->setType(null);
+        } else {
+            $type = $em->getRepository(TypesDeBien::class)->find((int)$data['type']);
+            if ($type) { $bien->setType($type); }
+        }
+    }
+
+    // --- Relations: Type d’activité ---
+    if (array_key_exists('activite', $data)) {
+        if ($data['activite'] === '' || $data['activite'] === null) {
+            $bien->setTypeActivite(null);
+        } else {
+            $act = $em->getRepository(TypesActivite::class)->find((int)$data['activite']);
+            if ($act) { $bien->setTypeActivite($act); }
+        }
+    }
+
+    // --- Relation: Emplacement (ожидаем ID города) ---
+    if (array_key_exists('ville', $data)) {
+        if ($data['ville'] === '' || $data['ville'] === null) {
+            $bien->setEmplacement(null);
+        } else {
+            $empl = $em->getRepository(Emplacement::class)->find((int)$data['ville']);
+            if ($empl) { $bien->setEmplacement($empl); }
+        }
+    }
+
+    // --- ManyToMany: Conforts (перезапись списка) ---
+    if (isset($data['conforts']) && is_array($data['conforts'])) {
+        // очистить текущие
+        foreach ($bien->getConfort() as $existing) {
+            $bien->removeConfort($existing);
+        }
+        // добавить присланные
+        foreach ($data['conforts'] as $confId) {
+            $conf = $em->getRepository(Confort::class)->find((int)$confId);
+            if ($conf) { $bien->addConfort($conf); }
+        }
+    }
+
+    // --- Photos: добавляем новые (старые не удаляем) ---
+    // Ожидаем поле 'photos[]' в FormData
+    if (!empty($files['photos']) && is_array($files['photos'])) {
+        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/biens';
+        if (!is_dir($uploadsDir)) { @mkdir($uploadsDir, 0777, true); }
+
+        foreach ($files['photos'] as $file) {
+            if ($file) {
+                $newFilename = uniqid() . '.' . $file->guessExtension();
+                try {
+                    $file->move($uploadsDir, $newFilename);
+                    $photo = new \App\Entity\Photo();
+                    $photo->setImageName($newFilename);
+                    $photo->setBien($bien);
+                    $em->persist($photo);
+                } catch (\Throwable $e) {
+                    return $this->json(['error' => 'Erreur lors du téléchargement d’une photo.'], 500);
+                }
+            }
+        }
+    }
+
+    $em->flush();
+
+    return $this->json(['message' => 'Bien mis à jour avec succès ✅', 'id' => $bien->getId()]);
+    }
+
 }
