@@ -44,7 +44,7 @@ export class BienDetailComponent implements OnInit {
 
   // Boutons d'action
   editBien(): void {
-    if (this.bien) this.router.navigate(['/biens/edit', this.bien.id]);
+    if (this.bien) this.router.navigate(['/biens', this.bien.id, 'edit']);
   }
 
   goBack(): void {

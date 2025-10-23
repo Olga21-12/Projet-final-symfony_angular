@@ -80,7 +80,7 @@ export class BienService {
     for (const key in data) {
       if (data[key] !== undefined && data[key] !== null) {
         if (Array.isArray(data[key])) {
-          data[key].forEach((val) => formData.append(${key}[], val));
+          data[key].forEach((val) => formData.append(`${key}[]`, val));
         } else {
           formData.append(key, data[key]);
         }
@@ -89,7 +89,7 @@ export class BienService {
 
     photos.forEach((photo) => formData.append('photos[]', photo));
 
-    return this.http.post(${this.apiUrl}/${id}?_method=PUT, formData);
+    return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
   }
 }
 
