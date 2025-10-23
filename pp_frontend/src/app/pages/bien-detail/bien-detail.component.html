@@ -3,28 +3,37 @@
 
   <div class="row">
     <!-- Colonne gauche (Photos) -->
-    <div class="col-md-6 text-center">
-      <div *ngIf="bien.photos && bien.photos.length > 1" id="carouselPhotos" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div *ngFor="let photo of bien.photos; let i = index" class="carousel-item" [class.active]="i === 0">
-            <img [src]="'https://127.0.0.1:8000' + photo" class="d-block w-100 rounded shadow-sm" alt="photo bien">
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselPhotos" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselPhotos" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
-      </div>
+<div class="col-md-6 text-center">
 
-      <img
-        *ngIf="!bien.photos || bien.photos.length === 1"
-        [src]="'https://127.0.0.1:8000' + (bien.photos?.[0] || '/uploads/biens/sans_photo.png')"
-        class="img-fluid rounded shadow-sm"
-        alt="photo bien"
-      />
+  <!-- Si plusieurs photos — carrousel -->
+  <div *ngIf="bien.photos && bien.photos.length > 1" id="carouselPhotos" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngFor="let photo of bien.photos; let i = index" class="carousel-item" [class.active]="i === 0">
+        <img
+          [src]="'https://127.0.0.1:8000' + photo"
+          class="d-block w-100 rounded shadow-sm"
+          alt="photo bien"
+          onerror="this.src='https://127.0.0.1:8000/uploads/biens/sans_photo.png'"
+        />
+      </div>
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPhotos" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselPhotos" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+    <!-- Si une seule photo ou aucune -->
+    <img
+      *ngIf="!bien.photos || bien.photos.length <= 1"
+      [src]="'https://127.0.0.1:8000' + (bien.photos?.[0] || '/uploads/biens/sans_photo.png')"
+      class="img-fluid rounded shadow-sm"
+      alt="photo bien"
+      onerror="this.src='https://127.0.0.1:8000/uploads/biens/sans_photo.png'"
+    />
+  </div>
 
     <!-- Colonne droite (Infos) -->
     <div class="col-md-6">
