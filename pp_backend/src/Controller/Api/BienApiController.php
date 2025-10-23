@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('/api/biens', name: 'api_biens_')]
 
@@ -210,7 +211,7 @@ class BienApiController extends AbstractController
         return $this->json(['message' => 'Le logement a été supprimé avec succès ✅']);
     }
 
-#[Route('/{id}', name: 'update', methods: ['PUT','POST', 'GET'])]
+#[Route('/{id}', name: 'update', methods: ['PUT','POST', 'POST'])]
 public function update(int $id, Request $request, EntityManagerInterface $em): JsonResponse
 {
     /** @var Bien|null $bien */
@@ -276,27 +277,66 @@ public function update(int $id, Request $request, EntityManagerInterface $em): J
         }
     }
 
-    // --- Photos: добавляем новые (старые не удаляем) ---
-    // Ожидаем поле 'photos[]' в FormData
-    if (!empty($files['photos']) && is_array($files['photos'])) {
-        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/biens';
-        if (!is_dir($uploadsDir)) { @mkdir($uploadsDir, 0777, true); }
+    // --- Photos: ajout de nouvelles images (max 4) ---
+$uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/biens';
+if (!is_dir($uploadsDir)) { @mkdir($uploadsDir, 0777, true); }
 
-        foreach ($files['photos'] as $file) {
-            if ($file) {
-                $newFilename = uniqid() . '.' . $file->guessExtension();
-                try {
-                    $file->move($uploadsDir, $newFilename);
-                    $photo = new \App\Entity\Photo();
-                    $photo->setImageName($newFilename);
-                    $photo->setBien($bien);
-                    $em->persist($photo);
-                } catch (\Throwable $e) {
-                    return $this->json(['error' => 'Erreur lors du téléchargement d’une photo.'], 500);
-                }
-            }
-        }
+// ⚠️ ВАЖНО: поле именно 'photos[]' на фронте → здесь читаем 'photos'
+$files = $request->files->get('photos');
+
+// Нормализуем в массив
+if ($files instanceof UploadedFile || $files === null) {
+    $files = $files ? [$files] : [];
+} elseif (!is_array($files)) {
+    return $this->json(['error' => 'Format de fichiers invalide.'], 400);
+}
+
+if (count($files) > 4) {
+    return $this->json(['error' => 'Maximum 4 photos autorisées.'], 400);
+}
+
+// Разрешённые mime-типы и лимит размера (например, 8 МБ на файл)
+$allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+$maxPerFileBytes = 8 * 1024 * 1024;
+
+foreach ($files as $idx => $file) {
+    if (!$file) { continue; }
+
+    // Если PHP вернул ошибку — покажем оригинальное сообщение
+    if (!$file->isValid()) {
+        return $this->json(['error' => 'Upload invalide: '.$file->getErrorMessage()], 400);
     }
+
+    // Тип
+    $mime = $file->getMimeType();
+    if (!in_array($mime, $allowedMime, true)) {
+        return $this->json(['error' => 'Type de fichier non supporté (autorisé: JPG, PNG, WEBP).'], 400);
+    }
+
+    // Размер
+    if ($file->getSize() > $maxPerFileBytes) {
+        return $this->json(['error' => 'Fichier trop volumineux (max 8 Mo par image).'], 400);
+    }
+
+    // Сохранение
+    $ext = $file->guessExtension() ?: 'jpg';
+    $newFilename = uniqid('bien_').'.'.$ext;
+
+    try {
+        $file->move($uploadsDir, $newFilename);
+
+        $photo = new \App\Entity\Photo();
+        $photo->setImageName($newFilename);
+        $photo->setBien($bien);
+        $em->persist($photo);
+
+    } catch (\Throwable $e) {
+    return $this->json([
+        'error' => 'Erreur interne : ' . $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ], 500);
+    }
+}
 
     $em->flush();
 
