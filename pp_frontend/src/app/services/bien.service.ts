@@ -53,7 +53,9 @@ export class BienService {
   }
 
   deleteBien(id: number): Observable<any> {
-    return this.http.delete(`${(this.apiUrl)}/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    return this.http.delete(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
   createBien(data: any, photos: File[]): Observable<any> {
@@ -71,7 +73,7 @@ export class BienService {
 
     photos.forEach((photo) => formData.append('photos[]', photo));
 
-    return this.http.post(`${this.apiUrl}`, formData);
+    return this.http.post(`${this.apiUrl}`, formData, { withCredentials: true });
   }
 
   updateBien(id: number, data: any, photos: File[]): Observable<any> {
@@ -91,13 +93,12 @@ export class BienService {
     formData.append('photos[]', file, file.name); // 👈 важно передать имя
   });
 
-  // Можно остаться на POST + _method, если роут разрешает methods: ['PUT','POST']
-  return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
-  // или: return this.http.put(`${this.apiUrl}/${id}`, formData);
+  return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData, { withCredentials: true });
 }
+
   getBiensByUserId(userId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
-}
+    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`, { withCredentials: true });
+  }
 
 }
 

@@ -20,12 +20,12 @@ export const routes: Routes = [
     { path: 'faq', component: FaqComponent, title: 'FAQ' },
     { path: 'login', component: LoginComponent, title: 'Login' },
     { path: 'register', component: RegisterComponent, title: 'S\'inscrire' },
-    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: 'Profile' },
+    { path: 'profile', component: ProfileComponent, title: 'Profile' },
     { path: 'verify-email', component: VerifyEmailComponent, title: 'Vérification Email' },
-    { path: 'edit-profile', component: EditProfileComponent, canActivate: [AuthGuard], title: 'Modifier le profil' },
+    { path: 'edit-profile', component: EditProfileComponent, title: 'Modifier le profil' },
     { path: 'biens', component: BienListComponent, title: 'Liste des Biens' },
-    { path: 'biens/create', component: BienCreeComponent, canActivate: [ProprietaireGuard], title: 'Créer le Bien' },
-    { path: 'biens/:id', component: BienDetailComponent, canActivate: [AuthGuard], title: 'Détails du Bien' },
-    { path: 'biens/:id/edit', component: BienEditComponent, canActivate: [ProprietaireGuard], title: 'Modifier le Bien' }
+    { path: 'biens/create', component: BienCreeComponent, title: 'Créer le Bien' },
+    { path: 'biens/:id', component: BienDetailComponent, title: 'Détails du Bien' },
+    { path: 'biens/:id/edit', component: BienEditComponent, title: 'Modifier le Bien' }
     
 ];

@@ -6,6 +6,7 @@ use App\Repository\TypesActiviteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TypesActiviteRepository::class)]
 #[ORM\Table(name: "types_activite")]
@@ -17,6 +18,7 @@ class TypesActivite
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['bien:read'])]
     private ?string $type_activite = null;
 
     /**
