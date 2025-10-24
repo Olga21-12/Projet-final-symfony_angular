@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,35 +14,16 @@ export class NavbarComponent implements OnInit {
 
 user: any = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser){
-      this.user = JSON.parse(storedUser);
-    }
-  }
-
-  loadUser() {
-    const storedUser = localStorage.getItem('user');
-    this.user = storedUser ? JSON.parse(storedUser) : null;
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
   }
 
   logout() {
-    // Suppression des données utilisateur
-    localStorage.removeItem('user');
-    localStorage.removeItem('isLoggedIn');
-    this.user = null;
-
-    // Redirection vers la page de connexion
+    this.authService.clearUser();
     this.router.navigate(['/login']);
   }
-
- // scrolled = false;
-
-  // слушаем событие прокрутки окна
-//  @HostListener('window:scroll', [])
-//  onWindowScroll() {
-//    this.scrolled = window.scrollY > 50;
-//  }
 }
