@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use App\Entity\Traits\Timestampable;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: BienRepository::class)]
 #[ORM\Table(name: "biens")]
@@ -21,11 +22,13 @@ class Bien
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['bien:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 8)]
+    #[Groups(['bien:read'])]
     private ?string $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -33,6 +36,7 @@ class Bien
 
     #[ORM\Column]
     #[Assert\NotBlank()]
+    #[Groups(['bien:read'])]
     private ?float $prix = null;
 
     #[ORM\Column]
@@ -42,9 +46,11 @@ class Bien
     private ?int $nombre_de_chambres = null;
 
     #[ORM\Column]
+    #[Groups(['bien:read'])]
     private ?bool $disponibilite = null;
 
     #[ORM\Column]
+    #[Groups(['bien:read'])]
     private ?bool $luxe = null;
 
     use Timestampable;
@@ -53,6 +59,7 @@ class Bien
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
+    #[Groups(['bien:read'])]
     private ?Emplacement $emplacement = null;
 
     /**
@@ -62,6 +69,7 @@ class Bien
     private Collection $photos;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
+    #[Groups(['bien:read'])]
     private ?TypesDeBien $type = null;
 
     /**
@@ -83,6 +91,7 @@ class Bien
     private Collection $offresVentes;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
+    #[Groups(['bien:read'])]
     private ?TypesActivite $typeActivite = null;
 
     public function __construct()

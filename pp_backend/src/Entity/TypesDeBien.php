@@ -6,6 +6,7 @@ use App\Repository\TypesDeBienRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TypesDeBienRepository::class)]
 #[ORM\Table(name: "types_de_bien")]
@@ -17,6 +18,7 @@ class TypesDeBien
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['bien:read'])]
     private ?string $type_de_bien = null;
 
     /**

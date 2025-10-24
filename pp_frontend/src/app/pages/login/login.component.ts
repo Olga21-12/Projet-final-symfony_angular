@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     login() {
   this.http.post('https://127.0.0.1:8000/api/login',
     { email: this.email, password: this.password },
-    { headers: { 'Content-Type': 'application/json' } } // 👈 важно!
+    { headers: { 'Content-Type': 'application/json' }, withCredentials: true } // 👈 важно!
   ).subscribe({
     next: (res: any) => {
       this.authService.setUser(res.user);

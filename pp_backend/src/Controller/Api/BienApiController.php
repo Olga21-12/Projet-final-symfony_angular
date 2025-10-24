@@ -355,7 +355,7 @@ foreach ($files as $idx => $file) {
     return $this->json(['message' => 'Bien mis à jour avec succès ✅', 'id' => $bien->getId()]);
     }
 
-    #[Route('/api/biens/user/{id}', name: 'biens_by_user', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'biens_by_user', methods: ['GET'])]
         public function getBiensByUser(EntityManagerInterface $em, int $id): JsonResponse
         {
             $biens = $em->getRepository(Bien::class)->findBy(['user' => $id]);

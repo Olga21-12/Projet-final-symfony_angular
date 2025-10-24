@@ -6,13 +6,31 @@
 
 <div *ngIf="!loading && biens.length > 0" class="row justify-content-center">
   <div *ngFor="let bien of biens" class="col-md-4 mb-4">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm h-100">
       <div class="card-body">
-        <h5>{{ bien.adresse }}</h5>
-        <p><strong>Prix :</strong> {{ bien.prix }} €</p>
-        <p><strong>Surface :</strong> {{ bien.surface }} m²</p>
-        <p><strong>Ville :</strong> {{ bien.ville }}</p>
-        <a [routerLink]="['/biens/edit', bien.id]" class="btn btn-sm btn-outline-primary">Modifier</a>
+        <h5 class="card-title">{{ bien.adresse }}</h5>
+        <p><strong>Prix :</strong> {{ bien.prix | number }} €</p>
+        <p><strong>Type :</strong> {{ bien.type?.type_de_bien }}</p>
+        <p><strong>Pays / Ville :</strong> {{ bien.emplacement?.pays }} / {{ bien.emplacement?.ville }}</p>
+        <p><strong>Activité :</strong> {{ bien.typeActivite?.type_activite }}</p>
+        <p>
+          <strong>Disponibilité :</strong>
+          <span [ngClass]="bien.disponibilite ? 'text-success' : 'text-danger'">
+            {{ bien.disponibilite ? 'Disponible' : 'Non disponible' }}
+          </span>
+        </p>
+
+        <div class="mt-3 d-flex justify-content-between">
+          <button class="btn btn-sm" (click)="viewBien(bien.id)">
+            👁️ Voir
+          </button>
+          <button class="btn btn-sm" (click)="editBien(bien.id)">
+            ✏️ Modifier
+          </button>
+          <button class="btn btn-sm" (click)="deleteBien(bien.id)">
+            🗑️ Supprimer
+          </button>
+        </div>
       </div>
     </div>
   </div>
