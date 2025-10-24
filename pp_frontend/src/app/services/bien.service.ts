@@ -95,5 +95,9 @@ export class BienService {
   return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData);
   // или: return this.http.put(`${this.apiUrl}/${id}`, formData);
 }
+  getBiensByUserId(userId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
+}
+
 }
 

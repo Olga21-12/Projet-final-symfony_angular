@@ -1,0 +1,19 @@
+<div *ngIf="loading" class="text-center">Chargement...</div>
+
+<div *ngIf="!loading && biens.length === 0" class="text-center text-muted">
+  Vous n'avez pas encore ajouté d'annonces.
+</div>
+
+<div *ngIf="!loading && biens.length > 0" class="row justify-content-center">
+  <div *ngFor="let bien of biens" class="col-md-4 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5>{{ bien.adresse }}</h5>
+        <p><strong>Prix :</strong> {{ bien.prix }} €</p>
+        <p><strong>Surface :</strong> {{ bien.surface }} m²</p>
+        <p><strong>Ville :</strong> {{ bien.ville }}</p>
+        <a [routerLink]="['/biens/edit', bien.id]" class="btn btn-sm btn-outline-primary">Modifier</a>
+      </div>
+    </div>
+  </div>
+</div>

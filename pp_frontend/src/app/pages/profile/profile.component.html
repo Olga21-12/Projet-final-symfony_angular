@@ -45,3 +45,56 @@
     <p>Chargement du profil...</p>
   </div>
 </ng-template>
+
+<!-- Section Onglets -->
+<div class="mt-5 profile-tabs" *ngIf="user">
+  <ul class="nav nav-tabs justify-content-center">
+    <!-- Réservé aux propriétaires -->
+    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'annonces'"
+        (click)="activeTab = 'annonces'"
+      >
+        🏡 Mes annonces
+      </a>
+    </li>
+
+    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'recherches'"
+        (click)="activeTab = 'recherches'"
+      >
+        💾 Mes recherches sauvegardées
+      </a>
+    </li>
+
+    <!-- Réservé au client -->
+    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'client'">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'recherches'"
+        (click)="activeTab = 'recherches'"
+      >
+        💾 Mes recherches sauvegardées
+      </a>
+    </li>
+  </ul>
+
+  <!-- Contenu de l'onglet -->
+  <div class="tab-content mt-4">
+    <!-- Mes annonces -->
+    <div *ngIf="activeTab === 'annonces'">
+      <app-mes-biens [userId]="user.id"></app-mes-biens>
+    </div>
+
+    <!-- Mes recherches enregistrées -->
+    <div *ngIf="activeTab === 'recherches'">
+      <p class="text-muted text-center">
+        (💡 Cette section sera bientôt disponible.)
+      </p>
+    </div>
+  </div>
+</div>
+
