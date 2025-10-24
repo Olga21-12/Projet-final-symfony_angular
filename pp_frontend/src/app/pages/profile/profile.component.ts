@@ -19,11 +19,21 @@ export class ProfileComponent implements OnInit{
   constructor(private userService: UserService, private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
-    const storedUser = localStorage.getItem('user');
+    if (localStorage.getItem('emailVerified') === 'true') {
+      this.message = '✅ Votre adresse e-mail a été confirmée avec succès !';
+      localStorage.removeItem('emailVerified');
+    }
+  
+  const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      this.loadUser(parsed.id);
-    } else{
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser?.id) {
+        this.loadUser(parsedUser.id);
+      } else {
+        console.warn('Aucun ID utilisateur trouvé');
+      }
+    } else {
+      console.warn('Aucun utilisateur en localStorage');
       this.router.navigate(['/login']);
     }
   }

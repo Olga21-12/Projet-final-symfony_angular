@@ -1,4 +1,7 @@
 <div class="container content-box mt-5 text-center" *ngIf="user; else loading">
+  <p *ngIf="message" class="alert alert-success text-center">
+    {{ message }}
+  </p>
   <h2 class="text-center title mb-4">Bienvenue, {{ user.surnom }} 🐾</h2>
 
   <div class="row justify-content-center align-items-center profile-layout">

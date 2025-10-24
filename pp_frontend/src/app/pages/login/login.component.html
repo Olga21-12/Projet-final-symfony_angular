@@ -1,7 +1,7 @@
+
 <div class="container content-box mt-5" style="max-width: 75%;">
   <h2 class="title text-center mb-4">Connexion</h2>
 
-  <div *ngIf="message" class="alert alert-success text-center">{{ message }}</div>
   <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
 
   <form (ngSubmit)="login()" novalidate>
