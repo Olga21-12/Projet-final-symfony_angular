@@ -17,3 +17,60 @@
 .profile-layout {
   gap: 2rem;
 }
+
+/* Onglets du profil */
+.profile-tabs {
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* --- Линия вкладок --- */
+.profile-tabs .nav-tabs {
+  border-bottom: 2px solid rgba(59, 46, 42, 0.15);
+  gap: 1rem;
+}
+
+/* --- Каждая вкладка --- */
+.profile-tabs .nav-link {
+  color: #3b2e2a;
+  background-color: rgba(255, 250, 245, 0.8);
+  border: none;
+  border-radius: 10px 10px 0 0;
+  padding: 0.8rem 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  text-transform: uppercase; /* 👑 делает как заглавие */
+}
+
+/* --- При наведении --- */
+.profile-tabs .nav-link:hover {
+  background-color: #ffe4cf;
+  color: teal;
+  transform: translateY(-2px);
+}
+
+/* --- Активная вкладка --- */
+.profile-tabs .nav-link.active {
+  background-color: teal;
+  color: white !important;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 128, 128, 0.3);
+  transform: translateY(-1px);
+}
+
+/* --- Контент под вкладками --- */
+.profile-tabs .tab-content {
+  background-color: rgba(255, 250, 245, 0.95);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+/* --- Курсор --- */
+.profile-tabs .nav-link {
+  cursor: pointer;
+}
