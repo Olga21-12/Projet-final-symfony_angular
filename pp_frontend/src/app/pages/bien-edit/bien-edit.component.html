@@ -2,6 +2,10 @@
   <app-bien-form [isEditMode]="true" [bien]="bienData"></app-bien-form>
 </div>
 
+<div class="text-end mt-3">
+  <button class="btn btn-secondary" (click)="goBack()">Annuler</button>
+</div>
+
 <ng-template #loading>
   <div class="text-center mt-5">
     <div class="spinner-border text-info" role="status"></div>

@@ -27,7 +27,7 @@ export class BienEditComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate([`/biens/${this.bienId}`]);
+    this.router.navigate([`/biens`]);
   }
 
   
