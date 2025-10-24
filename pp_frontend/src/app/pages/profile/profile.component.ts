@@ -1,3 +1,4 @@
+import { MesBiensComponent } from './../../components/mes-biens/mes-biens.component';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,15 +9,18 @@ import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MesBiensComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit{
   user!: User | null;
   message = '';
+  activeTab = '';
 
-  constructor(private userService: UserService, private router: Router, private http: HttpClient) {}
+  constructor(private userService: UserService, 
+              private router: Router, 
+              private http: HttpClient) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('emailVerified') === 'true') {
