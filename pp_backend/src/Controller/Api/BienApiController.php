@@ -211,10 +211,10 @@ class BienApiController extends AbstractController
         }
 
          //  Vérification : Seul le propriétaire peut supprimer
-        $user = $this->getUser();
-        if (!$user || $bien->getProprietaire() !== $user) {
-            return $this->json(['error' => 'Accès refusé — vous n’êtes pas le propriétaire.'], 403);
-        }
+    //    $user = $this->getUser();
+    //    if (!$user || $bien->getProprietaire() !== $user) {
+    //        return $this->json(['error' => 'Accès refusé — vous n’êtes pas le propriétaire.'], 403);
+    //    }
 
     // Supprimé de la base de données (les photos restent dans /uploads/biens)
         $em->remove($bien);
