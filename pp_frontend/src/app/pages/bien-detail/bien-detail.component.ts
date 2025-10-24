@@ -26,6 +26,10 @@ export class BienDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
+    if (this.bien && typeof this.bien.activite === 'string') {
+      this.bien.activite = { id: 0, type_activite: this.bien.activite };
+    }
+
     // Vérifions qui est l'auteur (depuis localStorage)
     const storedUser = localStorage.getItem('user');
     if (storedUser) this.userId = JSON.parse(storedUser).id;
@@ -41,6 +45,30 @@ export class BienDetailComponent implements OnInit {
       }
     });
   }
+
+  get libelleActivite(): string {
+  if (!this.bien) return '';
+  
+  const activite = this.bien.activite;
+  const type = (typeof activite === 'object') ? activite?.type_activite : activite;
+
+  return type === 'Vente' ? 'Acheter' : 'Louer';
+  }
+
+get libelleTypeEtActivite(): string {
+  if (!this.bien) return '';
+
+  const type = typeof this.bien.type === 'object'
+    ? this.bien.type?.type_de_bien
+    : this.bien.type;
+
+  const activite = typeof this.bien.activite === 'object'
+    ? this.bien.activite?.type_activite
+    : this.bien.activite;
+
+  return `${type ?? ''} - ${activite ?? ''}`;
+}
+
 
   // Boutons d'action
   editBien(): void {
@@ -73,4 +101,6 @@ export class BienDetailComponent implements OnInit {
     }
   });
 }
+
+
 }

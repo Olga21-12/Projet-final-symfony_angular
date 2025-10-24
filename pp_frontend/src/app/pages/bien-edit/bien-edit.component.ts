@@ -24,4 +24,6 @@ export class BienEditComponent implements OnInit {
       });
     }
   }
+
+  
 }

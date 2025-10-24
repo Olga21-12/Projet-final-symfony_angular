@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-
+use App\Entity\User;
 use App\Entity\Bien;
 use App\Entity\TypesDeBien;
 use App\Entity\Confort;
@@ -185,6 +185,12 @@ class BienApiController extends AbstractController
                         return $this->json(['error' => 'Erreur lors du téléchargement d’une photo.'], 500);
                     }
                 }
+            }
+        }
+        if (!empty($data['user_id'])) {
+            $user = $em->getRepository(User::class)->find($data['user_id']);
+            if ($user) {
+                $bien->setUser($user);
             }
         }
 

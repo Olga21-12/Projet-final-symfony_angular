@@ -27,8 +27,8 @@
         <button class="btn" (click)="deleteProfile()">🗑️ Supprimer mon compte</button>
       </div>
 
-      <div class="text-center mt-4" *ngIf="user?.role === 'ROLE_PROPRIETAIRE'">
-        <a routerLink="/biens/cree" class="btn btn-outline-info">
+      <div class="text-center mt-4" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
+        <a routerLink="/biens/create" class="btn btn-outline-info">
           🏠 Ajouter un logement
         </a>
       </div>

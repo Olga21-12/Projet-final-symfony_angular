@@ -1,5 +1,5 @@
 <div class="container mt-5" *ngIf="!loading && bien; else loadingTpl">
-  <h2 class="text-center mb-4 title">{{ bien.type }} - {{ bien.activite }} </h2>
+  <h2 class="text-center mb-4 title">{{ libelleTypeEtActivite }} </h2>
 
   <div class="row">
     <!-- Colonne gauche (Photos) -->
@@ -47,7 +47,7 @@
 
       <div class="mt-4">
         <button class="btn me-2">
-          {{ bien.activite === 'Vente' ? 'Acheter' : 'Louer' }}
+          {{ libelleActivite }}
         </button>
         <a href="mailto:{{ bien.proprietaire?.email }}" class="btn btn-outline-info">Contacter le propriétaire</a>
       </div>
