@@ -12,8 +12,8 @@ export interface Bien {
   nombre_de_chambres: number;
   disponibilite: boolean;
   luxe: boolean;
-  type: number | { id: number; type_de_bien: string };
-  activite: number | { id: number; type_activite: string };
+  type: number | { id: number; type_de_bien: string } | number;
+  activite: number | { id: number; type_activite: string } | number;
   emplacement: {
     pays: string;
     ville: string;

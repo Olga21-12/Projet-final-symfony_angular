@@ -54,6 +54,11 @@ class TypesActivite
         return $this;
     }
 
+    public function getTypeActivite(): ?string
+    {
+        return $this->type_activite;
+    }
+
     /**
      * @return Collection<int, Bien>
      */

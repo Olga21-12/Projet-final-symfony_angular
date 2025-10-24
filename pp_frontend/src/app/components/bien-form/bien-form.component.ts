@@ -1,5 +1,5 @@
 import { EmplacementService } from './../../services/emplacement.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BienService, Bien } from '../../services/bien.service';
@@ -14,7 +14,11 @@ import { ConfortService } from '../../services/confort.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './bien-form.component.html'
 })
-export class BienFormComponent implements OnInit {
+export class BienFormComponent implements OnInit, OnChanges {
+
+  currentUserId: number | null = null;
+
+  @Output() formSubmit = new EventEmitter<{ payload: any; photos: File[] }>();
 
   @Input() bien: Bien = {
     id: 0,
@@ -38,7 +42,6 @@ export class BienFormComponent implements OnInit {
   @Input() isEditMode = false;
 
   photos: File[] = [];
-
   message = '';
   error = '';
 
@@ -51,7 +54,6 @@ export class BienFormComponent implements OnInit {
   selectedPays = '';
   selectedVille = '';
 
-  // ✅ новые безопасные поля для ID типа и активности
   selectedTypeId: number | null = null;
   selectedActiviteId: number | null = null;
 
@@ -64,28 +66,43 @@ export class BienFormComponent implements OnInit {
     private confortService: ConfortService
   ) {}
 
+  // -----------------------------------
+  // 🔹 1. Инициализация пользователя и справочников
+  // -----------------------------------
   ngOnInit(): void {
-    // заполняем страны / типы / активности / комфорты
+    const storedUser = localStorage.getItem('user');
+    this.currentUserId = storedUser ? JSON.parse(storedUser).id : null;
+
     this.loadPays();
     this.loadTypes();
     this.loadActivites();
     this.loadConforts();
-
-    // если редактирование — подставляем страну / город / id
-    if (this.isEditMode && this.bien.emplacement) {
-      this.selectedPays = this.bien.emplacement.pays || '';
-      this.selectedVille = this.bien.emplacement.ville || '';
-      if (this.selectedPays) this.loadVilles(this.selectedPays);
-    }
-
-    // ✅ приводим type и activite к ID
-    this.selectedTypeId =
-      typeof this.bien.type === 'object' ? this.bien.type.id : (this.bien.type as number);
-    this.selectedActiviteId =
-      typeof this.bien.activite === 'object' ? this.bien.activite.id : (this.bien.activite as number);
   }
 
-  // ------------------ PAYS & VILLES ------------------
+  // -----------------------------------
+  // 🔹 2. Реакция на изменение входных данных (при редактировании)
+  // -----------------------------------
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['bien'] && this.bien) {
+      console.log('📦 Données du bien reçues:', this.bien);
+      // Подгрузка выбранных значений только после прихода bien
+      this.selectedTypeId =
+        typeof this.bien.type === 'object' ? this.bien.type.id : (this.bien.type as number);
+
+      this.selectedActiviteId =
+        typeof this.bien.activite === 'object' ? this.bien.activite.id : (this.bien.activite as number);
+
+      if (this.bien.emplacement) {
+        this.selectedPays = this.bien.emplacement.pays || '';
+        this.selectedVille = this.bien.emplacement.ville || '';
+        if (this.selectedPays) this.loadVilles(this.selectedPays);
+      }
+    }
+  }
+
+  // -----------------------------------
+  // 🔹 3. Справочники (страны, города, типы и т.д.)
+  // -----------------------------------
   loadPays(): void {
     this.emplacementService.getPays().subscribe({
       next: (res) => (this.paysList = res),
@@ -106,35 +123,40 @@ export class BienFormComponent implements OnInit {
     this.selectedVille = '';
     this.villes = [];
 
-    if (pays) {
-      this.loadVilles(pays);
-    }
+    if (pays) this.loadVilles(pays);
   }
 
-  // ------------------ TYPES ------------------
   loadTypes(): void {
-    this.typeService.getTypes().subscribe({
-      next: (res) => (this.types = res),
-      error: () => (this.error = 'Erreur lors du chargement des types.')
-    });
-  }
+  this.typeService.getTypes().subscribe({
+    next: (res) => {
+      this.types = res;
+      console.log('📘 Types reçus:', res);
 
-  // ------------------ ACTIVITÉS ------------------
-  loadActivites(): void {
-    this.activiteService.getActivites().subscribe({
-      next: (res) => (this.activites = res),
-      error: () => (this.error = 'Erreur lors du chargement des activités.')
-    });
-  }
+      // 💡 если уже есть выбранный тип — обновим его
+      if (this.bien.type && typeof this.bien.type === 'object') {
+        this.selectedTypeId = this.bien.type.id;
+        console.log('✅ Type synchronisé:', this.selectedTypeId);
+      }
+    },
+    error: () => (this.error = 'Erreur lors du chargement des types.')
+  });
+}
 
-  // ------------------ CONFORTS ------------------
-  onConfortChange(event: any, id: number): void {
-    if (event.target.checked) {
-      this.bien.conforts.push(id);
-    } else {
-      this.bien.conforts = this.bien.conforts.filter((c) => c !== id);
-    }
-  }
+loadActivites(): void {
+  this.activiteService.getActivites().subscribe({
+    next: (res) => {
+      this.activites = res;
+      console.log('📗 Activités reçues:', res);
+
+      // 💡 если уже есть выбранная activité — обновим её
+      if (this.bien.activite && typeof this.bien.activite === 'object') {
+        this.selectedActiviteId = this.bien.activite.id;
+        console.log('✅ Activité synchronisée:', this.selectedActiviteId);
+      }
+    },
+    error: () => (this.error = 'Erreur lors du chargement des activités.')
+  });
+}
 
   loadConforts(): void {
     this.confortService.getConforts().subscribe({
@@ -143,7 +165,17 @@ export class BienFormComponent implements OnInit {
     });
   }
 
-  // ------------------ PHOTOS ------------------
+  // -----------------------------------
+  // 🔹 4. Обработка чекбоксов и файлов
+  // -----------------------------------
+  onConfortChange(event: any, id: number): void {
+    if (event.target.checked) {
+      this.bien.conforts.push(id);
+    } else {
+      this.bien.conforts = this.bien.conforts.filter((c) => c !== id);
+    }
+  }
+
   onPhotosSelected(event: any): void {
     const files = Array.from(event.target.files) as File[];
     const allowed = ['image/jpeg', 'image/png', 'image/webp'];
@@ -154,7 +186,9 @@ export class BienFormComponent implements OnInit {
       .slice(0, 4);
   }
 
-  // ------------------ ENVOI DU FORMULAIRE ------------------
+  // -----------------------------------
+  // 🔹 5. Отправка формы
+  // -----------------------------------
   onSubmit(): void {
     this.error = '';
     this.message = '';
@@ -170,30 +204,15 @@ export class BienFormComponent implements OnInit {
       activite: this.selectedActiviteId,
       pays: this.selectedPays,
       ville: this.selectedVille,
+      user_id: this.currentUserId
     };
 
-    if (this.isEditMode) {
-      this.updateBien(payload);
-    } else {
-      this.createBien(payload);
-    }
+    this.formSubmit.emit({ payload, photos: this.photos });
   }
 
-  // ------------------ CRÉATION ------------------
-  private createBien(payload: any): void {
-    this.bienService.createBien(payload, this.photos).subscribe({
-      next: (res) => {
-        this.message = res.message || 'Bien ajouté avec succès ✅';
-        setTimeout(() => this.router.navigate(['/biens']), 1500);
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = err.error?.error || 'Erreur lors de l’ajout du bien.';
-      }
-    });
-  }
-
-  // ------------------ MISE À JOUR ------------------
+  // -----------------------------------
+  // 🔹 6. Обновление (если форма используется напрямую)
+  // -----------------------------------
   private updateBien(payload: any): void {
     this.bienService.updateBien(this.bien.id, payload, this.photos).subscribe({
       next: (res) => {

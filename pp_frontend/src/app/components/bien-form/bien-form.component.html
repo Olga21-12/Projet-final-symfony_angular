@@ -30,14 +30,14 @@
       <div class="col-md-6 mb-3">
         <label>Type</label>
         <select [(ngModel)]="selectedTypeId" name="type" class="form-select" required>
-          <option *ngFor="let t of types" [value]="t.id">{{ t.type_de_bien }}</option>
+          <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
         </select>
       </div>
 
       <div class="col-md-6 mb-3">
         <label>Activité</label>
         <select [(ngModel)]="selectedActiviteId" name="activite" class="form-select" required>
-          <option *ngFor="let a of activites" [value]="a.id">{{ a.type_activite }}</option>
+          <option *ngFor="let a of activites" [value]="a.id">{{ a.name }}</option>
         </select>
       </div>
     </div>
