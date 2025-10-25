@@ -1,0 +1,76 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+  <style>
+    .dashboard-wrapper {
+        padding: 2rem;
+    }
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .dashboard-header h1 {
+        font-weight: 600;
+        color: #027b8b;
+    }
+    .dashboard-header p {
+        color: #6c757d;
+    }
+    .card-stats {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        border-radius: 1rem;
+    }
+    .card-stats:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .card-stats h2 {
+        font-size: 2rem;
+        margin-bottom: 0;
+        color: #333;
+    }
+    .card-stats p {
+        color: #6c757d;
+        margin: 0;
+    }
+  </style>
+
+  <div class="dashboard-wrapper">
+      <div class="dashboard-header">
+          <h1>Bienvenue, {{ app.user.prenom }} 🐾</h1>
+          <p>Panneau d'administration du site PurrPalace</p>
+      </div>
+
+      <div class="row justify-content-center g-4">
+          <div class="col-md-3">
+              <div class="card card-stats text-center p-4 bg-light" onclick="window.location.href='{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController') }}'">
+                  <div class="fs-1 text-primary mb-2"><i class="fa fa-user"></i></div>
+                  <h2>{{ userCount }}</h2>
+                  <p>Utilisateurs</p>
+              </div>
+          </div>
+
+          <div class="col-md-3">
+              <div class="card card-stats text-center p-4 bg-light" onclick="window.location.href='{{ ea_url().setController('App\\Controller\\Admin\\BienCrudController') }}'">
+                  <div class="fs-1 text-success mb-2"><i class="fa fa-building"></i></div>
+                  <h2>{{ bienCount }}</h2>
+                  <p>Biens enregistrés</p>
+              </div>
+          </div>
+
+          <div class="col-md-3">
+              <div class="card card-stats text-center p-4 bg-light" onclick="window.location.href='{{ ea_url().setController('App\\Controller\\Admin\\ReservationCrudController') }}'">
+                  <div class="fs-1 text-danger mb-2"><i class="fa fa-calendar"></i></div>
+                  <h2>{{ reservationCount }}</h2>
+                  <p>Réservations</p>
+              </div>
+          </div>
+      </div>
+
+      <footer class="text-center mt-5 text-muted small">
+          © {{ "now"|date("Y") }} PurrPalace — Administration
+      </footer>
+  </div>
+{% endblock %}
