@@ -14,18 +14,34 @@ use App\Entity\Reservation;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdminDashboardController extends AbstractDashboardController
 {
+
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        // При входе в /admin можно сразу перенаправлять, например, на пользователей:
-        return $this->redirectToRoute('admin_user_crud_index');
-        // Или, если хочешь видеть саму панель:
-        // return parent::index();
+        // реальные данные
+        $userCount = $this->em->getRepository(User::class)->count([]);
+        $bienCount = $this->em->getRepository(Bien::class)->count([]);
+        $reservationCount = $this->em->getRepository(Reservation::class)->count([]);
+
+        return $this->render('admin/dashboard.html.twig', [
+            'userCount' => $userCount,
+            'bienCount' => $bienCount,
+            'reservationCount' => $reservationCount,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
