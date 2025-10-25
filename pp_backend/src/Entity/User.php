@@ -496,4 +496,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return sprintf('%s %s (%s)', $this->prenom, $this->nom, $this->email);
     }
+
+    private ?string $plainPassword = null;
+
+        public function getPlainPassword(): ?string
+        {
+            return $this->plainPassword;
+        }
+
+        public function setPlainPassword(?string $plainPassword): self
+        {
+            $this->plainPassword = $plainPassword;
+            return $this;
+        }
 }
