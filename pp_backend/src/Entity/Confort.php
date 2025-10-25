@@ -107,4 +107,9 @@ class Confort
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->nom ?? $this->type_activite ?? $this->ville ?? 'Non défini';
+    }
 }

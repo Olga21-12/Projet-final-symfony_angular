@@ -120,4 +120,9 @@ class TypesActivite
 
         return $this;
     }
+
+    public function __toString(): string
+        {
+            return $this->getTypeActivite() ?? 'Activité non définie';
+        }
 }

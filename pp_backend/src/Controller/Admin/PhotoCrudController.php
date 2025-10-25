@@ -4,9 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Photo;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PhotoCrudController extends AbstractCrudController
 {
@@ -15,14 +16,22 @@ class PhotoCrudController extends AbstractCrudController
         return Photo::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
+        yield AssociationField::new('bien', 'Bien lié')->autocomplete();
+
+        yield TextField::new('imageFile', 'Téléverser la photo')
+            ->setFormType(VichImageType::class)
+            ->onlyOnForms()
+            ->setFormTypeOptions([
+                'required' => false,
+                'allow_delete' => false,
+                'download_uri' => false,
+            ]);
+
+        yield ImageField::new('imageName', 'Aperçu')
+            ->setBasePath('/uploads/biens/')
+            ->onlyOnIndex()
+            ->setRequired(false);
     }
-    */
 }
