@@ -15,14 +15,13 @@ class TypesActiviteCrudController extends AbstractCrudController
         return TypesActivite::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            IdField::new('id')->hideOnForm(),
+            TextField::new('type_activite', 'Type d’activité')
+                ->setHelp('Exemple : Vente, Location courte, Location longue, etc.')
+                ->setRequired(true),
         ];
     }
-    */
 }

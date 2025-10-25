@@ -17,7 +17,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
-
 class BienCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -50,10 +49,20 @@ class BienCrudController extends AbstractCrudController
         yield BooleanField::new('disponibilite', 'Disponible');
         yield BooleanField::new('luxe', 'Luxe');
 
-    //    yield AssociationField::new('confort', 'Conforts')->onlyOnForms()->setRequired(false);
+        yield AssociationField::new('confort', 'Conforts')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+                'multiple' => true,
+                'expanded' => true, // чекбоксы
+            ])
+            ->onlyOnForms();
 
-        yield CollectionField::new('photos', 'Galerie')
-            ->setTemplatePath('admin/fields/photos.html.twig')
+        yield CollectionField::new('confort', 'Conforts')
+            ->setTemplatePath('admin/fields/conforts.html.twig')
+            ->onlyOnDetail();    
+
+        yield CollectionField::new('confort', 'Conforts')
+            ->setTemplatePath('admin/fields/conforts.html.twig')
             ->onlyOnDetail();
         
         //  Dates

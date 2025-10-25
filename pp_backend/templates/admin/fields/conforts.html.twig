@@ -1,0 +1,13 @@
+{% set value = value ?? field.value ?? [] %}
+
+{% if value is not empty %}
+  <ul style="display: flex; flex-wrap: wrap; gap: 8px; padding-left: 0;">
+    {% for confort in value %}
+      <li style="list-style: none; padding: 4px 10px; border-radius: 6px;">
+        {{ confort.name }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <span style="color: #999;">Aucun confort</span>
+{% endif %}
