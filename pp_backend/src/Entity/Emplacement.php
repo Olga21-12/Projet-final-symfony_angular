@@ -187,6 +187,7 @@ class Emplacement
     public function __toString(): string
     {
         return sprintf('%s - %s', $this->pays ?? 'Pays inconnu', $this->ville ?? 'Ville inconnue');
+        return $this->getPays().' - '.$this->getVille();
     }
 
 }

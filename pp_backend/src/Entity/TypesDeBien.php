@@ -112,4 +112,9 @@ class TypesDeBien
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->getTypeDeBien() ?? 'Type non défini';
+    }
 }

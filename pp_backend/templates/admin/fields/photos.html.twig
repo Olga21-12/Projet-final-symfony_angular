@@ -1,0 +1,15 @@
+{% set value = value ?? field.value ?? [] %}
+
+{% if value is not empty %}
+  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    {% for photo in value %}
+      {% if photo.imageName %}
+        <img src="{{ asset('uploads/biens/' ~ photo.imageName) }}"
+             alt="photo"
+             style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
+      {% endif %}
+    {% endfor %}
+  </div>
+{% else %}
+  <span style="color: #999;">Aucune photo</span>
+{% endif %}

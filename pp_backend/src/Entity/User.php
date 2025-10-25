@@ -495,6 +495,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return sprintf('%s %s (%s)', $this->prenom, $this->nom, $this->email);
+        return $this->getPrenom().' '.$this->getNom().' ('.$this->getEmail().')';
     }
 
     private ?string $plainPassword = null;
