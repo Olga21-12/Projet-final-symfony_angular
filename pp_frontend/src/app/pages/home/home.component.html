@@ -2,7 +2,9 @@
   <div class="overlay-container">
     <div class="container content-box p-4">
 
-      <h1 class="title mb-3">Bienvenue</h1>
+      <h1 class="title mb-3">Bienvenue
+        <span *ngIf="user">, {{ user.prenom }} 🐾</span>
+      </h1>
 
       <p class="site-slogan mb-4">
         Du château de la reine à la cabane dans les marais, vous trouverez tout chez nous !
