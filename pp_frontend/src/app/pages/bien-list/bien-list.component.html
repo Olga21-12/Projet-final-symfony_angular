@@ -15,38 +15,34 @@
 
   <div class="row" *ngIf="!loading && !error">
     <div class="col-md-4 mb-4" *ngFor="let bien of biens">
+      
       <div class="card h-100 shadow-sm">
-
         <h5 class="card-title">{{ bien.type }} — {{ bien.activite }}</h5>
 
         <img
           [src]="'https://127.0.0.1:8000' + (bien.photos && bien.photos.length ? bien.photos[0] : '/uploads/biens/sans_photo.png')"
           class="card-img-top"
-          alt="Photo du bien"
-        />
+          alt="Photo du bien"/>
 
         <div class="card-body">
-
           <p class="card-text" [innerHTML]="bien.description | truncate:100:true:'...':true"></p>
+          
+        <div class="card-info mt-2">  
           <p><strong>{{ bien.prix | currency:'EUR' }}</strong></p>
           <p>
             {{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}<br />
             {{ bien.surface }} m² • {{ bien.nombre_de_chambres }} chambres
           </p>
 
-          <!-- PROPRIÉTAIRE -->
-          <div class="d-flex justify-content-between align-items-center mt-2">
-            <small class="text-secondary">
-              🧍 {{ bien.proprietaire }}<br />
-              ⏱ ajouté il y a {{ bien.created_ago }} jour{{ bien.created_ago > 1 ? 's' : '' }}
-            </small>
-          </div>
-
-          <button class="btn w-100" (click)="voirBien(bien.id)">Voir plus</button>
-        </div>
-      </div>
+          <small class="text-secondary d-block">
+        🧍 {{ bien.proprietaire }}<br />
+        ⏱ ajouté il y a {{ bien.created_ago }} jour{{ bien.created_ago > 1 ? 's' : '' }}
+      </small>
     </div>
+
+    <button class="btn btn-info mt-auto" (click)="voirBien(bien.id)">Voir plus</button>
   </div>
+</div>
 
     <!-- 📄 Pagination
     <app-paginator

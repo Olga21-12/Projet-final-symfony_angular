@@ -1,0 +1,14 @@
+.card-body .btn {
+  flex: 1;
+  margin: 0 4px;
+  font-size: 0.85rem;
+  padding: 4px 6px; 
+}
+
+.card-body .btn:first-child {
+  margin-left: 0;
+}
+
+.card-body .btn:last-child {
+  margin-right: 0;
+}
