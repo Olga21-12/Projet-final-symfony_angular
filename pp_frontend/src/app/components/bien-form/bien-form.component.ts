@@ -67,7 +67,7 @@ export class BienFormComponent implements OnInit, OnChanges {
   ) {}
 
   // -----------------------------------
-  // 🔹 1. Инициализация пользователя и справочников
+  // Initialisation de l'utilisateur et des répertoires
   // -----------------------------------
   ngOnInit(): void {
     const storedUser = localStorage.getItem('user');
@@ -80,12 +80,12 @@ export class BienFormComponent implements OnInit, OnChanges {
   }
 
   // -----------------------------------
-  // 🔹 2. Реакция на изменение входных данных (при редактировании)
+  // Réaction aux modifications des données d'entrée (lors de l'édition)
   // -----------------------------------
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['bien'] && this.bien) {
       console.log('📦 Données du bien reçues:', this.bien);
-      // Подгрузка выбранных значений только после прихода bien
+      // Chargement des valeurs sélectionnées uniquement après l'arrivée du bien
       this.selectedTypeId =
         typeof this.bien.type === 'object' ? this.bien.type.id : (this.bien.type as number);
 
@@ -97,11 +97,17 @@ export class BienFormComponent implements OnInit, OnChanges {
         this.selectedVille = this.bien.emplacement.ville || '';
         if (this.selectedPays) this.loadVilles(this.selectedPays);
       }
+
+      if (this.bien.conforts && this.bien.conforts.length > 0) {
+      this.bien.conforts = this.bien.conforts.map((c: any) =>
+        typeof c === 'object' ? c.id : c
+      );
     }
   }
+}
 
   // -----------------------------------
-  // 🔹 3. Справочники (страны, города, типы и т.д.)
+  // Chargement des listes (pays, villes, types, activités, conforts)
   // -----------------------------------
   loadPays(): void {
     this.emplacementService.getPays().subscribe({
@@ -132,7 +138,7 @@ export class BienFormComponent implements OnInit, OnChanges {
       this.types = res;
       console.log('📘 Types reçus:', res);
 
-      // 💡 если уже есть выбранный тип — обновим его
+      // S'il existe déjà un type sélectionné, nous le mettrons à jour
       if (this.bien.type && typeof this.bien.type === 'object') {
         this.selectedTypeId = this.bien.type.id;
         console.log('✅ Type synchronisé:', this.selectedTypeId);
@@ -148,7 +154,7 @@ loadActivites(): void {
       this.activites = res;
       console.log('📗 Activités reçues:', res);
 
-      // 💡 если уже есть выбранная activité — обновим её
+      // S'il existe déjà une activité sélectionnée, mettez-la à jour
       if (this.bien.activite && typeof this.bien.activite === 'object') {
         this.selectedActiviteId = this.bien.activite.id;
         console.log('✅ Activité synchronisée:', this.selectedActiviteId);
@@ -166,7 +172,7 @@ loadActivites(): void {
   }
 
   // -----------------------------------
-  // 🔹 4. Обработка чекбоксов и файлов
+  //  Gestion des conforts et photos
   // -----------------------------------
   onConfortChange(event: any, id: number): void {
     if (event.target.checked) {
@@ -187,7 +193,7 @@ loadActivites(): void {
   }
 
   // -----------------------------------
-  // 🔹 5. Отправка формы
+  //  Soumission du formulaire
   // -----------------------------------
   onSubmit(): void {
     this.error = '';
@@ -198,6 +204,7 @@ loadActivites(): void {
       return;
     }
 
+    // Envoie la structure correcte pour le backend Symfony
     const payload = {
       ...this.bien,
       type: this.selectedTypeId,
@@ -207,12 +214,11 @@ loadActivites(): void {
       user_id: this.currentUserId
     };
 
+    console.log('🚀 Données envoyées au backend:', payload);
+
     this.formSubmit.emit({ payload, photos: this.photos });
   }
 
-  // -----------------------------------
-  // 🔹 6. Обновление (если форма используется напрямую)
-  // -----------------------------------
   private updateBien(payload: any): void {
     this.bienService.updateBien(this.bien.id, payload, this.photos).subscribe({
       next: (res) => {
@@ -225,6 +231,4 @@ loadActivites(): void {
       }
     });
   }
-
-  
 }

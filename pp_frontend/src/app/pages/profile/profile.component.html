@@ -25,16 +25,17 @@
       <p><strong>Date d'inscription :</strong> {{ user.date_inscription }}</p>
       <p><strong>Dernière modification :</strong> {{ user.date_modification }}</p>
 
-      <div class="mt-4 text-center">
-        <button class="btn me-2" (click)="editProfile()">✏️ Modifier mon compte</button>
-        <button class="btn" (click)="deleteProfile()">🗑️ Supprimer mon compte</button>
-      </div>
+    <div class="mt-4 d-flex flex-wrap justify-content-center gap-2">
+      <button class="btn btn-outline-primary" (click)="editProfile()">✏️ Modifier mon compte</button>
+      <button class="btn btn-outline-danger" (click)="deleteProfile()">🗑️ Supprimer mon compte</button>
+    </div>
 
-      <div class="text-center mt-4" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
-        <a routerLink="/biens/create" class="btn btn-outline-info">
-          🏠 Ajouter un logement
-        </a>
-      </div>
+    <div class="mt-4 d-flex flex-wrap justify-content-center gap-2" *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'">
+      <a routerLink="/biens/create" class="btn btn-outline-info">🏠 Ajouter un logement</a>
+
+      <a *ngIf="user?.role?.toLowerCase() === 'admin'" href="https://127.0.0.1:8000/admin" target="_blank" class="btn btn-outline-secondary">
+      ⚙️ Accéder au panneau admin</a>
+    </div>
 
     </div>
   </div>
@@ -49,8 +50,12 @@
 <!-- Section Onglets -->
 <div class="mt-5 profile-tabs" *ngIf="user">
   <ul class="nav nav-tabs justify-content-center">
-    <!-- Réservé aux propriétaires -->
-    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
+
+    <!-- Onglets visibles pour propriétaire et admin -->
+    <li
+      class="nav-item"
+      *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'"
+    >
       <a
         class="nav-link"
         [class.active]="activeTab === 'annonces'"
@@ -60,7 +65,10 @@
       </a>
     </li>
 
-    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'propriétaire'">
+    <li
+      class="nav-item"
+      *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'"
+    >
       <a
         class="nav-link"
         [class.active]="activeTab === 'recherches'"

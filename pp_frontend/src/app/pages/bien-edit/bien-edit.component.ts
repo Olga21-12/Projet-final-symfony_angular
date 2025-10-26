@@ -13,6 +13,8 @@ import { BienService } from '../../services/bien.service';
 export class BienEditComponent implements OnInit {
   bienData: any = null;
   bienId!: number;
+  message = '';
+  error = '';
 
   constructor(private route: ActivatedRoute, private bienService: BienService, private router: Router) {}
 
@@ -24,6 +26,27 @@ export class BienEditComponent implements OnInit {
         error: (err) => console.error('Erreur chargement bien', err),
       });
     }
+  }
+
+  onFormSubmit(event: { payload: any; photos: File[] }): void {
+    this.error = '';
+    this.message = '';
+
+    if (!this.bienData?.id) {
+      this.error = 'Aucun identifiant de logement trouvé.';
+      return;
+    }
+
+    this.bienService.updateBien(this.bienData.id, event.payload, event.photos).subscribe({
+      next: (res) => {
+        this.message = res.message || 'Bien mis à jour avec succès ✅';
+        setTimeout(() => this.router.navigate(['/biens']), 1500);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour du bien:', err);
+        this.error = err.error?.error || 'Erreur lors de la mise à jour.';
+      }
+    });
   }
 
   goBack(): void {

@@ -7,9 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use App\Entity\Traits\Timestampable;
 
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: "photos")]
 #[Vich\Uploadable]
 class Photo
@@ -53,9 +55,14 @@ class Photo
         return $this->imageFile;
     }
 
+    use Timestampable;
+
     public function setImageFile(?File $imageFile = null): void
 {
     $this->imageFile = $imageFile;
+    if ($imageFile !== null) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
 }
 
     public function getImageName(): ?string
@@ -77,4 +84,6 @@ class Photo
     {
         $this->imageSize = $imageSize;
     }
+    
+    
 }

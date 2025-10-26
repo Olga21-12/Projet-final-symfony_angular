@@ -1,5 +1,5 @@
 <div class="container mt-5" *ngIf="bienData; else loading">
-  <app-bien-form [isEditMode]="true" [bien]="bienData"></app-bien-form>
+  <app-bien-form [isEditMode]="true" [bien]="bienData" (formSubmit)="onFormSubmit($event)"></app-bien-form>
 </div>
 
 <div class="text-end mt-3">

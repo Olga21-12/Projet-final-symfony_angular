@@ -27,7 +27,7 @@
 
         <div class="card-body">
 
-          <p class="card-text">{{ bien.description | truncate:60:true:'...' }}</p>
+          <p class="card-text" [innerHTML]="bien.description | truncate:100:true:'...':true"></p>
           <p><strong>{{ bien.prix | currency:'EUR' }}</strong></p>
           <p>
             {{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}<br />

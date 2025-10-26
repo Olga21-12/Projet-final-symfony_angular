@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Contact;
+use App\Entity\Photo;
 
 class AdminDashboardController extends AbstractDashboardController
 {
@@ -69,15 +70,20 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::section('Localisation');
         yield MenuItem::linkToCrud('Emplacements', 'fa fa-map-marker', Emplacement::class);
 
+        yield MenuItem::section('Photos');
+        yield MenuItem::linkToCrud('Photos', 'fa fa-image', Photo::class);
+
         yield MenuItem::section('Offres et Réservations');
         yield MenuItem::linkToCrud('Offres de vente', 'fa fa-tag', OffresVente::class);
         yield MenuItem::linkToCrud('Recherches', 'fa fa-search', Recherche::class);
         yield MenuItem::linkToCrud('Réservations', 'fa fa-calendar', Reservation::class);
 
+        yield MenuItem::section('Messages');
+        yield MenuItem::linkToCrud('Messages reçus', 'fa fa-envelope', Contact::class);
+
         yield MenuItem::section('Retour');
         yield MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', 'http://localhost:4200'); 
         yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
-        yield MenuItem::section('Messages');
-        yield MenuItem::linkToCrud('Messages reçus', 'fa fa-envelope', Contact::class);
+        
     }
 }

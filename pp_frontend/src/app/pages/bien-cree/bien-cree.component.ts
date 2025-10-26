@@ -33,4 +33,9 @@ export class BienCreeComponent {
     }
   });
 }
+
+goBack(): void {
+    this.router.navigate([`/biens`]);
+  }
+  
 }

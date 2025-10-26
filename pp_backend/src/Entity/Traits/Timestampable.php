@@ -3,10 +3,10 @@ namespace App\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Timestampable{
-    #[ORM\Column(name: "date_inscription")]
+    #[ORM\Column(name: "date_inscription", type: "datetime_immutable", nullable: false)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(name: "date_modification")]
+    #[ORM\Column(name: "date_modification", type: "datetime_immutable", nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function getCreatedAt(): ?\DateTimeImmutable
