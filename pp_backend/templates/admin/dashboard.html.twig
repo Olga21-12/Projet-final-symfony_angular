@@ -61,6 +61,15 @@
           </div>
 
           <div class="col-md-3">
+                <div class="card card-stats text-center p-4 bg-light"
+                    onclick="window.location.href='{{ ea_url().setController('App\\Controller\\Admin\\ContactCrudController') }}'">
+                    <div class="fs-1 text-warning mb-2"><i class="fa fa-envelope"></i></div>
+                    <h2>{{ unreadMessages }}</h2>
+                    <p>Messages</p>
+                </div>
+            </div>
+
+          <div class="col-md-3">
               <div class="card card-stats text-center p-4 bg-light" onclick="window.location.href='{{ ea_url().setController('App\\Controller\\Admin\\ReservationCrudController') }}'">
                   <div class="fs-1 text-danger mb-2"><i class="fa fa-calendar"></i></div>
                   <h2>{{ reservationCount }}</h2>

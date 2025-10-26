@@ -14,10 +14,10 @@ use App\Entity\Reservation;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Contact;
 
 class AdminDashboardController extends AbstractDashboardController
 {
@@ -32,14 +32,16 @@ class AdminDashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        // реальные данные
+        
         $userCount = $this->em->getRepository(User::class)->count([]);
         $bienCount = $this->em->getRepository(Bien::class)->count([]);
         $reservationCount = $this->em->getRepository(Reservation::class)->count([]);
+        $unreadMessages = $this->em->getRepository(Contact::class)->count(['isRead' => false]);
 
         return $this->render('admin/dashboard.html.twig', [
             'userCount' => $userCount,
             'bienCount' => $bienCount,
+            'unreadMessages' => $unreadMessages,
             'reservationCount' => $reservationCount,
         ]);
     }
@@ -73,7 +75,9 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Réservations', 'fa fa-calendar', Reservation::class);
 
         yield MenuItem::section('Retour');
-        yield MenuItem::linkToRoute('Retour au site', 'fa fa-arrow-left', 'app_home'); // заменишь на свой маршрут Angular/домашней страницы
+        yield MenuItem::linkToUrl('Retour au site', 'fa fa-arrow-left', 'http://localhost:4200'); 
         yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
+        yield MenuItem::section('Messages');
+        yield MenuItem::linkToCrud('Messages reçus', 'fa fa-envelope', Contact::class);
     }
 }

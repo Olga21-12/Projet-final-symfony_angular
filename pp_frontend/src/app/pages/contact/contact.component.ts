@@ -10,10 +10,5 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
 })
 export class ContactComponent {
 
-messageSent = false;
 
-  onSubmit() {
-    this.messageSent = true;
-    setTimeout(() => (this.messageSent = false), 4000); // исчезнет через 4 секунды
-  }
 }
