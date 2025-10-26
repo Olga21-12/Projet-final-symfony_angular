@@ -61,8 +61,8 @@ class BienCrudController extends AbstractCrudController
             ->setTemplatePath('admin/fields/conforts.html.twig')
             ->onlyOnDetail();    
 
-        yield CollectionField::new('confort', 'Conforts')
-            ->setTemplatePath('admin/fields/conforts.html.twig')
+        yield CollectionField::new('photos', 'Galerie')
+            ->setTemplatePath('admin/fields/photos.html.twig')
             ->onlyOnDetail();
         
         //  Dates

@@ -39,3 +39,10 @@ body{
   text-align: center;
   letter-spacing: 1px;
 }
+
+.sous-titre{
+  font-family: "Chelsea Market", system-ui;
+  color: #3b2e2a;
+  text-align: center;
+  font-size: 1.2rem;
+}
