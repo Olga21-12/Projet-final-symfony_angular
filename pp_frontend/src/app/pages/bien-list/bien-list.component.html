@@ -42,7 +42,7 @@
             </small>
           </div>
 
-          <a [routerLink]="['/biens', bien.id]" class="btn w-100">Voir plus</a>
+          <button class="btn w-100" (click)="voirBien(bien.id)">Voir plus</button>
         </div>
       </div>
     </div>

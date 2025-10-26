@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router) {}
 
-  canActivate(): boolean {
-    const user = this.authService.getUser();
+  canActivate(): boolean | UrlTree {
+    const user = localStorage.getItem('user');
+
     if (user) {
-      return true;
-    } else {
-      this.router.navigate(['/login'], { 
-        queryParams: { message: 'Vous devez être connecté pour accéder à cette page.' } 
-      });
-      return false;
+      return true; // L'utilisateur est connecté - accès accordé
     }
+
+    // 🚫 L'utilisateur est un invité - redirection vers la connexion
+    alert('Pour voir le détail, veuillez vous connecter ou vous inscrire.');
+    return this.router.createUrlTree(['/login']);
   }
 }
