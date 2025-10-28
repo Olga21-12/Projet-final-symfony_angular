@@ -99,9 +99,26 @@
 
     <!-- Mes recherches enregistrées -->
     <div *ngIf="activeTab === 'recherches'">
-      <p class="text-muted text-center">
-        (💡 Cette section sera bientôt disponible.)
-      </p>
+      <div *ngIf="recherches.length === 0" class="text-muted text-center">
+        Aucune recherche enregistrée pour le moment.
+      </div>
+
+      <div class="list-group">
+        <div *ngFor="let r of recherches" class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ r.mot_cle || '—' }}</strong>
+              <span *ngIf="r.ville"> • {{ r.ville }}</span>
+              <div class="text-muted small mt-1">
+                💰 {{ r.budget_max || '—' }} € |
+                📐 {{ r.surface_max || '—' }} m² |
+                🛏️ {{ r.nombre_de_chambres || 0 }} chambres
+              </div>
+            </div>
+            <small class="text-secondary">{{ r.created_at }}</small>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

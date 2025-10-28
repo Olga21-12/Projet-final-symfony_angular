@@ -1,5 +1,23 @@
-<div class="d-flex justify-content-center mt-4">
-  <button class="btn btn-outline-info me-2" (click)="changePage(currentPage - 1)" [disabled]="currentPage <= 1">◀</button>
-  <span class="align-self-center">Page {{ currentPage }} / {{ totalPages }}</span>
-  <button class="btn btn-outline-info ms-2" (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages">▶</button>
+<div class="pagination-wrapper d-flex justify-content-center align-items-center mt-5 mb-4">
+  <button
+    class="btn-nav me-3"
+    (click)="changePage(currentPage - 1)"
+    [disabled]="currentPage <= 1"
+    title="Page précédente">
+    ‹
+  </button>
+
+  <div class="page-indicator px-3 py-2 rounded-pill shadow-sm">
+    <span class="text-muted">Page</span>
+    <strong class="mx-2 text-info">{{ currentPage }}</strong>
+    <span class="text-muted">/ {{ totalPages }}</span>
+  </div>
+
+  <button
+    class="btn-nav ms-3"
+    (click)="changePage(currentPage + 1)"
+    [disabled]="currentPage >= totalPages"
+    title="Page suivante">
+    ›
+  </button>
 </div>

@@ -7,6 +7,7 @@ use App\Repository\RechercheRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RechercheRepository::class)]
 #[ORM\Table(name: "recherches")]
@@ -20,41 +21,51 @@ class Recherche
     use Timestampable;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['bien:read'])]
     private ?string $mot_cle = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bien:read'])]
     private ?float $budget_max = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bien:read'])]
     private ?float $surface_max = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bien:read'])]
     private ?int $nombre_de_chambres = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['bien:read'])]
     private ?string $ville = null;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
+    #[Groups(['bien:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
     #[ORM\JoinColumn(nullable: true)]
+    //#[Groups(['bien:read'])]
     private ?Emplacement $emplacement = null;
 
     /**
      * @var Collection<int, TypesDeBien>
      */
     #[ORM\ManyToMany(targetEntity: TypesDeBien::class, inversedBy: 'recherches')]
+  //  #[Groups(['bien:read'])]
     private Collection $typesDeBien;
 
     /**
      * @var Collection<int, Confort>
      */
     #[ORM\ManyToMany(targetEntity: Confort::class, inversedBy: 'recherches')]
+   // #[Groups(['bien:read'])]
     private Collection $confort;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
     #[ORM\JoinColumn(nullable: true)]
+   // #[Groups(['bien:read'])]
     private ?TypesActivite $typeActivite = null;
 
     public function __construct()

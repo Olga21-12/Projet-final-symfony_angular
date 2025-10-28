@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BienFilterComponent } from './bien-filter.component';
+import { ModalLouerComponent } from './modal-louer.component';
 
-describe('BienFilterComponent', () => {
-  let component: BienFilterComponent;
-  let fixture: ComponentFixture<BienFilterComponent>;
+describe('ModalLouerComponent', () => {
+  let component: ModalLouerComponent;
+  let fixture: ComponentFixture<ModalLouerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BienFilterComponent]
+      imports: [ModalLouerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BienFilterComponent);
+    fixture = TestBed.createComponent(ModalLouerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

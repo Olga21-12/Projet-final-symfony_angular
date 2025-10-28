@@ -54,5 +54,18 @@
   text-align: justify;
 }
 
+.country-link {
+  color: #836a62;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.country-link:hover {
+  color: #281f1c;
+  text-decoration: underline;
+}
+
+
 
 

@@ -6,6 +6,7 @@ use App\Entity\Traits\Timestampable;
 use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 #[ORM\Table(name: "reservations")]
@@ -17,17 +18,21 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['bien:read'])]
     private ?\DateTime $date_debut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['bien:read'])]
     private ?\DateTime $date_fin = null;
 
     use Timestampable;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[Groups(['bien:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[Groups(['bien:read'])]
     private ?Bien $bien = null;
 
     public function getId(): ?int

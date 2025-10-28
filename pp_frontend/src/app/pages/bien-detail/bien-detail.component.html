@@ -39,16 +39,30 @@
     <div class="col-md-6">
       <h4 class="text-secondary mb-3">{{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}</h4>
       <p><strong>Adresse :</strong> {{ bien.adresse }}</p>
-      <p><strong>Prix :</strong> {{ bien.prix | currency:'EUR' }} </p>
+      <p class="mb-1">
+        <strong>Prix :</strong>
+        {{ bien.prix | priceByActivity: bien.activite_key }}
+      </p>
+
+      <!--
+      <p class="mb-2">
+        <strong>Disponibilité :</strong>
+        <span [class.text-success]="bien.disponible" [class.text-danger]="!bien.disponible">
+          {{ bien.disponible ? 'Disponible' : 'Non disponible' }}
+        </span>
+      </p>      
+      -->
+
       <p><strong>Surface :</strong> {{ bien.surface }} m²</p>
       <p><strong>Chambres :</strong> {{ bien.nombre_de_chambres }} </p>
       <p><strong>Confort :</strong> {{ bien.conforts.join(', ') || 'Aucun' }}</p>
       <p><strong>Propriétaire :</strong> {{ bien.proprietaire?.surnom }} </p>
 
       <div class="mt-4">
-        <button class="btn me-2">
+        <button class="btn btn-info me-2" (click)="onAction()">
           {{ libelleActivite }}
         </button>
+
         <a href="mailto:{{ bien.proprietaire?.email }}" class="btn btn-outline-info">Contacter le propriétaire</a>
       </div>
 
@@ -73,6 +87,13 @@
     <button *ngIf="bien.proprietaire?.id === userId" class="btn " (click)="deleteBien()">🗑 Supprimer</button>
   </div>
 </div>
+
+  <app-modal-louer
+    [visible]="showModal"
+    [bienId]="bien?.id!"
+    (closed)="closeModal()"
+    (success)="onSuccess()">
+  </app-modal-louer>
 
 <ng-template #loadingTpl>
   <div class="text-center mt-5">

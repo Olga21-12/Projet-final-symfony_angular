@@ -12,7 +12,8 @@ import { ConfortService } from '../../services/confort.service';
   selector: 'app-bien-form',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './bien-form.component.html'
+  templateUrl: './bien-form.component.html',
+  styleUrl: './bien-form.component.css'
 })
 export class BienFormComponent implements OnInit, OnChanges {
 

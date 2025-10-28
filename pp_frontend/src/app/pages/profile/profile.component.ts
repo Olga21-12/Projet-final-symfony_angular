@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
+import { Recherche, RechercheService } from '../../services/recherche.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,9 +19,12 @@ export class ProfileComponent implements OnInit{
   message = '';
   activeTab = '';
 
+  recherches: Recherche[] = [];
+
   constructor(private userService: UserService, 
               private router: Router, 
-              private http: HttpClient) {}
+              private http: HttpClient,
+              private rechercheService: RechercheService) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('emailVerified') === 'true') {
@@ -33,6 +37,7 @@ export class ProfileComponent implements OnInit{
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser?.id) {
         this.loadUser(parsedUser.id);
+        this.loadRecherches();
       } else {
         console.warn('Aucun ID utilisateur trouvé');
       }
@@ -54,6 +59,18 @@ export class ProfileComponent implements OnInit{
     }
   });
 }
+
+// Загружаем сохранённые поиски
+  loadRecherches() {
+    this.rechercheService.getUserRecherches().subscribe({
+      next: (data) => {
+        this.recherches = data;
+      },
+      error: () => {
+        this.recherches = [];
+      }
+    });
+  }
 
   editProfile() {
     this.router.navigate(['/edit-profile']);

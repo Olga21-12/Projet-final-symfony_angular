@@ -8,10 +8,11 @@ use App\Entity\TypesDeBien;
 use App\Entity\Confort;
 use App\Entity\Emplacement;
 use App\Entity\TypesActivite;
-use App\Model\SearchData;
 use App\Repository\BienRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,9 +25,20 @@ class BienApiController extends AbstractController
 {
    // 1. LISTE DE TOUS LES BIENS
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(BienRepository $repo): JsonResponse
+    public function index(Request $request, BienRepository $repo, PaginatorInterface $paginator): JsonResponse
     {
-        $biens = $repo->findAll();
+
+        $page = max(1, (int)$request->query->get('page', 1));
+        $limit = (int)$request->query->get('limit', 6); 
+
+        $query = $repo->createQueryBuilder('b')
+            ->leftJoin('b.emplacement', 'e')->addSelect('e')
+            ->leftJoin('b.type', 't')->addSelect('t')
+            ->leftJoin('b.typeActivite', 'a')->addSelect('a')
+            ->orderBy('b.createdAt', 'DESC')
+            ->getQuery();
+
+        $pagination = $paginator->paginate($query, $page, $limit);
 
         $data = array_map(function (Bien $bien) {
             return [
@@ -57,9 +69,17 @@ class BienApiController extends AbstractController
                 'created_at' => $bien->getCreatedAt()?->format('Y-m-d'),
                 'updated_at' => $bien->getUpdatedAt()?->format('Y-m-d'),
             ];
-        }, $biens);
+        }, iterator_to_array($pagination->getItems()));
 
-        return $this->json($data);
+        return $this->json([
+            'items' => $data,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'totalPages' => ceil($pagination->getTotalItemCount() / $limit),
+                'totalItems' => $pagination->getTotalItemCount(),
+            ],
+        ]);
     }
 
     // 2. COMPTE DES BIENS
@@ -71,7 +91,7 @@ class BienApiController extends AbstractController
         }
 
     //  AFFICHAGE D’UN SEUL BIEN
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(EntityManagerInterface $em, int $id): JsonResponse
     {
         $bien = $em->getRepository(Bien::class)->find($id);
@@ -119,8 +139,15 @@ class BienApiController extends AbstractController
 
     // 3. CRÉATION D’UN NOUVEAU BIEN
     #[Route('', name: 'create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em): JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, Security $security): JsonResponse
     {
+
+        $user = $security->getUser();
+
+        if (!$user || !in_array('ROLE_PROPRIETAIRE', $user->getRoles(), true)) {
+            return new JsonResponse(['error' => 'Accès refusé : seuls les propriétaires peuvent ajouter un bien.'], 403);
+        }
+
         $data = $request->request->all();
         $files = $request->files->all();
 
@@ -222,95 +249,105 @@ class BienApiController extends AbstractController
         return $this->json(['message' => 'Le logement a été supprimé avec succès ✅']);
     }
 
-#[Route('/{id}', name: 'update', methods: ['PUT','POST', 'POST'])]
-public function update(int $id, Request $request, EntityManagerInterface $em): JsonResponse
-{
-    /** @var Bien|null $bien */
-    $bien = $em->getRepository(Bien::class)->find($id);
-    if (!$bien) {
-        return $this->json(['error' => 'Bien introuvable'], 404);
-    }
-
-    $data  = $request->request->all();
-    $files = $request->files->all();
-
-    // --- Champs scalaires ---
-    if (isset($data['adresse']))               { $bien->setAdresse((string)$data['adresse']); }
-    if (isset($data['description']))           { $bien->setDescription($data['description'] !== '' ? (string)$data['description'] : null); }
-    if (isset($data['prix']) && is_numeric($data['prix']))                 { $bien->setPrix((float)$data['prix']); }
-    if (isset($data['surface']) && is_numeric($data['surface']))           { $bien->setSurface((float)$data['surface']); }
-    if (isset($data['nombre_de_chambres']) && is_numeric($data['nombre_de_chambres'])) {
-        $bien->setNombreDeChambres((int)$data['nombre_de_chambres']);
-    }
-    if (isset($data['disponibilite']))         { $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL)); }
-    if (isset($data['luxe']))                  { $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL)); }
-
-    // --- Relations: Type de bien ---
-    if (array_key_exists('type', $data)) {
-        if ($data['type'] === '' || $data['type'] === null) {
-            $bien->setType(null);
-        } else {
-            $type = $em->getRepository(TypesDeBien::class)->find((int)$data['type']);
-            if ($type) { $bien->setType($type); }
+    #[Route('/{id}', name: 'update', methods: ['PUT','POST', 'POST'])]
+    public function update(int $id, Request $request, EntityManagerInterface $em, Security $security): JsonResponse
+    {
+        /** @var Bien|null $bien */
+        $bien = $em->getRepository(Bien::class)->find($id);
+        if (!$bien) {
+            return $this->json(['error' => 'Bien introuvable'], 404);
         }
-    }
 
-    // --- Relations: Type d’activité ---
-    if (array_key_exists('activite', $data)) {
-        if ($data['activite'] === '' || $data['activite'] === null) {
-            $bien->setTypeActivite(null);
-        } else {
-            $act = $em->getRepository(TypesActivite::class)->find((int)$data['activite']);
-            if ($act) { $bien->setTypeActivite($act); }
-        }
-    }
+        $data  = $request->request->all();
+        $files = $request->files->all();
 
-    // --- Relation: Emplacement (ожидаем ID города) ---
-    if (array_key_exists('ville', $data)) {
-        if ($data['ville'] === '' || $data['ville'] === null) {
-            $bien->setEmplacement(null);
-        } else {
-            $empl = $em->getRepository(Emplacement::class)->find((int)$data['ville']);
-            if ($empl) { $bien->setEmplacement($empl); }
+        // --- Champs scalaires ---
+        if (isset($data['adresse'])){ 
+            $bien->setAdresse((string)$data['adresse']); 
         }
-    }
+        if (isset($data['description'])){ 
+            $bien->setDescription($data['description'] !== '' ? (string)$data['description'] : null); 
+        }
+        if (isset($data['prix']) && is_numeric($data['prix'])){ 
+            $bien->setPrix((float)$data['prix']); 
+        }
+        if (isset($data['surface']) && is_numeric($data['surface'])){ 
+            $bien->setSurface((float)$data['surface']); 
+        }
+        if (isset($data['nombre_de_chambres']) && is_numeric($data['nombre_de_chambres'])){
+            $bien->setNombreDeChambres((int)$data['nombre_de_chambres']);
+        }
+        if (isset($data['disponibilite'])){ 
+            $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL)); 
+        }
+        if (isset($data['luxe'])){
+            $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL)); 
+        }
 
-    // --- ManyToMany: Conforts (перезапись списка) ---
-    if (isset($data['conforts']) && is_array($data['conforts'])) {
-        // очистить текущие
-        foreach ($bien->getConfort() as $existing) {
-            $bien->removeConfort($existing);
+        // --- Relations: Type de bien ---
+        if (array_key_exists('type', $data)) {
+            if ($data['type'] === '' || $data['type'] === null) {
+                $bien->setType(null);
+            } else {
+                $type = $em->getRepository(TypesDeBien::class)->find((int)$data['type']);
+                if ($type) { $bien->setType($type); }
+            }
         }
-        // добавить присланные
-        foreach ($data['conforts'] as $confId) {
-            $conf = $em->getRepository(Confort::class)->find((int)$confId);
-            if ($conf) { $bien->addConfort($conf); }
+
+        // --- Relations: Type d’activité ---
+        if (array_key_exists('activite', $data)) {
+            if ($data['activite'] === '' || $data['activite'] === null) {
+                $bien->setTypeActivite(null);
+            } else {
+                $act = $em->getRepository(TypesActivite::class)->find((int)$data['activite']);
+                if ($act) { $bien->setTypeActivite($act); }
+            }
         }
-    }
+
+        // --- Relation: Emplacement (ожидаем ID города) ---
+        if (array_key_exists('ville', $data)) {
+            if ($data['ville'] === '' || $data['ville'] === null) {
+                $bien->setEmplacement(null);
+            } else {
+                $empl = $em->getRepository(Emplacement::class)->find((int)$data['ville']);
+                if ($empl) { $bien->setEmplacement($empl); }
+            }
+        }
+
+        // --- ManyToMany: Conforts (перезапись списка) ---
+        if (isset($data['conforts']) && is_array($data['conforts'])) {
+            // очистить текущие
+            foreach ($bien->getConfort() as $existing) {
+                $bien->removeConfort($existing);
+            }
+            // добавить присланные
+            foreach ($data['conforts'] as $confId) {
+                $conf = $em->getRepository(Confort::class)->find((int)$confId);
+                if ($conf) { $bien->addConfort($conf); }
+            }
+        }
 
     // --- Photos: ajout de nouvelles images (max 4) ---
-$uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/biens';
-if (!is_dir($uploadsDir)) { @mkdir($uploadsDir, 0777, true); }
+        $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/biens';
+        if (!is_dir($uploadsDir)) { @mkdir($uploadsDir, 0777, true); }
 
-// ⚠️ ВАЖНО: поле именно 'photos[]' на фронте → здесь читаем 'photos'
-$files = $request->files->get('photos');
+        $files = $request->files->get('photos');
 
-// Нормализуем в массив
-if ($files instanceof UploadedFile || $files === null) {
-    $files = $files ? [$files] : [];
-} elseif (!is_array($files)) {
-    return $this->json(['error' => 'Format de fichiers invalide.'], 400);
-}
+        if ($files instanceof UploadedFile || $files === null) {
+            $files = $files ? [$files] : [];
+        } elseif (!is_array($files)) {
+            return $this->json(['error' => 'Format de fichiers invalide.'], 400);
+        }
 
-if (count($files) > 4) {
-    return $this->json(['error' => 'Maximum 4 photos autorisées.'], 400);
-}
+        if (count($files) > 4) {
+            return $this->json(['error' => 'Maximum 4 photos autorisées.'], 400);
+        }
 
-// Разрешённые mime-типы и лимит размера (например, 8 МБ на файл)
-$allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
-$maxPerFileBytes = 8 * 1024 * 1024;
+        // Разрешённые mime-типы и лимит размера (например, 8 МБ на файл)
+        $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+        $maxPerFileBytes = 8 * 1024 * 1024;
 
-foreach ($files as $idx => $file) {
+    foreach ($files as $idx => $file) {
     if (!$file) { continue; }
 
     // Если PHP вернул ошибку — покажем оригинальное сообщение
@@ -355,11 +392,121 @@ foreach ($files as $idx => $file) {
     }
 
     #[Route('/user/{id}', name: 'biens_by_user', methods: ['GET'])]
-        public function getBiensByUser(EntityManagerInterface $em, int $id): JsonResponse
+        public function getBiensByUser(EntityManagerInterface $em, 
+                                       int $id,
+                                       Request $request,
+                                       PaginatorInterface $paginator): JsonResponse
         {
             $biens = $em->getRepository(Bien::class)->findBy(['user' => $id]);
             return $this->json($biens, 200, [], ['groups' => 'bien:read']);
         }
 
+// COURTE DURÉE
+#[Route('/{id}/short-rent', name: 'short_rent', methods: ['POST'])]
+public function shortRent(int $id, Request $request, EntityManagerInterface $em, Security $security): JsonResponse
+{
+    $bien = $em->getRepository(Bien::class)->find($id);
+    if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
+
+    $user = $security->getUser();
+    if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+
+    $data = json_decode($request->getContent(), true);
+    $days = (int)($data['durationDays'] ?? 1);
+
+    $now = new \DateTime();
+    $end = (clone $now)->modify("+{$days} days");
+
+    // vérifier disponibilité
+    $active = $em->getRepository(\App\Entity\Reservation::class)->createQueryBuilder('r')
+        ->select('COUNT(r.id)')
+        ->where('r.bien = :bien')
+        ->andWhere('r.date_debut <= :now')
+        ->andWhere('r.date_fin >= :now')
+        ->setParameter('bien', $bien)
+        ->setParameter('now', $now)
+        ->getQuery()
+        ->getSingleScalarResult();
+
+    if ($active > 0) return $this->json(['message' => 'Ce bien n\'est pas disponible.'], 409);
+
+    $res = new \App\Entity\Reservation();
+    $res->setBien($bien);
+    $res->setUser($user);
+    $res->setDateDebut($now);
+    $res->setDateFin($end);
+
+    $em->persist($res);
+    $em->flush();
+
+    return $this->json(['message' => 'Réservation courte durée confirmée ✅']);
+}
+
+    // LONGUE DURÉE
+    #[Route('/{id}/long-rent', name: 'long_rent', methods: ['POST'])]
+    public function longRent(int $id, EntityManagerInterface $em, Security $security): JsonResponse
+    {
+        $bien = $em->getRepository(Bien::class)->find($id);
+        if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
+
+        $user = $security->getUser();
+        if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+
+        $now = new \DateTime();
+
+        // vérifier s'il y a déjà une réservation longue
+        $active = $em->getRepository(\App\Entity\Reservation::class)->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.bien = :bien')
+            ->andWhere('r.date_fin IS NULL')
+            ->setParameter('bien', $bien)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($active > 0) return $this->json(['message' => 'Ce bien est déjà loué.'], 409);
+
+        $res = new \App\Entity\Reservation();
+        $res->setBien($bien);
+        $res->setUser($user);
+        $res->setDateDebut($now);
+
+        $em->persist($res);
+        $em->flush();
+
+        return $this->json(['message' => 'Location longue durée confirmée ✅']);
+    }
+
+    // VENTE
+    #[Route('/{id}/buy', name: 'buy', methods: ['POST'])]
+    public function buy(int $id, EntityManagerInterface $em, Security $security): JsonResponse
+    {
+        $bien = $em->getRepository(Bien::class)->find($id);
+        if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
+
+        $user = $security->getUser();
+        if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+
+        // vérifier s'il est déjà vendu
+        $sold = $em->getRepository(\App\Entity\OffresVente::class)->createQueryBuilder('v')
+            ->select('COUNT(v.id)')
+            ->where('v.bien = :bien')
+            ->andWhere('v.statut IN (:st)')
+            ->setParameter('bien', $bien)
+            ->setParameter('st', ['vendu', 'réservé'])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($sold > 0) return $this->json(['message' => 'Ce bien est déjà vendu.'], 409);
+
+        $vente = new \App\Entity\OffresVente();
+        $vente->setBien($bien);
+        $vente->setUser($user);
+        $vente->setStatut('vendu');
+
+        $em->persist($vente);
+        $em->flush();
+
+        return $this->json(['message' => 'Vous avez acheté ce bien ✅']);
+    }
 
 }

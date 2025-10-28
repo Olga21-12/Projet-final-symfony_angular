@@ -32,6 +32,7 @@ class Bien
     private ?string $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['bien:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -40,9 +41,11 @@ class Bien
     private ?float $prix = null;
 
     #[ORM\Column]
+    #[Groups(['bien:read'])]
     private ?float $surface = null;
 
     #[ORM\Column]
+    #[Groups(['bien:read'])]
     private ?int $nombre_de_chambres = null;
 
     #[ORM\Column]
@@ -56,6 +59,7 @@ class Bien
     use Timestampable;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
+    #[Groups(['bien:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]
@@ -66,6 +70,7 @@ class Bien
      * @var Collection<int, Photo>
      */
     #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'bien')]
+    #[Groups(['bien:read'])]
     private Collection $photos;
 
     #[ORM\ManyToOne(inversedBy: 'biens')]

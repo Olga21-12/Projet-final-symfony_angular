@@ -7,39 +7,33 @@ namespace App\Model;
  */
 class SearchData
 {
-    /** Recherche textuelle */
-    public string $q = '';
+    /**  Recherche textuelle */
+    public ?string $q = null;
 
-    /** Numéro de page pour la pagination */
+    /**  Numéro de page pour la pagination */
     public int $page = 1;
 
-    /** Type de bien (chambre, appartement, maison, etc.) */
+    /**  Types de biens (plusieurs possibles) */
     public ?string $type = null;
 
-    /** Type d’activité (location_courte, location_longue, vente, etc.) */
+    /**  Type d’activité (vente, location, etc.) */
     public ?string $activite = null;
 
-    /** Pays */
+    /**  Pays (plusieurs possibles) */
     public ?string $pays = null;
 
-    /** Ville */
+    /**  Villes (plusieurs possibles) */
     public ?string $ville = null;
 
-    /** Nombre minimal de chambres */
-    public int $chambres = 0;
+    /**  Nombre minimal de chambres */
+    public ?int $chambres = null;
 
-    /** Prix minimal */
-    public ?float $prixMin = null;
-
-    /** Prix maximal */
+    /**  Prix maximal */
     public ?float $prixMax = null;
 
-    /** Surface minimale */
-    public ?float $surfaceMin = null;
-
-    /** Surface maximale */
+    /**  Surface maximale */
     public ?float $surfaceMax = null;
 
-    /** Liste des conforts sélectionnés (TV, Internet, etc.) */
+    /**  Conforts sélectionnés (TV, Internet, etc.) */
     public array $conforts = [];
 }

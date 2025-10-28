@@ -30,7 +30,7 @@ class AdminDashboardController extends AbstractDashboardController
         $this->em = $em;
     }
 
-    #[Route('/admin', name: 'admin')]
+    #[Route('/admin', name: 'admin_dashboard')]
     public function index(): Response
     {
         

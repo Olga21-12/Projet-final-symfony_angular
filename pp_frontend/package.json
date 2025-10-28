@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-https": "ng serve --ssl true --ssl-cert \"C:\\Users\\Olga\\.symfony5\\certs\\localhost.crt\" --ssl-key \"C:\\Users\\Olga\\.symfony5\\certs\\localhost.key\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

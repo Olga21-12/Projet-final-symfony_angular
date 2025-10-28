@@ -12,13 +12,24 @@ export class ProprietaireGuard implements CanActivate {
   canActivate(): boolean {
     const user = this.authService.getUser();
 
-    if (user && user.role === 'ROLE_PROPRIETAIRE') {
-      return true;
-    } else {
-      this.router.navigate(['/login'], { 
-        queryParams: { message: 'Vous devez être propriétaire pour ajouter un bien.' } 
-      });
-      return false;
-    }
+    if (!user) {
+    this.router.navigate(['/login'], {
+      queryParams: { message: 'Vous devez être propriétaire pour ajouter un bien.' }
+    });
+    return false;
+  }
+
+  // 🔹 принимаем обе формы: "Propriétaire" и "ROLE_PROPRIETAIRE"
+  const role = user.role?.toLowerCase();
+
+  if (role === 'propriétaire' || role === 'role_proprietaire') {
+    return true;
+  }
+
+  this.router.navigate(['/login'], {
+    queryParams: { message: 'Vous devez être propriétaire pour ajouter ou modifier un bien.' }
+  });
+  return false;
+    
   }
 }

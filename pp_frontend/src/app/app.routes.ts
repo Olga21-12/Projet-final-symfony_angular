@@ -24,8 +24,8 @@ export const routes: Routes = [
     { path: 'verify-email', component: VerifyEmailComponent, title: 'Vérification Email' },
     { path: 'edit-profile', component: EditProfileComponent, title: 'Modifier le profil' },
     { path: 'biens', component: BienListComponent, title: 'Liste des Biens' },
-    { path: 'biens/create', component: BienCreeComponent, canActivate: [AuthGuard], title: 'Créer le Bien' },
     { path: 'biens/:id', component: BienDetailComponent, canActivate: [AuthGuard], title: 'Détails du Bien' },
-    { path: 'biens/:id/edit', component: BienEditComponent, canActivate: [AuthGuard], title: 'Modifier le Bien' }
+    { path: 'biens/create', component: BienCreeComponent, canActivate: [ProprietaireGuard], title: 'Créer le Bien' },
+    { path: 'biens/:id/edit', component: BienEditComponent, canActivate: [ProprietaireGuard], title: 'Modifier le Bien' }
 
 ];

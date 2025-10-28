@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Entity\Traits\Timestampable;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -21,10 +21,11 @@ class Photo
     #[ORM\Column]
     private ?int $id = null;
 
-        #[Vich\UploadableField(mapping: 'bien_image', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Vich\UploadableField(mapping: 'bien_image', fileNameProperty: 'imageName', size: 'imageSize')]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['bien:read'])]
     private ?string $imageName = null;
 
     #[ORM\Column(nullable: true)]

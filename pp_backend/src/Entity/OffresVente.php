@@ -6,6 +6,7 @@ use App\Repository\OffresVenteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Timestampable;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OffresVenteRepository::class)]
 #[ORM\Table(name: "offres_vente")]
@@ -17,14 +18,17 @@ class OffresVente
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['bien:read'])]
     private ?string $statut = null;
 
     use Timestampable;
     
     #[ORM\ManyToOne(inversedBy: 'offresVentes')]
+  //  #[Groups(['bien:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'offresVentes')]
+  //  #[Groups(['bien:read'])]
     private ?Bien $bien = null;
 
     public function getId(): ?int

@@ -13,7 +13,7 @@ export interface Bien {
   disponibilite: boolean;
   luxe: boolean;
   type: number | { id: number; type_de_bien: string } | number;
-  activite: number | { id: number; type_activite: string } | number;
+  activite: number | { id: number; type_activite?: string; name?: string; nom?: string } | number;
   emplacement: {
     pays: string;
     ville: string;
@@ -30,6 +30,9 @@ export interface Bien {
     email: string;
   };
   created_ago: number;
+
+  // Ajout de la clé simplifiée pour le pipe de prix
+  activite_key?: 'short' | 'long' | 'sale' | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -90,7 +93,7 @@ export class BienService {
   }
 
   (photos || []).slice(0, 4).forEach((file) => {
-    formData.append('photos[]', file, file.name); // 👈 важно передать имя
+    formData.append('photos[]', file, file.name); 
   });
 
   return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData, { withCredentials: true });
@@ -100,5 +103,35 @@ export class BienService {
     return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`, { withCredentials: true });
   }
 
+  getPaginatedBiens(page: number, limit: number): Observable<{ items: Bien[], pagination: any }> {
+    return this.http.get<{ items: Bien[], pagination: any }>(
+      `${this.apiUrl}?page=${page}&limit=${limit}`,
+      { withCredentials: true }
+    );
+  }
+
+  shortRent(bienId: number, durationDays: number) {
+    return this.http.post<{message: string}>(
+      `${this.apiUrl}/${bienId}/short-rent`,
+      { durationDays },
+      { withCredentials: true }
+    );
+  }
+
+  longRent(bienId: number) {
+    return this.http.post<{message: string}>(
+      `${this.apiUrl}/${bienId}/long-rent`,
+      {},
+      { withCredentials: true }
+    );
+  }
+
+  buy(bienId: number) {
+    return this.http.post<{message: string}>(
+      `${this.apiUrl}/${bienId}/buy`,
+      {},
+      { withCredentials: true }
+    );
+  }
 }
 
