@@ -22,7 +22,7 @@
       <div class="row" *ngIf="!loading && !error">
         <div class="col-md-4 mb-4" *ngFor="let bien of biens">
           <div class="card h-100 shadow-sm">
-            
+
             <h5 class="card-title">{{ bien.type }} — {{ bien.activite }}</h5>
 
             <img
@@ -36,6 +36,13 @@
                 class="card-text"
                 [innerHTML]="bien.description | truncate: 100 : true : '...' : true"
               ></p>
+
+              <p class="mb-1">
+                <strong>
+                <span [ngClass]="bien.disponibilite ? 'text-success' : 'text-danger'">
+                  {{ bien.disponibilite ? 'Disponible' : 'Non disponible' }}
+                </span></strong>
+              </p>
 
               <div class="card-info mt-2">
                 <p><strong>{{ bien.prix | currency: 'EUR' }}</strong></p>
@@ -59,13 +66,13 @@
       </div>
 
       <!-- Pagination  -->
-      
+
       <app-paginator
         [currentPage]="currentPage"
         [totalPages]="totalPages"
         (pageChange)="changePage($event)"
       ></app-paginator>
-      
+
     </div>
   </div>
 </div>

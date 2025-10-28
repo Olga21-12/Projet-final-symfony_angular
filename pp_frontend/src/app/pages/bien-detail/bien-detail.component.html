@@ -44,14 +44,12 @@
         {{ bien.prix | priceByActivity: bien.activite_key }}
       </p>
 
-      <!--
-      <p class="mb-2">
-        <strong>Disponibilité :</strong>
-        <span [class.text-success]="bien.disponible" [class.text-danger]="!bien.disponible">
-          {{ bien.disponible ? 'Disponible' : 'Non disponible' }}
-        </span>
-      </p>      
-      -->
+      <p class="mb-1">
+        <strong>Disponibilité :
+        <span [ngClass]="bien.disponibilite ? 'text-success' : 'text-danger'">
+          {{ bien.disponibilite ? 'Disponible' : 'Non disponible' }}
+        </span></strong>
+      </p>
 
       <p><strong>Surface :</strong> {{ bien.surface }} m²</p>
       <p><strong>Chambres :</strong> {{ bien.nombre_de_chambres }} </p>
@@ -59,9 +57,14 @@
       <p><strong>Propriétaire :</strong> {{ bien.proprietaire?.surnom }} </p>
 
       <div class="mt-4">
-        <button class="btn btn-info me-2" (click)="onAction()">
-          {{ libelleActivite }}
+        <button
+          class="btn me-2"
+          [ngClass]="bien.disponibilite ? 'btn-available' : 'btn-unavailable'"
+          [disabled]="!bien.disponibilite"
+          (click)="onAction()">
+          {{ bien.disponibilite ? libelleActivite : 'Indisponible' }}
         </button>
+
 
         <a href="mailto:{{ bien.proprietaire?.email }}" class="btn btn-outline-info">Contacter le propriétaire</a>
       </div>

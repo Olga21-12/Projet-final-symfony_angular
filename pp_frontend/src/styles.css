@@ -46,3 +46,16 @@ body{
   text-align: center;
   font-size: 1.2rem;
 }
+
+/* --- état normal --- */
+.btn-available {
+  background-color: teal;
+}
+
+/* --- état indisponible --- */
+.btn-unavailable {
+  background-color: #b22222; /* rouge brique */
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+

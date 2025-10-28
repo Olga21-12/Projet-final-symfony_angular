@@ -139,6 +139,7 @@ ngOnInit(): void {
       this.bienService.buy(this.bien.id).subscribe({
         next: (res) => {
           alert(res.message || 'Achat confirmé ✅');
+          this.bien!.disponibilite = false;
           this.onSuccess(); // rafraîchir les données du bien après l'achat
         },
         error: (err) => {
@@ -160,6 +161,7 @@ ngOnInit(): void {
       this.bienService.longRent(this.bien.id).subscribe({
         next: (res) => {
           alert(res.message || 'Location longue durée confirmée ✅');
+          this.bien!.disponibilite = false;
           this.onSuccess(); // rafraîchir les données du bien après la location
         },
         error: (err) => {
