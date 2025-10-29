@@ -6,10 +6,31 @@
         <ul class="list-unstyled">
           <li routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"><a class="footer-link" routerLink="/">Accueil</a></li>
-          <li routerLinkActive="active"><a class="footer-link" routerLink="/login">Se connecter</a></li>
-          <li routerLinkActive="active"><a class="footer-link" routerLink="/register">S'inscrire</a></li>
-          <li routerLinkActive="active"><a class="footer-link" routerLink="/faq">FAQ</a></li>
-          <li routerLinkActive="active"><a class="footer-link" routerLink="/contact">Contact</a></li>
+
+              <!-- Si utilisateur n'est pas connecté -->
+          <ng-template #guestLinks>
+            <li routerLinkActive="active">
+              <a class="footer-link" routerLink="/login">Se connecter</a>
+            </li>
+            <li routerLinkActive="active">
+              <a class="footer-link" routerLink="/register">S'inscrire</a>
+            </li>
+          </ng-template>
+
+          <!-- Si utilisateur est connecté -->
+          <ng-container *ngIf="user; else guestLinks">
+            <li class="nav-item" routerLinkActive="active">
+              <a class="footer-link text-danger" (click)="logout()">Déconnexion</a>
+            </li>
+          </ng-container>
+
+          <li routerLinkActive="active">
+            <a class="footer-link" routerLink="/faq">FAQ</a>
+          </li>
+
+          <li routerLinkActive="active">
+            <a class="footer-link" routerLink="/contact">Contact</a>
+          </li>
         </ul>
       </div>
 

@@ -26,4 +26,12 @@ user: any = null;
     this.authService.clearUser();
     this.router.navigate(['/login']);
   }
+
+  hasRole(role: string): boolean {
+    const r = this.user?.roles ?? this.user?.role;
+    if (Array.isArray(r)) return r.includes(role);
+    if (typeof r === 'string') return r === role || r.toLowerCase() === 'propriétaire';
+    return false;
+  }
+  
 }
