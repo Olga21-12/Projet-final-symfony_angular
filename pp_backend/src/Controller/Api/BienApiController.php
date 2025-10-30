@@ -7,6 +7,8 @@ use App\Entity\Bien;
 use App\Entity\TypesDeBien;
 use App\Entity\Confort;
 use App\Entity\Emplacement;
+use App\Entity\OffresVente;
+use App\Entity\Reservation;
 use App\Entity\TypesActivite;
 use App\Repository\BienRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -400,56 +402,65 @@ class BienApiController extends AbstractController
 public function shortRent(int $id, Request $request, EntityManagerInterface $em, Security $security): JsonResponse
 {
     $bien = $em->getRepository(Bien::class)->find($id);
-    if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
+        if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
 
-    $user = $security->getUser();
-    if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+        $data = json_decode($request->getContent(), true);
+        $userId = $data['user_id'] ?? null;
+        $days   = (int)($data['durationDays'] ?? 1);
 
-    $data = json_decode($request->getContent(), true);
-    $days = (int)($data['durationDays'] ?? 1);
+        if (!$userId) return $this->json(['message' => 'Aucun utilisateur spécifié'], 400);
 
-    $now = new \DateTime();
-    $end = (clone $now)->modify("+{$days} days");
+        $user = $em->getRepository(User::class)->find($userId);
+        if (!$user) return $this->json(['message' => 'Utilisateur introuvable'], 404);
 
-    // vérifier disponibilité
-    $active = $em->getRepository(\App\Entity\Reservation::class)->createQueryBuilder('r')
-        ->select('COUNT(r.id)')
-        ->where('r.bien = :bien')
-        ->andWhere('r.date_debut <= :now')
-        ->andWhere('r.date_fin >= :now')
-        ->setParameter('bien', $bien)
-        ->setParameter('now', $now)
-        ->getQuery()
-        ->getSingleScalarResult();
+        $now = new \DateTime();
+        $end = (clone $now)->modify("+{$days} days");
 
-    if ($active > 0) return $this->json(['message' => 'Ce bien n\'est pas disponible.'], 409);
+        // Vérifier s'il est déjà loué à cette période
+        $active = $em->getRepository(Reservation::class)->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->where('r.bien = :bien')
+            ->andWhere('r.date_fin >= :now')
+            ->setParameter('bien', $bien)
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-    $res = new \App\Entity\Reservation();
-    $res->setBien($bien);
-    $res->setUser($user);
-    $res->setDateDebut($now);
-    $res->setDateFin($end);
+        if ($active > 0) {
+            return $this->json(['message' => 'Ce bien n’est pas disponible.'], 409);
+        }
 
-    $em->persist($res);
-    $em->flush();
+        $res = new Reservation();
+        $res->setBien($bien);
+        $res->setUser($user);
+        $res->setDateDebut($now);
+        $res->setDateFin($end);
 
-    return $this->json(['message' => 'Réservation courte durée confirmée ✅']);
+        $bien->setDisponibilite(false);
+
+        $em->persist($res);
+        $em->flush();
+
+        return $this->json(['message' => 'Réservation courte durée confirmée ✅']);
 }
 
     // LONGUE DURÉE
     #[Route('/{id}/long-rent', name: 'long_rent', methods: ['POST'])]
-    public function longRent(int $id, EntityManagerInterface $em, Security $security): JsonResponse
+    public function longRent(int $id, EntityManagerInterface $em, Request $request): JsonResponse
     {
         $bien = $em->getRepository(Bien::class)->find($id);
         if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
 
-        $user = $security->getUser();
-        if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+        $data = json_decode($request->getContent(), true);
+        $userId = $data['user_id'] ?? null;
+        if (!$userId) return $this->json(['message' => 'Aucun utilisateur spécifié'], 400);
+
+        $user = $em->getRepository(User::class)->find($userId);
+        if (!$user) return $this->json(['message' => 'Utilisateur introuvable'], 404);
 
         $now = new \DateTime();
 
-        // vérifier s'il y a déjà une réservation longue
-        $active = $em->getRepository(\App\Entity\Reservation::class)->createQueryBuilder('r')
+        $active = $em->getRepository(Reservation::class)->createQueryBuilder('r')
             ->select('COUNT(r.id)')
             ->where('r.bien = :bien')
             ->andWhere('r.date_fin IS NULL')
@@ -457,12 +468,16 @@ public function shortRent(int $id, Request $request, EntityManagerInterface $em,
             ->getQuery()
             ->getSingleScalarResult();
 
-        if ($active > 0) return $this->json(['message' => 'Ce bien est déjà loué.'], 409);
+        if ($active > 0) {
+            return $this->json(['message' => 'Ce bien est déjà loué.'], 409);
+        }
 
-        $res = new \App\Entity\Reservation();
+        $res = new Reservation();
         $res->setBien($bien);
         $res->setUser($user);
         $res->setDateDebut($now);
+
+        $bien->setDisponibilite(false);
 
         $em->persist($res);
         $em->flush();
@@ -472,16 +487,19 @@ public function shortRent(int $id, Request $request, EntityManagerInterface $em,
 
     // VENTE
     #[Route('/{id}/buy', name: 'buy', methods: ['POST'])]
-    public function buy(int $id, EntityManagerInterface $em, Security $security): JsonResponse
+    public function buy(int $id, EntityManagerInterface $em, Request $request): JsonResponse
     {
         $bien = $em->getRepository(Bien::class)->find($id);
         if (!$bien) return $this->json(['message' => 'Bien introuvable'], 404);
 
-        $user = $security->getUser();
-        if (!$user) return $this->json(['message' => 'Utilisateur non connecté'], 401);
+        $data = json_decode($request->getContent(), true);
+        $userId = $data['user_id'] ?? null;
+        if (!$userId) return $this->json(['message' => 'Aucun utilisateur spécifié'], 400);
 
-        // vérifier s'il est déjà vendu
-        $sold = $em->getRepository(\App\Entity\OffresVente::class)->createQueryBuilder('v')
+        $user = $em->getRepository(User::class)->find($userId);
+        if (!$user) return $this->json(['message' => 'Utilisateur introuvable'], 404);
+
+        $sold = $em->getRepository(OffresVente::class)->createQueryBuilder('v')
             ->select('COUNT(v.id)')
             ->where('v.bien = :bien')
             ->andWhere('v.statut IN (:st)')
@@ -490,17 +508,21 @@ public function shortRent(int $id, Request $request, EntityManagerInterface $em,
             ->getQuery()
             ->getSingleScalarResult();
 
-        if ($sold > 0) return $this->json(['message' => 'Ce bien est déjà vendu.'], 409);
+        if ($sold > 0) {
+            return $this->json(['message' => 'Ce bien est déjà vendu.'], 409);
+        }
 
-        $vente = new \App\Entity\OffresVente();
+        $vente = new OffresVente();
         $vente->setBien($bien);
         $vente->setUser($user);
         $vente->setStatut('vendu');
 
+        $bien->setDisponibilite(false);
+
         $em->persist($vente);
         $em->flush();
 
-        return $this->json(['message' => 'Vous avez acheté ce bien ✅']);
+        return $this->json(['message' => 'Achat confirmé ✅']);
     }
 
 }

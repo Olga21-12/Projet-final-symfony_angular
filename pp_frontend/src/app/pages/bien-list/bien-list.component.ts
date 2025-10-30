@@ -7,6 +7,7 @@ import { FiltreService } from '../../services/filtre.service';
 import { BienFiltreComponent } from '../../components/bien-filtre/bien-filtre.component';
 import { PaginatorComponent } from '../../components/paginator/paginator.component';
 import { ActivatedRoute } from '@angular/router';
+import { RechercheService } from '../../services/recherche.service';
 
 @Component({
   selector: 'app-bien-list',
@@ -25,12 +26,12 @@ export class BienListComponent implements OnInit {
   totalPages = 1;
   limit = 6;
 
-
   constructor(
     private bienService: BienService,
     private router: Router,
     private filtreService: FiltreService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private rechercheService: RechercheService
   ) {}
 
   // Convertit les données de l'API dans un format que le modèle peut comprendre
@@ -144,11 +145,30 @@ export class BienListComponent implements OnInit {
   // filtre
   onSearch(filters: any) {
     this.loading = true;
+
     this.filtreService.search(filters).subscribe({
       next: (data) => {
         this.biens = (data || []).map((b: any) => this.normalizeBien(b));
         this.totalBiens = this.biens.length;
         this.loading = false;
+
+        // nous enregistrons la recherche UNIQUEMENT si l'utilisateur est autorisé
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+
+          const payload = {
+          user_id: user.id,
+          pays: filters.pays,
+          ville: filters.ville,
+          typeBien: filters.typeBien
+        };
+
+          this.rechercheService.saveSearch(payload).subscribe({
+            next: () => console.log('🔹 Recherche sauvegardée'),
+            error: (err) => console.warn('Erreur sauvegarde recherche:', err)
+          });
+        }
       },
       error: () => {
         this.error = 'Erreur de filtrage';
@@ -157,11 +177,10 @@ export class BienListComponent implements OnInit {
     });
   }
 
-  // === Nouveau code pour changer l'affichage ===
-viewMode: 'grid' | 'list' = 'grid'; 
+    // === Nouveau code pour changer l'affichage ===
+  viewMode: 'grid' | 'list' = 'grid'; 
 
-toggleView(mode: 'grid' | 'list') {
-  this.viewMode = mode;
-}
-
+  toggleView(mode: 'grid' | 'list') {
+    this.viewMode = mode;
+  }
 }

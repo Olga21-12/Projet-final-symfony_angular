@@ -110,29 +110,29 @@ export class BienService {
     );
   }
 
-  shortRent(bienId: number, durationDays: number) {
-    return this.http.post<{message: string}>(
-      `${this.apiUrl}/${bienId}/short-rent`,
-      { durationDays },
-      { withCredentials: true }
-    );
-  }
+  shortRent(bienId: number, durationDays: number, userId: number) {
+  return this.http.post<{message: string}>(
+    `${this.apiUrl}/${bienId}/short-rent`,
+    { user_id: userId, durationDays },
+    { withCredentials: false } // ⚠️ теперь можно без cookie
+  );
+}
 
-  longRent(bienId: number) {
-    return this.http.post<{message: string}>(
-      `${this.apiUrl}/${bienId}/long-rent`,
-      {},
-      { withCredentials: true }
-    );
-  }
+longRent(bienId: number, userId: number) {
+  return this.http.post<{message: string}>(
+    `${this.apiUrl}/${bienId}/long-rent`,
+    { user_id: userId },
+    { withCredentials: false }
+  );
+}
 
-  buy(bienId: number) {
-    return this.http.post<{message: string}>(
-      `${this.apiUrl}/${bienId}/buy`,
-      {},
-      { withCredentials: true }
-    );
-  }
+buy(bienId: number, userId: number) {
+  return this.http.post<{message: string}>(
+    `${this.apiUrl}/${bienId}/buy`,
+    { user_id: userId },
+    { withCredentials: false }
+  );
+}
 
   getFilteredBiens(filters: any): Observable<any> {
     let params = new HttpParams();

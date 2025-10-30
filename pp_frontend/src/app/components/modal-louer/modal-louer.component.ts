@@ -14,6 +14,7 @@ export class ModalLouerComponent {
   @Input() visible = false;             
   @Output() closed = new EventEmitter<void>();
   @Output() success = new EventEmitter<void>();
+  @Input() userId!: number;
 
   loading = false;
 
@@ -37,7 +38,7 @@ export class ModalLouerComponent {
     if (this.loading || !this.bienId) return;
     this.loading = true;
 
-    this.bienService.shortRent(this.bienId, durationDays).subscribe({
+    this.bienService.shortRent(this.bienId, durationDays, this.userId).subscribe({
       next: (res) => {
         alert(res.message || 'Réservation confirmée ✅');
         this.loading = false;

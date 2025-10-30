@@ -136,7 +136,7 @@ ngOnInit(): void {
 
     // Vente → appel de la route /buy
     if (typeof this.bien.activite === 'object' && this.bien.activite?.type_activite === 'Vente') {
-      this.bienService.buy(this.bien.id).subscribe({
+      this.bienService.buy(this.bien.id, this.userId!).subscribe({
         next: (res) => {
           alert(res.message || 'Achat confirmé ✅');
           this.bien!.disponibilite = false;
@@ -158,7 +158,7 @@ ngOnInit(): void {
 
     // Location longue durée → appel direct à la route /long-rent
     if (typeof this.bien.activite === 'object' && this.bien.activite?.type_activite === 'Location long') {
-      this.bienService.longRent(this.bien.id).subscribe({
+      this.bienService.longRent(this.bien.id, this.userId!).subscribe({
         next: (res) => {
           alert(res.message || 'Location longue durée confirmée ✅');
           this.bien!.disponibilite = false;

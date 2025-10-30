@@ -25,6 +25,10 @@ class Recherche
     #[Groups(['bien:read'])]
     private ?string $mot_cle = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['bien:read'])]
+    private ?string $pays = null;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['bien:read'])]
     private ?float $budget_max = null;
@@ -40,6 +44,10 @@ class Recherche
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['bien:read'])]
     private ?string $ville = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['bien:read'])]
+    private ?string $type_bien = null;
 
     #[ORM\ManyToOne(inversedBy: 'recherches')]
     #[Groups(['bien:read'])]
@@ -223,4 +231,21 @@ class Recherche
 
         return $this;
     }
+
+    public function getPays(): ?string {
+         return $this->pays; 
+        }
+
+    public function setPays(?string $pays): static {
+         $this->pays = $pays; return $this; 
+        }
+
+    public function getTypeBien(): ?string {
+         return $this->type_bien;
+        }
+
+    public function setTypeBien(?string $type_bien): static {
+         $this->type_bien = $type_bien; 
+         return $this; 
+        }
 }

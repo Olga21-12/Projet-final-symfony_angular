@@ -6,11 +6,12 @@ import { Router, RouterModule } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { Recherche, RechercheService } from '../../services/recherche.service';
+import { MesSearchComponent } from '../../components/mes-search/mes-search.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, MesBiensComponent],
+  imports: [CommonModule, RouterModule, MesBiensComponent, MesSearchComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -60,17 +61,17 @@ export class ProfileComponent implements OnInit{
   });
 }
 
-// Загружаем сохранённые поиски
-  loadRecherches() {
-    this.rechercheService.getUserRecherches().subscribe({
-      next: (data) => {
-        this.recherches = data;
-      },
-      error: () => {
-        this.recherches = [];
-      }
-    });
-  }
+loadRecherches() {
+  if (!this.user) return;
+  this.rechercheService.getUserRecherchesById(this.user.id).subscribe({
+    next: (data) => {
+      this.recherches = data;
+    },
+    error: () => {
+      this.recherches = [];
+    }
+  });
+}
 
   editProfile() {
     this.router.navigate(['/edit-profile']);
