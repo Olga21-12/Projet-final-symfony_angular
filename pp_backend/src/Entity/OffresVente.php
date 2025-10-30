@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OffresVenteRepository::class)]
 #[ORM\Table(name: "offres_vente")]
+#[ORM\HasLifecycleCallbacks]
 class OffresVente
 {
     #[ORM\Id]

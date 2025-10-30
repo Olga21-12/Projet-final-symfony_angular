@@ -24,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
-
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class UserCrudController extends AbstractCrudController implements EventSubscriberInterface
 {
@@ -76,7 +76,7 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
         yield IdField::new('id')->onlyOnIndex();
         yield EmailField::new('email', 'Email');
 
-        
+
         yield TextField::new('plainPassword', 'Mot de passe')
             ->setFormType(PasswordType::class)
             ->onlyOnForms()
@@ -96,11 +96,10 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
             ->allowMultipleChoices()
             ->hideOnIndex();
 
-        // В таблице (index) показываем страну и город отдельно
+        // pays + ville
         yield TextField::new('emplacement.pays', 'Pays')->onlyOnIndex();
         yield TextField::new('emplacement.ville', 'Ville')->onlyOnIndex();
 
-        // В формах редактирования / создания показываем список существующих эмпласманов
         yield AssociationField::new('emplacement', 'Pays / Ville')
             ->autocomplete()
             ->onlyOnForms();
@@ -114,15 +113,17 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
                 return $entity->getEmplacement()->getPays().' - '.$entity->getEmplacement()->getVille();
             });
 
-        yield TextField::new('adresse', 'Adresse');    
+        yield TextField::new('adresse', 'Adresse');
 
         yield DateField::new('date_de_naissance', 'Date de naissance')->hideOnIndex();
 
-        yield ImageField::new('imageName', 'Photo')
-            ->setUploadDir('public/uploads/profiles/')
-            ->setBasePath('/uploads/profiles/')
-            ->setUploadedFileNamePattern('[randomhash].[extension]')
-            ->setRequired(false);
+        yield ImageField::new('imageName', 'Photo de profil')
+            ->setBasePath('/uploads/profiles')
+            ->onlyOnIndex();
+
+        yield TextField::new('imageFile', 'Uploader une photo')
+            ->setFormType(VichImageType::class)
+            ->onlyOnForms();
 
         yield DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail();
         yield DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail();

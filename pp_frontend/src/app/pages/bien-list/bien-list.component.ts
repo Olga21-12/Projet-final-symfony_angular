@@ -156,4 +156,12 @@ export class BienListComponent implements OnInit {
       },
     });
   }
+
+  // === Nouveau code pour changer l'affichage ===
+viewMode: 'grid' | 'list' = 'grid'; 
+
+toggleView(mode: 'grid' | 'list') {
+  this.viewMode = mode;
+}
+
 }

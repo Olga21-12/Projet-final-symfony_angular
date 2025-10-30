@@ -29,7 +29,7 @@ class BienApiController extends AbstractController
     {
 
         $page = max(1, (int)$request->query->get('page', 1));
-        $limit = (int)$request->query->get('limit', 6); 
+        $limit = (int)$request->query->get('limit', 6);
 
         $query = $repo->createQueryBuilder('b')
             ->leftJoin('b.emplacement', 'e')->addSelect('e')
@@ -141,12 +141,6 @@ class BienApiController extends AbstractController
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em, Security $security): JsonResponse
     {
-
-        $user = $security->getUser();
-
-        if (!$user || !in_array('ROLE_PROPRIETAIRE', $user->getRoles(), true)) {
-            return new JsonResponse(['error' => 'Accès refusé : seuls les propriétaires peuvent ajouter un bien.'], 403);
-        }
 
         $data = $request->request->all();
         $files = $request->files->all();
@@ -262,26 +256,26 @@ class BienApiController extends AbstractController
         $files = $request->files->all();
 
         // --- Champs scalaires ---
-        if (isset($data['adresse'])){ 
-            $bien->setAdresse((string)$data['adresse']); 
+        if (isset($data['adresse'])){
+            $bien->setAdresse((string)$data['adresse']);
         }
-        if (isset($data['description'])){ 
-            $bien->setDescription($data['description'] !== '' ? (string)$data['description'] : null); 
+        if (isset($data['description'])){
+            $bien->setDescription($data['description'] !== '' ? (string)$data['description'] : null);
         }
-        if (isset($data['prix']) && is_numeric($data['prix'])){ 
-            $bien->setPrix((float)$data['prix']); 
+        if (isset($data['prix']) && is_numeric($data['prix'])){
+            $bien->setPrix((float)$data['prix']);
         }
-        if (isset($data['surface']) && is_numeric($data['surface'])){ 
-            $bien->setSurface((float)$data['surface']); 
+        if (isset($data['surface']) && is_numeric($data['surface'])){
+            $bien->setSurface((float)$data['surface']);
         }
         if (isset($data['nombre_de_chambres']) && is_numeric($data['nombre_de_chambres'])){
             $bien->setNombreDeChambres((int)$data['nombre_de_chambres']);
         }
-        if (isset($data['disponibilite'])){ 
-            $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL)); 
+        if (isset($data['disponibilite'])){
+            $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL));
         }
         if (isset($data['luxe'])){
-            $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL)); 
+            $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL));
         }
 
         // --- Relations: Type de bien ---
@@ -392,7 +386,7 @@ class BienApiController extends AbstractController
     }
 
     #[Route('/user/{id}', name: 'biens_by_user', methods: ['GET'])]
-        public function getBiensByUser(EntityManagerInterface $em, 
+        public function getBiensByUser(EntityManagerInterface $em,
                                        int $id,
                                        Request $request,
                                        PaginatorInterface $paginator): JsonResponse

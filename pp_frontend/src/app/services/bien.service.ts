@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -93,7 +93,7 @@ export class BienService {
   }
 
   (photos || []).slice(0, 4).forEach((file) => {
-    formData.append('photos[]', file, file.name); 
+    formData.append('photos[]', file, file.name);
   });
 
   return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, formData, { withCredentials: true });
@@ -133,5 +133,20 @@ export class BienService {
       { withCredentials: true }
     );
   }
+
+  getFilteredBiens(filters: any): Observable<any> {
+    let params = new HttpParams();
+
+    for (const key of Object.keys(filters)) {
+      const value = filters[key];
+
+      if (value !== null && value !== '' && value !== undefined) {
+        params = params.set(key, String(value)); // 👈 все как строки
+      }
+    }
+
+    return this.http.get(`${this.apiUrl}/filtre`, { params });
+  }
+
 }
 

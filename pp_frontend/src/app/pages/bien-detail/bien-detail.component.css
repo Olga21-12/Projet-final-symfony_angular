@@ -1,0 +1,28 @@
+.content-bien{
+  max-width: 1400px;
+  color: #3b2e2a;
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.7;
+  padding: 2.5rem;
+}
+
+.luxury-crown-end {
+  position: absolute;
+  top: -25px;           
+  right: -40px;        
+  transform: rotate(5deg);
+  z-index: 5;
+  padding: 3px;
+}
+
+.luxury-crown-end img {
+  display: block;
+  width: 75px;
+  height: 75px;
+  animation: crown-swing 4s ease-in-out infinite;
+}
+
+@keyframes crown-swing {
+  0%, 100% { transform: rotate(30deg); }
+  50% { transform: rotate(35deg); }
+}

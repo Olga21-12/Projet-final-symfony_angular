@@ -36,4 +36,10 @@ class SearchData
 
     /**  Conforts sélectionnés (TV, Internet, etc.) */
     public array $conforts = [];
+
+    /**  Bien de luxe (optionnel) */
+    public ?bool $luxe = null;
+
+    /* Disponidilite */
+    public ?bool $disponibilite = null;
 }

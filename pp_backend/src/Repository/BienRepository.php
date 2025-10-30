@@ -82,7 +82,19 @@ class BienRepository extends ServiceEntityRepository
     if (!empty($data->conforts)) {
         $qb->andWhere('c.name IN (:conforts)')
            ->setParameter('conforts', $data->conforts, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-    }*/
+    }
+
+    // Luxe
+if ($data->luxe !== null) {
+    $qb->andWhere('b.luxe = :luxe')
+        ->setParameter('luxe', $data->luxe ? 1 : 0);
+}
+
+// Disponibilité
+if ($data->disponibilite !== null) {
+    $qb->andWhere('b.disponibilite = :dispo')
+        ->setParameter('dispo', $data->disponibilite ? 1 : 0);
+}*/
 
     return $qb->getQuery();
     }

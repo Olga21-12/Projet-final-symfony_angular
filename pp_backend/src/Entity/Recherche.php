@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RechercheRepository::class)]
 #[ORM\Table(name: "recherches")]
+#[ORM\HasLifecycleCallbacks]
 class Recherche
 {
     #[ORM\Id]

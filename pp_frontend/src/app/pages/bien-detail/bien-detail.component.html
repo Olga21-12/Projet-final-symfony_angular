@@ -1,5 +1,19 @@
-<div class="container mt-5" *ngIf="!loading && bien; else loadingTpl">
-  <h2 class="text-center mb-4 title">{{ libelleTypeEtActivite }} </h2>
+<div class="container content-bien mt-5" *ngIf="!loading && bien; else loadingTpl">
+  
+    <div class="text-center mb-4">
+      <h2 class="title d-inline-block position-relative m-0">
+        {{ libelleTypeEtActivite }}
+        <span *ngIf="bien.luxe" class="luxury-crown-end">
+          <img
+            src="/assets/icons/crown.png"
+            alt="Bien de luxe"
+            width="40"
+            height="40"
+            title="Bien de luxe"
+          />
+        </span>
+      </h2>
+    </div>
 
   <div class="row">
     <!-- Colonne gauche (Photos) -->

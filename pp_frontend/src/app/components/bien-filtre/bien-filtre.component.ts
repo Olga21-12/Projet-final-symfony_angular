@@ -22,9 +22,8 @@ export class BienFiltreComponent implements OnInit {
     chambres: '',
     confort: '',     
     typeBien: '',
-    activite: ''
+    activite: ''   
   };
-
 
   paysList: string[] = [];
   villesList: string[] = [];

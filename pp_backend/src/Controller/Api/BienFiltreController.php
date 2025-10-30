@@ -29,10 +29,15 @@ class BienFiltreController extends AbstractController
         $data->prixMax    = isset($params['prixMax']) && $params['prixMax'] !== '' ? (float)$params['prixMax'] : null;
         $data->surfaceMax = isset($params['surfaceMax']) && $params['surfaceMax'] !== '' ? (float)$params['surfaceMax'] : null;
         $data->chambres   = isset($params['chambres']) && $params['chambres'] !== '' ? (int)$params['chambres'] : null;
-       // $data->conforts   = isset($params['conforts']) ? (array)$params['conforts'] : [];
+        
+        
+
+//$data->luxe = isset($params['luxe']) ? (int) $params['luxe'] === 1 : null;
+//$data->disponibilite = isset($params['disponibilite']) ? (int) $params['disponibilite'] === 1 : null;
+
+        // $data->conforts   = isset($params['conforts']) ? (array)$params['conforts'] : [];
 
         // Nous obtenons des Biens avec un filtre
-
         $query = $bienRepository->searchBiensQuery($data);
         $biens = $query->getResult();
 

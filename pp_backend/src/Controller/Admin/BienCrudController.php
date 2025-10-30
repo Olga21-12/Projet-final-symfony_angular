@@ -16,6 +16,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class BienCrudController extends AbstractCrudController
 {
@@ -59,12 +62,12 @@ class BienCrudController extends AbstractCrudController
 
         yield CollectionField::new('confort', 'Conforts')
             ->setTemplatePath('admin/fields/conforts.html.twig')
-            ->onlyOnDetail();    
+            ->onlyOnDetail();
 
         yield CollectionField::new('photos', 'Galerie')
             ->setTemplatePath('admin/fields/photos.html.twig')
             ->onlyOnDetail();
-        
+
         //  Dates
         yield DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail();
         yield DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail();
@@ -74,7 +77,7 @@ class BienCrudController extends AbstractCrudController
     {
         return $actions
             ->disable(Action::DELETE)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL); 
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     public function configureFilters(Filters $filters): Filters
