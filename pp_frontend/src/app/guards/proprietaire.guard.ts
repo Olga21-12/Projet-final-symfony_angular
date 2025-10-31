@@ -19,7 +19,7 @@ export class ProprietaireGuard implements CanActivate {
     return false;
   }
 
-  // 🔹 принимаем обе формы: "Propriétaire" и "ROLE_PROPRIETAIRE"
+  // "Propriétaire" и "ROLE_PROPRIETAIRE"
   const role = user.role?.toLowerCase();
 
   if (role === 'propriétaire' || role === 'role_proprietaire') {
@@ -30,6 +30,6 @@ export class ProprietaireGuard implements CanActivate {
     queryParams: { message: 'Vous devez être propriétaire pour ajouter ou modifier un bien.' }
   });
   return false;
-    
+
   }
 }

@@ -9,6 +9,7 @@ import { PaginatorComponent } from '../../components/paginator/paginator.compone
 import { ActivatedRoute } from '@angular/router';
 import { RechercheService } from '../../services/recherche.service';
 
+
 @Component({
   selector: 'app-bien-list',
   standalone: true,

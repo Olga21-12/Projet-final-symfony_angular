@@ -99,7 +99,7 @@
 
     <!-- Mes recherches enregistrées -->
     <div *ngIf="activeTab === 'recherches'">
-      <app-mes-search [recherches]="recherches"></app-mes-search>
+      <app-mes-search [userId]="user.id"></app-mes-search>
     </div>
   </div>
 </div>

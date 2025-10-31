@@ -25,6 +25,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 
 class UserCrudController extends AbstractCrudController implements EventSubscriberInterface
 {
@@ -77,10 +78,11 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
         yield EmailField::new('email', 'Email');
 
 
+        if ($pageName === Crud::PAGE_NEW) {
         yield TextField::new('plainPassword', 'Mot de passe')
             ->setFormType(PasswordType::class)
-            ->onlyOnForms()
             ->setRequired(true);
+        }
 
         yield TextField::new('nom', 'Nom');
         yield TextField::new('prenom', 'Prénom');
@@ -121,13 +123,21 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
             ->setBasePath('/uploads/profiles')
             ->onlyOnIndex();
 
+        yield ImageField::new('imageName', 'Photo de profil')
+            ->setBasePath('/uploads/profiles')
+            ->onlyOnDetail();
+
         yield TextField::new('imageFile', 'Uploader une photo')
             ->setFormType(VichImageType::class)
             ->onlyOnForms();
 
         yield DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail();
         yield DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail();
-    }
+
+        yield Field::new('biens', 'Biens du propriétaire')
+            ->setTemplatePath('admin/fields/user_biens.html.twig')
+            ->onlyOnDetail();
+            }
 
     public function configureFilters(Filters $filters): Filters
     {
@@ -154,7 +164,7 @@ class UserCrudController extends AbstractCrudController implements EventSubscrib
 
     public function configureActions(Actions $actions): Actions
     {
-        // запрещаем удаление пользователей с Biens
+        // Nous interdisons la suppression des utilisateurs de Biens
         return $actions
            // ->disable(Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL);

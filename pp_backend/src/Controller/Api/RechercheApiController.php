@@ -42,7 +42,7 @@ class RechercheApiController extends AbstractController
     #[Route('/save', name: 'save', methods: ['POST'])]
     public function save(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+         $data = json_decode($request->getContent(), true) ?? $request->request->all();
     
         if (!$data) {
         return $this->json(['error' => 'Aucune donnée reçue'], 400);
@@ -58,13 +58,10 @@ class RechercheApiController extends AbstractController
     }
 
         $recherche = new \App\Entity\Recherche();
-    if ($user) {
         $recherche->setUser($user);
-    }
-
-    $recherche->setPays($data['pays'] ?? null);
-    $recherche->setVille($data['ville'] ?? null);
-    $recherche->setTypeBien($data['typeBien'] ?? null);
+        $recherche->setPays($data['pays'] ?? null);
+        $recherche->setVille($data['ville'] ?? null);
+        $recherche->setTypeBien($data['typeBien'] ?? null);
 
         $em->persist($recherche);
         $em->flush();
@@ -72,7 +69,7 @@ class RechercheApiController extends AbstractController
         return $this->json(['message' => 'Recherche sauvegardée avec succès ✅']);
     }
 
-    // 🔹 LISTE DES RECHERCHES D'UN UTILISATEUR
+    // LISTE DES RECHERCHES D'UN UTILISATEUR
     #[Route('/user/{id}', name: 'by_user', methods: ['GET'])]
     public function listByUser(int $id, RechercheRepository $repo, EntityManagerInterface $em): JsonResponse
     {
@@ -82,22 +79,18 @@ class RechercheApiController extends AbstractController
             return $this->json(['error' => 'Utilisateur non trouvé'], 404);
         }
 
-        $recherches = $repo->findBy(['user' => $user], ['createdAt' => 'DESC']);
+        $recherches = $em->getRepository(\App\Entity\Recherche::class)
+        ->findBy(['user' => $user], ['createdAt' => 'DESC']);
 
         $data = array_map(function ($r) {
-            $pays = $r->getEmplacement()?->getPays();
-            $ville = $r->getVille();
-            $types = $r->getTypesDeBien();
-            $typeBien = count($types) > 0 ? $types->first()->getTypeDeBien() : null;
-
-            return [
-                'id' => $r->getId(),
-                'pays' => $pays,
-                'ville' => $ville,
-                'type_bien' => $typeBien,
-                'created_at' => $r->getCreatedAt()?->format('Y-m-d H:i'),
-            ];
-        }, $recherches);
+        return [
+            'id' => $r->getId(),
+            'pays' => $r->getPays(),
+            'ville' => $r->getVille(),
+            'type_bien' => $r->getTypeBien(),
+            'created_at' => $r->getCreatedAt()?->format('Y-m-d H:i'),
+        ];
+    }, $recherches);
 
         return $this->json($data);
     }

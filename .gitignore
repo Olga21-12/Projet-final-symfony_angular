@@ -1,5 +1,22 @@
 ~$*
-# случайные файлы без расширения
+# 
 *()
 *[
 *]
+
+# Symfony
+/vendor/
+.env
+/.idea/
+var/
+public/uploads/
+
+# Angular
+pp_frontend/node_modules/
+pp_frontend/.angular/
+pp_frontend/dist/
+pp_frontend/coverage/
+
+# System files
+.DS_Store
+Thumbs.db

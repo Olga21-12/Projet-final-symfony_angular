@@ -1,17 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { ProprietaireGuard } from './proprietaire.guard';
 
-import { proprietaireGuard } from './proprietaire.guard';
-
-describe('proprietaireGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => proprietaireGuard(...guardParameters));
+describe('ProprietaireGuard', () => {
+  let guard: ProprietaireGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
+    guard = TestBed.inject(ProprietaireGuard);
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(guard).toBeTruthy();
   });
 });
