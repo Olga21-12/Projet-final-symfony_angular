@@ -27,3 +27,5 @@ pp_frontend/coverage/
 pp_backend/vendor/
 pp_backend/var/
 
+sauvegarde_historique.bundle
+
