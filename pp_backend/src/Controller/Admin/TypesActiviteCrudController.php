@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Entity\TypesActivite;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+
+class TypesActiviteCrudController extends AbstractCrudController
+{
+    public static function getEntityFqcn(): string
+    {
+        return TypesActivite::class;
+    }
+
+    public function configureFields(string $pageName): iterable
+    {
+        return [
+            IdField::new('id')->hideOnForm(),
+            TextField::new('type_activite', 'Type d’activité')
+                ->setHelp('Exemple : Vente, Location courte, Location longue, etc.')
+                ->setRequired(true),
+        ];
+    }
+}

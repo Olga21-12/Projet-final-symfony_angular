@@ -1,0 +1,51 @@
+.footer-link {
+  color: teal;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  display: block;
+  margin: 4px 0;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: rgb(3, 218, 218);
+  cursor: pointer;
+}
+
+.footer-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid rgb(3, 218, 218);
+  transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.social-icons a {
+  color: teal;
+  margin: 0 6px;
+  font-size: 1.2rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.text-teal {
+  color: teal;
+}
+
+.active > .footer-link {
+    color: rgb(3, 218, 218);
+    text-decoration: underline;
+    text-underline-offset: 4px; /* делает подчёркивание чуть ниже */
+  text-shadow: 0 0 4px #ffffffcc; /* лёгкое белое свечение */
+  -webkit-text-stroke: 0.4px #ffffff; /* псевдоутолщение текста */
+}

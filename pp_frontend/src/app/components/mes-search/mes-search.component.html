@@ -1,0 +1,15 @@
+<div *ngIf="!recherches || recherches.length === 0" class="text-muted text-center py-4">
+  <p>Aucune recherche enregistrée pour le moment.</p>
+</div>
+
+<div *ngIf="recherches && recherches.length > 0"
+     class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+  <a *ngFor="let r of recherches"
+     [routerLink]="['/biens']"
+     [queryParams]="{ pays: r.pays, ville: r.ville, typeBien: r.type_bien }"
+     class="btn btn-outline-info rounded-pill">
+    🌍 {{ r.pays || '—' }}
+    <span *ngIf="r.ville"> • {{ r.ville }}</span>
+    <span *ngIf="r.type_bien"> • 🏠 {{ r.type_bien }}</span>
+  </a>
+</div>

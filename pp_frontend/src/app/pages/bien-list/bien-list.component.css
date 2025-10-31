@@ -1,0 +1,203 @@
+
+.view-toolbar {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.view-toggle .btn {
+  border-radius: 10px;
+  padding: .45rem .7rem;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.view-toggle .btn.active {
+  background: teal;
+  color: #fff;
+  border-color: teal;
+}
+
+/* --- GRID cards --- */
+.card {
+  border-radius: 12px;
+  transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  border: 1px solid #f1f1f1;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+
+.card-title {
+  font-family: "Chelsea Market", system-ui;
+  font-size: 1rem;
+  color: #3b2e2a !important;
+  text-align: center;
+  letter-spacing: .5px;
+  margin: .75rem .75rem 0 .75rem;
+}
+
+.card-img-top, .card img {
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0;           
+  margin-top: .5rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: .75rem .9rem 1rem;
+  flex: 1 1 auto;
+}
+
+
+.card-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.6em; /* ≈3 строки */
+}
+
+
+.card-info { line-height: 1.2; }
+
+
+.badge-availability {
+  display: inline-block;
+  padding: .25rem .5rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.badge-availability.available {
+  color: #1e7e34;
+  background: #eaf7ee;
+  border-color: #d6f0db;
+}
+.badge-availability.unavailable {
+  color: #c82333;
+  background: #fdecee;
+  border-color: #f9d7dc;
+}
+
+
+.price {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+/* --- LIST view --- */
+.bien-item {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  transition: transform .2s ease, box-shadow .2s ease;
+  padding: 12px !important;
+  border: 1px solid #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+  background: #fff;
+}
+.bien-item:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 8px 20px rgba(0,0,0,.08); 
+}
+
+
+.bien-photo img {
+  width: 220px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.bien-info { min-width: 0; flex: 1 1 auto; }
+.bien-title {
+  font-family: "Chelsea Market", system-ui;
+  font-size: 1rem;
+  color: #3b2e2a !important;
+  margin-bottom: .35rem;
+}
+
+
+.bien-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.6em;
+}
+
+
+.bien-actions { 
+  margin-left: auto; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: end; 
+}
+
+
+.text-teal { 
+  color: teal; 
+}
+
+
+@media (max-width: 992px) {
+  .bien-photo img { width: 200px; }
+}
+@media (max-width: 768px) {
+  .bien-item { flex-direction: column; text-align: center; }
+  .bien-photo img { width: 100%; height: auto; margin-bottom: .75rem; }
+  .bien-actions { margin-top: .75rem; }
+}
+
+
+@media (min-width: 992px) {
+  .col-md-4 { padding-left: .6rem; padding-right: .6rem; }
+}
+
+/* "Luxe" */
+.luxury-badge {
+  position: absolute;
+  top: -12px;       
+  right: -12px;     
+  z-index: 10;
+  border-radius: 50%;
+  padding: 4px;
+  transform: rotate(10deg);
+}
+
+.luxury-badge img {
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
+/* --- Luxe badge for LIST view --- */
+.luxury-badge-list {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 10;
+  transform: rotate(10deg);
+}
+
+.luxury-badge-list img {
+  display: block;
+  width: 50px;
+  height: 50px;
+  animation: crown-swing 4s ease-in-out infinite;
+}
+
+@keyframes crown-swing {
+  0%, 100% { transform: rotate(30deg); }
+  50% { transform: rotate(35deg); }
+}
+

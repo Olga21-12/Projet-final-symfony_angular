@@ -1,0 +1,25 @@
+{% if field.value is not empty %}
+  <div class="d-flex flex-wrap gap-3">
+    {% for bien in field.value %}
+      {% set firstPhoto = bien.photos|first %}
+      <div class="border rounded-3 p-2 shadow-sm" style="width:180px;">
+        {% if firstPhoto and firstPhoto.imageName %}
+          <img src="{{ asset('uploads/biens/' ~ firstPhoto.imageName) }}"
+               alt="Photo du bien"
+               style="width:100%; height:110px; object-fit:cover; border-radius:6px;">
+        {% else %}
+          <div class="bg-light text-muted text-center p-4 rounded-3">Aucune photo</div>
+        {% endif %}
+        <div class="mt-2 small text-center">
+          <a href="{{ path('admin_dashboard') ~ '/?crudAction=detail&crudControllerFqcn=App\\Controller\\Admin\\BienCrudController&entityId=' ~ bien.id }}"
+             target="_blank"
+             class="text-decoration-none fw-semibold">
+            {{ bien.adresse|u.truncate(40) }}
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <span class="text-muted">Aucun bien associé</span>
+{% endif %}

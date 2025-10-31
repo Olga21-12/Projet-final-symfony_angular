@@ -1,0 +1,105 @@
+/* === Общие стили окна === */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  z-index: 1050;
+  backdrop-filter: blur(3px);
+}
+
+.modal-dialog {
+  margin-top: 5%;
+  transition: transform 0.3s ease-out;
+}
+
+.modal-content {
+  background: #fff7f2;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 25px rgba(59, 46, 42, 0.15);
+  color: #3b2e2a;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Анимация появления */
+.animate-modal {
+  animation: fadeInUp 0.4s ease both;
+}
+@keyframes fadeInUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* === Шапка === */
+.modal-header {
+  background: linear-gradient(90deg, teal 0%, darkcyan 100%);
+  font-family: "Chelsea Market", system-ui;
+  letter-spacing: 0.5px;
+  border-top-left-radius: 1.2rem;
+  border-top-right-radius: 1.2rem;
+}
+
+/* === Сетка для кнопок === */
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  justify-items: center;
+  align-items: center;
+}
+
+/* Основные кнопки */
+.list-group-item {
+  background-color: #fffaf5;
+  border: 2px solid teal !important;
+  border-radius: 12px !important;
+  color: #3b2e2a;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-width: 90px;
+}
+
+.list-group-item:hover {
+  background-color: teal;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 128, 128, 0.25);
+}
+
+/* Последняя кнопка (1 mois) — большая, на всю ширину */
+.list-group-item.last-btn {
+  grid-column: 1 / -1; /* занимает всю строку */
+  width: 100%;
+  max-width: 300px;
+  justify-self: center;
+  border-radius: 20px !important;
+  font-size: 1.1rem;
+  padding: 0.7rem 1rem;
+}
+
+/* Кнопка Fermer */
+.btn-outline-secondary {
+  font-weight: 600;
+  border: 2px solid teal;
+  color: teal;
+  font-family: "Montserrat", sans-serif;
+  background-color: #fff7f2;
+  transition: all 0.25s ease;
+}
+.btn-outline-secondary:hover {
+  background-color: teal;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 128, 128, 0.25);
+}

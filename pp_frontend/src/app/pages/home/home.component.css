@@ -1,0 +1,71 @@
+/* Фон всей страницы */
+.home-page {
+  min-height: 100vh;
+  background-size: cover;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Слоган */
+.site-slogan {
+  font-family: "Chelsea Market", system-ui;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #6d5844;
+  font-style: italic;
+}
+
+.expanded_text{
+  font-family: "Chelsea Market", system-ui;
+  color: #3b2e2a;
+  font-weight: 100;
+  letter-spacing: 0.5px;
+}
+
+/* Карта */
+.map-image {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+  width: 50%;
+  min-width: 220px;
+  border: 3px solid #d4b48c;
+  border-radius: 10px;
+}
+
+/* Печать лапки */
+.paw-stamp {
+  float: right;
+  margin: 1rem 0 0 1.5rem;
+  width: 150px;
+  opacity: 0.9;
+  transform: rotate(-30deg);
+  filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.25));
+}
+
+/* Текст */
+.text-content {
+  z-index: 1;
+  position: relative;
+}
+
+.text-content p{
+  text-align: justify;
+}
+
+.country-link {
+  color: #836a62;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.country-link:hover {
+  color: #281f1c;
+  text-decoration: underline;
+}
+
+
+
+

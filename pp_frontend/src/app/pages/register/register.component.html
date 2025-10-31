@@ -1,0 +1,100 @@
+<div class="content-box container mt-5" style="width: 75%;">
+  <h2 class="mb-3 text-center title">Créer un compte</h2>
+
+  <form (ngSubmit)="register()" #registerForm="ngForm">
+    
+    <div class="mb-3">
+      <label>Votre Nom</label>
+      <input type="text" [(ngModel)]="nom" name="nom" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Votre Prénom</label>
+      <input type="text" [(ngModel)]="prenom" name="prenom" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Votre SurNom</label>
+      <input type="text" [(ngModel)]="surnom" name="surnom" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Vous êtes :</label>
+      <select [(ngModel)]="role" name="role" class="form-select" required>
+        <option value="ROLE_CLIENT">Client</option>
+        <option value="ROLE_PROPRIETAIRE">Propriétaire</option>
+      </select>
+    </div>
+
+
+    <div class="mb-3">
+      <label>Date de Naissance</label>
+      <input type="date" [(ngModel)]="date_de_naissance" name="date_de_naissance" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Pays</label>
+      <select [(ngModel)]="selectedPays" name="pays" class="form-select" required (change)="onPaysChange($event)">
+        <option value="">Sélectionnez votre pays</option>
+        <option *ngFor="let p of paysList" [value]="p">{{ p }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3" *ngIf="selectedPays">
+      <label>Ville</label>
+      <select [(ngModel)]="selectedVille" name="ville" class="form-select" required>
+        <option value="">Sélectionnez votre ville</option>
+        <option *ngFor="let v of villes" [value]="v.id">{{ v.ville }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Adresse</label>
+      <input type="text" [(ngModel)]="adresse" name="adresse" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Téléphone</label>
+      <input type="tel" [(ngModel)]="telephone" name="telephone" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="email" name="email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Mot de passe</label>
+      <input type="password" [(ngModel)]="password" name="password" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Confirmer le mot de passe</label>
+      <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Photo de profil</label>
+      <input type="file" (change)="onFileChange($event)" accept="image/*" class="form-control" />
+    </div>
+
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="agreeTerms"
+        [(ngModel)]="agreeTerms"
+        name="agreeTerms"
+        required
+      />
+      <label for="agreeTerms" class="form-check-label">
+        J'accepte les conditions générales d'utilisation
+      </label>
+    </div>
+
+    <button class="btn w-100" type="submit">S’inscrire</button>
+  </form>
+
+  <p *ngIf="message" class="text-success mt-3">{{ message }}</p>
+  <p *ngIf="error" class="text-danger mt-3">{{ error }}</p>
+</div>

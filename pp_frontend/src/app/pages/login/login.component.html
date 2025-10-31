@@ -1,0 +1,25 @@
+<div *ngIf="message" class="alert alert-warning text-center">
+  {{ message }}
+</div>
+
+<div class="container content-box mt-5" style="max-width: 75%;">
+  <h2 class="title text-center mb-4">Connexion</h2>
+
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <form (ngSubmit)="login()" novalidate>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="email" name="email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Mot de passe</label>
+      <input type="password" [(ngModel)]="password" name="password" class="form-control" required />
+    </div>
+
+    <p class="mt-4 text-center">Not registered yet ? <a routerLink="/register">Create an account</a></p>
+
+    <button type="submit" class="btn">Se connecter</button>
+  </form>
+</div>

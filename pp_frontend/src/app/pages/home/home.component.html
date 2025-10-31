@@ -1,0 +1,176 @@
+<div class="home-page">
+  <div class="overlay-container">
+    <div class="container content-box p-4">
+
+      <h1 class="title mb-3">Bienvenue
+        <span *ngIf="user">, {{ user.prenom }} 🐾</span>
+      </h1>
+
+      <p class="site-slogan mb-4">
+        Du château de la reine à la cabane dans les marais, vous trouverez tout chez nous !
+      </p>
+
+      <div class="mb-4 expanded_text">
+        <p>
+            Bienvenue à <strong>Purr Palace</strong>, un univers féérique où
+            chaque demeure a une âme. Louez ou achetez votre rêve : un château
+            lumineux, une cabane cachée, ou une tour oubliée...
+          </p>
+          <p>
+            Ici, les propriétaires sont des conteurs et les voyageurs deviennent
+            des héros. 🐾
+          </p>
+      </div>
+
+      <div class="row align-items-start">
+
+      <div class="text-area">  
+        <!-- Map -->
+        
+          <img
+            src="assets/images/map/map.png"
+            alt="Carte du Royaume"
+            class="map-image"
+          />
+        <h3 class="sous-titre">🏝️ 
+          <a (click)="goToCountry('Avalon')" class="country-link">Avalon</a> — l’île du printemps éternel et de la guérison</h3>
+
+<p>Parmi les brumes et les vergers de pommiers sommeille une île légendaire, où le vent sent le miel et l’eau rend les forces. 
+  On dit que le roi Arthur y trouva le repos, et que la fée Morgane y règne sur le silence et les mystères. 
+  À l’aube, on peut croiser Mélusine près des sources transparentes ou entendre l’écho des anciennes chansons que chantent les vagues.</p>
+<p>🌸 <strong>Idéal pour </strong>: retrouver l’équilibre intérieur, une lune de miel, ou un refuge loin du monde.</p>
+<p>⚠️ <strong class="text-danger">Attention </strong>: le temps y coule plus lentement — les visiteurs risquent d’y rester pour toujours.</p>
+
+<h3 class="sous-titre">🏰 
+  <a (click)="goToCountry('Camelot')" class="country-link">Camelot</a> — le cœur de la chevalerie</h3>
+
+<p>Quelque part entre le conte et la légende s’élève le château de Camelot — cité de gloire, d’épées et d’idéaux.
+Les tables rondes rassemblent les plus braves, et le vin s’y verse avec des histoires.
+Chaque soir, les balcons s’illuminent de torches, et même l’air respire l’aventure.</p>
+<p>💒 <strong>Idéal pour </strong> : mariages médiévaux, tournois, et banquets d’entreprise héroïques.</p>
+<p>🛡️ <strong class="text-success">Conseil </strong>: la location d’armures n’est pas comprise dans le prix.</p>
+
+<h3 class="sous-titre">🌿 
+  <a (click)="goToCountry('Vallée des Moomins')" class="country-link">Vallée des Moomins</a> — le pays de la bonté et du thé chaud</h3>
+
+<p>Les tendres Moomins vous invitent dans leur vallée parfumée de tartes et de résine de pin.
+Ici, même la neige tombe plus doucement, et chaque visiteur reçoit une deuxième portion de confiture.</p>
+<p>🏡 <strong>Idéal pour </strong> : vacances familiales, yoga sous les lanternes, promenades hivernales.</p>
+<p>💬 <strong class="text-success">Conseil </strong> : n’oubliez pas votre parapluie — ici, même la pluie sourit.</p>
+
+<h3 class="sous-titre">❄️ 
+  <a (click)="goToCountry('Narnia')" class="country-link">Narnia</a> — où l’hiver dure cent ans et la magie ne meurt jamais</h3>
+
+<p>Passez la porte d’une vieille armoire et entrez dans un royaume où les animaux parlent et les rois rugissent.
+Les forêts y sont profondes, les châteaux majestueux et la neige plus blanche que la lune.</p>
+<p>💫 <strong>Idéal pour </strong> : mariages d’hiver et retraites mystiques au château de Cair Paravel.</p>
+<p>🦁 <strong class="text-danger">Attention </strong>: méfiez-vous des reines trop généreuses en chocolat chaud.</p>
+
+<h3 class="sous-titre">🧚‍♂️ 
+  <a (click)="goToCountry('Neverland')" class="country-link">Neverland</a> — l’île où l’on ne grandit jamais</h3>
+
+<p>Ici, les fées brillent sous la lune, les sirènes rient dans les criques et le capitaine Crochet loue une cabine sur le « Jolly Roger » (vue sur la mer incluse).</p>
+<p>🌴 <strong>Idéal pour </strong> : retrouver son âme d’enfant et vivre sans horloge.</p>
+<p>🏴‍☠️ <strong class="text-success">Conseil </strong>: si vous entendez « tic-tac »… courez.</p>
+
+<h3 class="sous-titre">⚔️ 
+  <a (click)="goToCountry('Nehwon')" class="country-link">Nehwon</a> — cité des ombres et des épées</h3>
+
+<p>Des tours s’élèvent au-dessus des brumes, les voleurs parlent en poésie, et les rats philosophent.
+Lankhmar, la grande ville, est un labyrinthe d’or et de fièvre.</p>
+<p>💀 <strong>Idéal pour </strong> : aventuriers, chasseurs d’artefacts, et amateurs d’intrigues sombres.</p>
+<p>🕯️ <strong class="text-success">Conseil </strong> : gardez votre bourse près du cœur.</p>
+
+<h3 class="sous-titre">🌈 
+  <a (click)="goToCountry('Oz')" class="country-link">Oz</a> — le royaume au-delà de l’arc-en-ciel</h3>
+
+<p>Dorothy est repartie, mais sa maison se loue toujours !
+Les champs de pavots chantent, les sorcières volent bas et la Cité d’Émeraude scintille au loin.</p>
+<p>💫 <strong>Idéal pour </strong> : amateurs de magie douce et de yoga chez les Munchkins.</p>
+<p>👠 <strong class="text-success">Conseil </strong> : portez vos souliers rouges — on ne sait jamais.</p>
+
+<h3 class="sous-titre">☀️ 
+  <a (click)="goToCountry('Solla Sollew')" class="country-link">Solla Sollew</a> — la ville sans soucis</h3>
+
+<p>Une cité où tous les problèmes se résolvent d’eux-mêmes et où l’air sent le citron et la joie.</p>
+<p>🌞 <strong>Idéal pour </strong> : ceux qui veulent faire une pause dans la réalité.</p>
+<p>🎈 <strong class="text-success">Conseil </strong> : si vous voyez Whoville, restez pour Noël.</p>
+
+<h3 class="sous-titre">🚂 
+  <a (click)="goToCountry('Sodor')" class="country-link">Sodor</a> — l’île des trains bavards</h3>
+
+<p>Thomas et ses amis accueillent les voyageurs à vapeur et à sourire.
+Les collines sont vertes, les rails chantent et chaque gare raconte une histoire.</p>
+<p>🚆 <strong>Idéal pour </strong>: familles et collectionneurs de locomotives.</p>
+<p>🔔 <strong class="text-success">Conseil </strong> : ici, les trains ont toujours raison.</p>
+
+<h3 class="sous-titre">🌋 
+  <a (click)="goToCountry('Terre du Milieu')" class="country-link">Terre du Milieu</a> — berceau des héros et des hobbits</h3>
+
+<p>Des collines du Comté aux montagnes du Mordor, chaque pierre porte un chant ancien.
+Vous pouvez louer un terrier hobbit ou un manoir elfique suspendu dans la lumière.</p>
+<p>🧙‍♂️ <strong>Idéal pour </strong> : rêveurs et amateurs de deuxième petit-déjeuner.</p>
+<p>💍 <strong class="text-danger">Attention </strong>: évitez les bijoux maudits.</p>
+
+<h3 class="sous-titre">🌌 
+  <a (click)="goToCountry('Pays des Rêves')" class="country-link">Pays des Rêves</a> — là où tout devient possible</h3>
+
+<p>Les songes s’y promènent librement entre les mers de brume et les tours de lune.</p>
+<p>🌙 <strong>Idéal pour </strong> : poètes, artistes, insomniaques inspirés.</p>
+<p>💤 <strong class="text-success">Conseil </strong>: attention à ne pas y rester endormi pour toujours.</p>
+
+<h3 class="sous-titre">🎩 
+  <a (click)="goToCountry('Pays des Merveilles')" class="country-link">Pays des Merveilles</a> — où la logique prend des vacances</h3>
+
+<p>Le Chat du Cheshire loue une maison invisible, le Chapelier fou organise des goûters sans fin.</p>
+<p>🍰 <strong>Idéal pour </strong> : esprits créatifs et rêveurs fous.</p>
+<p>🕳️ <strong class="text-success">Conseil </strong> : ici, poser des questions normales est impoli.</p>
+
+<h3 class="sous-titre">🪵 
+  <a (click)="goToCountry('Terabithia')" class="country-link">Terabithia </a>— royaume secret de l’amitié</h3>
+
+<p>Traversez la rivière à la corde et entrez dans un monde né de l’imagination.</p>
+<p>🌿 <strong>Idéal pour </strong> : ceux qui cherchent la magie intérieure.</p>
+<p>📖 <strong class="text-success">Conseil </strong> : parfois, les plus beaux ponts sont invisibles.</p>
+
+<h3 class="sous-titre">💎 
+  <a (click)="goToCountry('Thra')" class="country-link">Thra</a> — le monde du Cristal Noir</h3>
+
+<p>Entre ténèbres et lumière, les Gelflings luttent pour réparer le Cristal sacré.</p>
+<p>✨ <strong>Idéal pour </strong> : chercheurs de vérité et collectionneurs de légendes.</p>
+<p>🔮 <strong class="text-success">Conseil </strong> : la lumière la plus forte vient du cœur.</p>
+
+<h3 class="sous-titre">🕊️ 
+  <a (click)="goToCountry('Utopie')" class="country-link">Utopie</a> — l’île de l’équilibre parfait</h3>
+
+<p>Pas d’argent, pas de stress — juste des jardins, des rires et des lois équitables.</p>
+<p>🌻 <strong>Idéal pour </strong> : philosophes, rêveurs, et adeptes du brunch éternel.</p>
+<p>⚖️ <strong class="text-success">Conseil </strong> : ici, tout le monde a raison.</p>
+
+<h3 class="sous-titre">🌺 
+  <a (click)="goToCountry('Fantasia')" class="country-link">Fantasia</a> — le monde créé par les pensées</h3>
+
+<p>Chaque idée devient montagne, chaque rêve prend forme.
+La Reine Enfant attend celui qui osera croire encore.</p>
+<p>🌈 <strong>Idéal pour </strong> : écrivains, enfants et âmes fatiguées.</p>
+<p>📜 <strong class="text-success">Conseil </strong> : attention à ce que vous souhaitez — cela se réalisera.</p>
+
+<h3 class="sous-titre">🌾 
+  <a (click)="goToCountry('Comté')" class="country-link">Comté</a> — le havre des hobbits</h3>
+
+<p>Des portes rondes, des gâteaux, et de la bière blonde au coucher du soleil.</p>
+<p>🍂 <strong>Idéal pour </strong> : gourmands, tranquilles et amateurs de siestes prolongées.</p>
+<p>🍻 <strong class="text-success">Conseil </strong> : un invité qui chante ne paye pas le loyer.</p>
+
+     <!-- Empreinte de patte dans le coin inférieur droit -->
+    <img
+      src="assets/images/decor/paw-stamp.png"
+      alt="Sceau du chat"
+      class="paw-stamp"
+    />
+    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

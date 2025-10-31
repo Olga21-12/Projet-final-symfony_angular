@@ -1,0 +1,162 @@
+<form (ngSubmit)="onSubmit()" class="filter-form p-3 shadow-sm rounded">
+  <!-- 🔍 Recherche -->
+  <input
+    [(ngModel)]="filters.q"
+    name="q"
+    class="form-control mb-4"
+    placeholder="🔎 Rechercher par mot-clé (ex: château, mer, jardin...)"
+  />
+
+  <!--  Filtres -->
+  <div class="filter-menu">
+
+     <!--  Activité -->
+
+    <div class="mt-4">
+  <label class="fw-bold mb-3 d-block">Vous voudriez :</label>
+
+  <div class="activity-blocks d-flex flex-column gap-2">
+    <div
+      class="activity-item"
+      [class.active]="filters.activite === 'Vente'"
+      (click)="filters.activite = 'Vente'">Acheter
+    </div>
+
+    <div
+      class="activity-item"
+      [class.active]="filters.activite === 'Location longue'"
+      (click)="filters.activite = 'Location long'">Louer à long terme
+    </div>
+
+    <div
+      class="activity-item"
+      [class.active]="filters.activite === 'Location courte'"
+      (click)="filters.activite = 'Location court'">Louer pour court séjour
+    </div>
+
+    <div
+      class="activity-item"
+      [class.active]="filters.activite === ''"
+      (click)="filters.activite = ''">Voir tout
+    </div>
+  </div>
+</div>
+
+  <!-- Pays -->
+    <div class="filter-item">
+      <div
+        class="filter-title"
+        data-bs-toggle="collapse"
+        data-bs-target="#paysCollapse">
+        Pays
+      </div>
+      <ul
+        id="paysCollapse"
+        class="collapse filter-submenu list-unstyled ps-3">
+        <li
+          *ngFor="let p of paysList"
+          (click)="filters.pays = p"
+          class="filter-option"
+          [class.active]="filters.pays === p">
+          {{ p }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Ville -->
+    <div class="filter-item">
+      <div
+        class="filter-title"
+        data-bs-toggle="collapse"
+        data-bs-target="#villeCollapse">
+        Ville
+      </div>
+      <ul
+        id="villeCollapse"
+        class="collapse filter-submenu list-unstyled ps-3"
+      >
+        <li
+          *ngFor="let v of villesList"
+          (click)="filters.ville = v"
+          class="filter-option"
+          [class.active]="filters.ville === v">
+          {{ v }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Type de bien -->
+    <div class="filter-item">
+      <div
+        class="filter-title"
+        data-bs-toggle="collapse"
+        data-bs-target="#typeCollapse">
+        Type de bien
+      </div>
+      <ul
+        id="typeCollapse"
+        class="collapse filter-submenu list-unstyled ps-3"
+      >
+        <li
+          *ngFor="let t of typesList"
+          (click)="filters.typeBien = t"
+          class="filter-option"
+          [class.active]="filters.typeBien === t">
+          {{ t }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Confort -->
+    <div class="filter-item">
+      <div
+        class="filter-title"
+        data-bs-toggle="collapse"
+        data-bs-target="#confortCollapse">
+        Confort
+      </div>
+      <ul
+        id="confortCollapse"
+        class="collapse filter-submenu list-unstyled ps-3"
+      >
+        <li
+          *ngFor="let c of confortsList"
+          (click)="filters.confort = c"
+          class="filter-option"
+          [class.active]="filters.confort === c">
+          {{ c }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!--  Prix / Surface / Chambres -->
+  <div class="mt-4">
+    <input
+      [(ngModel)]="filters.prixMax"
+      name="prixMax"
+      type="number"
+      class="form-control mb-2"
+      placeholder="Prix maximum (€)"
+    />
+    <input
+      [(ngModel)]="filters.surfaceMax"
+      name="surfaceMax"
+      type="number"
+      class="form-control mb-2"
+      placeholder="Surface maximum (m²)"
+    />
+    <input
+      [(ngModel)]="filters.chambres"
+      name="chambres"
+      type="number"
+      class="form-control mb-3"
+      placeholder="Nombre min de chambres"
+    />
+  </div>
+
+  <!--  Bouton -->
+  <div class="text-center">
+    <button class="btn btn-primary w-100">🔍 Filtrer</button>
+  </div>
+</form>

@@ -1,0 +1,106 @@
+<div class="container content-box mt-5 text-center" *ngIf="user; else loading">
+  <p *ngIf="message" class="alert alert-success text-center">
+    {{ message }}
+  </p>
+  <h2 class="text-center title mb-4">Bienvenue, {{ user.surnom }} 🐾</h2>
+
+  <div class="row justify-content-center align-items-center profile-layout">
+    <!-- Photo -->
+    <div class="col-md-4 justify-content-center">
+      <img [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user.photo || 'sans_photo.png')"
+           alt="Photo de profil"
+           class="profile-photo">           
+    </div>
+
+    <!-- Information -->
+    <div class="col-md-6 profile-info">
+      <p><strong>Nom :</strong> {{ user.nom }}</p>
+      <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+      <p><strong>Rôle :</strong> {{ user.role }}</p>
+      <p><strong>Email :</strong> {{ user.email }}</p>
+      <p><strong>Pays et Ville :</strong> {{ user.pays }}, {{ user.ville }}</p>
+      <p><strong>Adresse :</strong> {{ user.adresse }}</p>
+      <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
+      <p><strong>Âge :</strong> {{ user.age }} ans</p>
+      <p><strong>Date d'inscription :</strong> {{ user.date_inscription }}</p>
+      <p><strong>Dernière modification :</strong> {{ user.date_modification }}</p>
+
+    <div class="mt-4 d-flex flex-wrap justify-content-center gap-2">
+      <button class="btn btn-outline-primary" (click)="editProfile()">✏️ Modifier mon compte</button>
+      <button class="btn btn-outline-danger" (click)="deleteProfile()">🗑️ Supprimer mon compte</button>
+    </div>
+
+    <div class="mt-4 d-flex flex-wrap justify-content-center gap-2" *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'">
+      <a routerLink="/biens/create" class="btn btn-outline-info">🏠 Ajouter un logement</a>
+
+      <a *ngIf="user?.role?.toLowerCase() === 'admin'" href="https://127.0.0.1:8000/admin" target="_blank" class="btn btn-outline-secondary">
+      ⚙️ Accéder au panneau admin</a>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center mt-5">
+    <p>Chargement du profil...</p>
+  </div>
+</ng-template>
+
+<!-- Section Onglets -->
+<div class="mt-5 profile-tabs" *ngIf="user">
+  <ul class="nav nav-tabs justify-content-center">
+
+    <!-- Onglets visibles pour propriétaire et admin -->
+    <li
+      class="nav-item"
+      *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'"
+    >
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'annonces'"
+        (click)="activeTab = 'annonces'"
+      >
+        🏡 Mes annonces
+      </a>
+    </li>
+
+    <li
+      class="nav-item"
+      *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'"
+    >
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'recherches'"
+        (click)="activeTab = 'recherches'"
+      >
+        💾 Mes recherches sauvegardées
+      </a>
+    </li>
+
+    <!-- Réservé au client -->
+    <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'client'">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'recherches'"
+        (click)="activeTab = 'recherches'"
+      >
+        💾 Mes recherches sauvegardées
+      </a>
+    </li>
+  </ul>
+
+  <!-- Contenu de l'onglet -->
+  <div class="tab-content mt-4">
+    <!-- Mes annonces -->
+    <div *ngIf="activeTab === 'annonces'">
+      <app-mes-biens [userId]="user.id"></app-mes-biens>
+    </div>
+
+    <!-- Mes recherches enregistrées -->
+    <div *ngIf="activeTab === 'recherches'">
+      <app-mes-search [userId]="user.id"></app-mes-search>
+    </div>
+  </div>
+</div>
+

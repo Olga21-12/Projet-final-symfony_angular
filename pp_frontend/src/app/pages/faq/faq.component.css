@@ -1,0 +1,41 @@
+.faq-container {
+  max-width: 900px;
+  background-color: rgba(255, 250, 245, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.accordion-button {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #3b2e2a;
+  transition: all 0.3s ease;
+}
+
+.accordion-button:hover {
+  background-color: #20c997;
+  color: #fff;
+}
+
+.accordion-body {
+  background-color: #fff;
+  border-radius: 10px;
+  color: #3e2f28;
+  font-size: 1rem;
+}
+
+hr {
+  border-color: #d4b48c;
+}
+
+h1,
+h2 {
+  font-family: "Chelsea Market", system-ui;
+  color: #3b2e2a;
+}
+
+p {
+  color: #4a3d37;
+}

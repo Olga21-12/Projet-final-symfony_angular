@@ -1,0 +1,46 @@
+<div
+  class="modal fade show"
+  tabindex="-1"
+  style="display: block; background: rgba(0,0,0,0.5)"
+  *ngIf="visible"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-4 animate-modal">
+      <div class="modal-header bg-info text-white rounded-top-4">
+        <h5 class="modal-title fw-semibold">Choisir la durée</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          aria-label="Fermer"
+          (click)="close()"
+        ></button>
+      </div>
+
+      <div class="modal-body text-center px-4 py-4">
+        <p class="mb-4 text-muted">
+          Sélectionnez la durée de la location :
+        </p>
+        <div class="list-group border-0">
+          <button
+            class="list-group-item list-group-item-action border rounded-3 mb-2 fw-medium"
+            *ngFor="let d of durations"
+            (click)="chooseDuration(d.days)"
+            [disabled]="loading"
+          >
+            {{ d.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 justify-content-center pb-4">
+        <button
+          class="btn btn-outline-secondary px-4 rounded-pill"
+          (click)="close()"
+          [disabled]="loading"
+        >
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

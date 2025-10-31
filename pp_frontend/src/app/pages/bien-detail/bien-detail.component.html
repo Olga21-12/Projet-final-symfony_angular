@@ -1,0 +1,121 @@
+<div class="container content-bien mt-5" *ngIf="!loading && bien; else loadingTpl">
+  
+    <div class="text-center mb-4">
+      <h2 class="title d-inline-block position-relative m-0">
+        {{ libelleTypeEtActivite }}
+        <span *ngIf="bien.luxe" class="luxury-crown-end">
+          <img
+            src="/assets/icons/crown.png"
+            alt="Bien de luxe"
+            width="40"
+            height="40"
+            title="Bien de luxe"
+          />
+        </span>
+      </h2>
+    </div>
+
+  <div class="row">
+    <!-- Colonne gauche (Photos) -->
+<div class="col-md-6 text-center">
+
+  <!-- Si plusieurs photos — carrousel -->
+  <div *ngIf="bien.photos && bien.photos.length > 1" id="carouselPhotos" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngFor="let photo of bien.photos; let i = index" class="carousel-item" [class.active]="i === 0">
+        <img
+          [src]="'https://127.0.0.1:8000' + photo"
+          class="d-block w-100 rounded shadow-sm"
+          alt="photo bien"
+          onerror="this.src='https://127.0.0.1:8000/uploads/biens/sans_photo.png'"
+        />
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPhotos" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselPhotos" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+    <!-- Si une seule photo ou aucune -->
+    <img
+      *ngIf="!bien.photos || bien.photos.length <= 1"
+      [src]="'https://127.0.0.1:8000' + (bien.photos?.[0] || '/uploads/biens/sans_photo.png')"
+      class="img-fluid rounded shadow-sm"
+      alt="photo bien"
+      onerror="this.src='https://127.0.0.1:8000/uploads/biens/sans_photo.png'"
+    />
+  </div>
+
+    <!-- Colonne droite (Infos) -->
+    <div class="col-md-6">
+      <h4 class="text-secondary mb-3">{{ bien.emplacement.ville }}, {{ bien.emplacement.pays }}</h4>
+      <p><strong>Adresse :</strong> {{ bien.adresse }}</p>
+      <p class="mb-1">
+        <strong>Prix :</strong>
+        {{ bien.prix | priceByActivity: bien.activite_key }}
+      </p>
+
+      <p class="mb-1">
+        <strong>Disponibilité :
+        <span [ngClass]="bien.disponibilite ? 'text-success' : 'text-danger'">
+          {{ bien.disponibilite ? 'Disponible' : 'Non disponible' }}
+        </span></strong>
+      </p>
+
+      <p><strong>Surface :</strong> {{ bien.surface }} m²</p>
+      <p><strong>Chambres :</strong> {{ bien.nombre_de_chambres }} </p>
+      <p><strong>Confort :</strong> {{ bien.conforts.join(', ') || 'Aucun' }}</p>
+      <p><strong>Propriétaire :</strong> {{ bien.proprietaire?.surnom }} </p>
+
+      <div class="mt-4">
+        <button
+          class="btn me-2"
+          [ngClass]="bien.disponibilite ? 'btn-available' : 'btn-unavailable'"
+          [disabled]="!bien.disponibilite"
+          (click)="onAction()">
+          {{ bien.disponibilite ? libelleActivite : 'Indisponible' }}
+        </button>
+
+
+        <a href="mailto:{{ bien.proprietaire?.email }}" class="btn btn-outline-info">Contacter le propriétaire</a>
+      </div>
+
+      <p class="mt-3 text-muted small">
+        Publié le {{ bien.created_at }} — Modifié le {{ bien.updated_at }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="mt-4">
+    <h5>Description</h5>
+    <p [innerHTML]="bien.description"></p>
+  </div>
+
+  <!-- Boutons bas -->
+  <div class="text-center mt-4">
+    <button class="btn me-2" (click)="goBack()">⬅ Retour à la liste</button>
+
+    <!-- Les boutons modifier et supprimer ne sont visibles que par l'auteur -->
+    <button *ngIf="bien.proprietaire?.id === userId" class="btn me-2" (click)="editBien()">✏️ Modifier</button>
+    <button *ngIf="bien.proprietaire?.id === userId" class="btn " (click)="deleteBien()">🗑 Supprimer</button>
+  </div>
+</div>
+
+  <app-modal-louer
+    [visible]="showModal"
+    [bienId]="bien?.id!"
+    [userId]="userId!"
+    (closed)="closeModal()"
+    (success)="onSuccess()">
+  </app-modal-louer>
+
+<ng-template #loadingTpl>
+  <div class="text-center mt-5">
+    <div class="spinner-border text-info" role="status"></div>
+    <p class="mt-3">Chargement du logement... </p>
+  </div>
+</ng-template>

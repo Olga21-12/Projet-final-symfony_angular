@@ -1,0 +1,13 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+  <router-outlet></router-outlet>
+</div>
+
+<button id="backToTop" 
+        class="back-to-top" 
+        title="Revenir en haut" 
+        (click)="scrollToTop()" 
+        [class.visible]="showButton">↑</button>
+
+<app-footer></app-footer>

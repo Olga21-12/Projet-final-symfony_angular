@@ -1,0 +1,29 @@
+~$*
+# 
+*()
+*[
+*]
+
+# Symfony
+/vendor/
+.env
+/.idea/
+var/
+
+
+# Angular
+pp_frontend/node_modules/
+pp_frontend/.angular/
+pp_frontend/dist/
+pp_frontend/coverage/
+
+# System files
+.DS_Store
+Thumbs.db
+
+pp_frontend/node_modules/
+pp_frontend/.angular/
+pp_frontend/coverage/
+pp_backend/vendor/
+pp_backend/var/
+

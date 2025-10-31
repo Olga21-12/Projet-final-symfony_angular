@@ -1,0 +1,13 @@
+<div class="container container-box mt-5">
+  <app-bien-form
+    [isEditMode]="false"
+    (formSubmit)="onFormSubmit($event)">
+  </app-bien-form>
+
+  <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+</div>
+
+<div class="text-end mt-3">
+  <button class="btn btn-secondary" (click)="goBack()">Annuler</button>
+</div>

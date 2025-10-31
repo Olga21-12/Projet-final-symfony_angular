@@ -1,0 +1,102 @@
+<div class="container content-box mt-5" *ngIf="user; else loading">
+  <h2 class="text-center title mb-4">Modifier le profil</h2>
+
+  <div *ngIf="message" class="alert alert-success text-center">{{ message }}</div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <form (ngSubmit)="saveProfile()" #editForm="ngForm">
+
+     <!-- Photo -->
+  <div class="mb-4 text-center">
+    <img
+      [src]="'https://127.0.0.1:8000/uploads/profiles/' + (user.photo || 'sans_photo.png')"
+      alt="Photo de profil"
+      class="profile-photo mb-3"
+      width="160"
+      height="160"
+    />
+    <input type="file" (change)="onPhotoSelected($event)" class="form-control" />
+  </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Nom :</label>
+        <input type="text" [(ngModel)]="user.nom" name="nom" class="form-control" required />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Prénom :</label>
+        <input type="text" [(ngModel)]="user.prenom" name="prenom" class="form-control" required />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Surnom :</label>
+        <input type="text" [(ngModel)]="user.surnom" name="surnom" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="role" class="form-label">Rôle :</label>
+        <!-- la valeur actuelle se sélectionne automatiquement -->
+          <select [(ngModel)]="user.role" name="role" class="form-select">
+            <option value="Client">Client</option>
+            <option value="Proprietaire">Propriétaire</option>
+          </select>
+
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Adresse :</label>
+        <input type="text" [(ngModel)]="user.adresse" name="adresse" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Téléphone :</label>
+        <input type="text" [(ngModel)]="user.telephone" name="telephone" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Date de naissance :</label>
+        <input type="date" [(ngModel)]="user.date_naissance" name="date_naissance" class="form-control" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Pays</label>
+        <select
+          [(ngModel)]="selectedPays"
+          name="pays"
+          class="form-select"
+          (change)="onPaysChange($event)"
+          required
+        >
+          <option value="">Sélectionnez votre pays</option>
+          <option *ngFor="let p of paysList" [value]="p">{{ p }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3" *ngIf="selectedPays">
+        <label>Ville</label>
+        <select
+          [(ngModel)]="selectedVille"
+          name="ville"
+          class="form-select"
+          required
+        >
+          <option value="">Sélectionnez votre ville</option>
+          <option *ngFor="let v of villes" [value]="v.id">{{ v.ville }}</option>
+        </select>
+      </div>
+
+          <div class="text-center mt-4">
+      <button type="submit" class="btn me-2">💾 Enregistrer</button>
+      <button type="button" class="btn" (click)="cancelEdit()">Annuler</button>
+    </div>
+  </div>
+  </form>
+</div>
+
+<ng-template #loading>
+  <div class="text-center mt-5">
+    <div class="spinner-border text-info" role="status"></div>
+    <p class="mt-3">Chargement du profil...</p>
+  </div>
+</ng-template>
