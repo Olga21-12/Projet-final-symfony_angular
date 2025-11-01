@@ -165,11 +165,11 @@ export class BienListComponent implements OnInit {
           typeBien: filters.typeBien
         };
 
-          this.rechercheService.saveSearch(payload).subscribe({
-            next: () => console.log('🔹 Recherche sauvegardée'),
-            error: (err) => console.warn('Erreur sauvegarde recherche:', err)
-          });
-        }
+//          this.rechercheService.saveSearch(payload).subscribe({
+//            next: () => console.log('🔹 Recherche sauvegardée'),
+//            error: (err) => console.warn('Erreur sauvegarde recherche:', err)
+//         });
+       }
       },
       error: () => {
         this.error = 'Erreur de filtrage';

@@ -1,14 +1,68 @@
-.card-body .btn {
-  flex: 1;
-  margin: 0 4px;
-  font-size: 0.85rem;
-  padding: 4px 6px; 
+:root {
+  --teal: #2aa198;
+  --teal-light: #4cc0b0;
+  --gold: #f4c542;
+  --bg-light: #faf8f6;
 }
 
-.card-body .btn:first-child {
-  margin-left: 0;
+.bien-card {
+  background-color: var(--bg-light);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-size: 0.9rem;
+  padding-top: 1.2rem;
 }
 
-.card-body .btn:last-child {
-  margin-right: 0;
+.bien-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 👑 Luxe badge */
+.badge-luxe {
+  background-color: var(--gold);
+  color: #333;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.text-teal {
+  color: var(--teal);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.btn-outline-teal {
+  color: var(--teal);
+  border: 1px solid var(--teal);
+}
+
+.btn-outline-teal:hover {
+  background-color: var(--teal);
+  color: white;
+}
+
+.btn-outline-gold {
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--gold);
+  color: white;
+}
+
+.btn-group-custom .btn {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+}
+
+@media (max-width: 576px) {
+  .bien-card {
+    font-size: 0.85rem;
+    padding-top: 0.8rem;
+  }
 }

@@ -65,42 +65,43 @@
       </a>
     </li>
 
-    <li
+     <li
       class="nav-item"
       *ngIf="user?.role?.toLowerCase() === 'propriétaire' || user?.role?.toLowerCase() === 'admin'"
     >
       <a
         class="nav-link"
-        [class.active]="activeTab === 'recherches'"
-        (click)="activeTab = 'recherches'"
+        [class.active]="activeTab === 'achats'"
+        (click)="activeTab = 'achats'"
       >
-        💾 Mes recherches sauvegardées
+        💎 Mes achats et locations
       </a>
     </li>
 
-    <!-- Réservé au client -->
+    <!-- Pour client uniquement -->
     <li class="nav-item" *ngIf="user?.role?.toLowerCase() === 'client'">
       <a
         class="nav-link"
-        [class.active]="activeTab === 'recherches'"
-        (click)="activeTab = 'recherches'"
+        [class.active]="activeTab === 'achats'"
+        (click)="activeTab = 'achats'"
       >
-        💾 Mes recherches sauvegardées
+        💎 Mes achats et locations
       </a>
     </li>
   </ul>
 
-  <!-- Contenu de l'onglet -->
+  <!-- Contenu des onglets -->
   <div class="tab-content mt-4">
-    <!-- Mes annonces -->
+
+    <!-- 🏡 Mes annonces -->
     <div *ngIf="activeTab === 'annonces'">
       <app-mes-biens [userId]="user.id"></app-mes-biens>
     </div>
 
-    <!-- Mes recherches enregistrées -->
-    <div *ngIf="activeTab === 'recherches'">
+    <!-- 💎 Mes achats et locations -->
+    <div *ngIf="activeTab === 'achats'">
       <app-mes-search [userId]="user.id"></app-mes-search>
     </div>
+      </div>
   </div>
-</div>
 

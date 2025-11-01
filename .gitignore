@@ -21,8 +21,6 @@ pp_frontend/coverage/
 .DS_Store
 Thumbs.db
 
-pp_frontend/node_modules/
-pp_frontend/.angular/
 pp_frontend/coverage/
 pp_backend/vendor/
 pp_backend/var/

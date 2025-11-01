@@ -1,15 +1,49 @@
-<div *ngIf="!recherches || recherches.length === 0" class="text-muted text-center py-4">
-  <p>Aucune recherche enregistrée pour le moment.</p>
+<div *ngIf="loading" class="text-center my-4">Chargement...</div>
+
+<div *ngIf="!loading && recherche.length === 0" class="text-center text-muted my-4">
+  Vous n'avez pas encore effectué d'achat ou de location.
 </div>
 
-<div *ngIf="recherches && recherches.length > 0"
-     class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-  <a *ngFor="let r of recherches"
-     [routerLink]="['/biens']"
-     [queryParams]="{ pays: r.pays, ville: r.ville, typeBien: r.type_bien }"
-     class="btn btn-outline-info rounded-pill">
-    🌍 {{ r.pays || '—' }}
-    <span *ngIf="r.ville"> • {{ r.ville }}</span>
-    <span *ngIf="r.type_bien"> • 🏠 {{ r.type_bien }}</span>
-  </a>
+<div *ngIf="!loading && recherche.length > 0" class="row justify-content-center">
+  <div *ngFor="let t of recherche" class="col-sm-6 col-md-4 col-lg-3 mb-4">
+    <div class="card transaction-card shadow-sm h-100 border-0 rounded-4">
+      <div class="img-container">
+        <img
+          *ngIf="t.photo"
+          [src]="'https://127.0.0.1:8000' + t.photo"
+          class="card-img-top rounded-top-4"
+          alt="Photo du bien"
+        />
+        <span
+          class="badge-type position-absolute top-0 start-0 m-2 px-3 py-1 rounded-pill"
+          [ngClass]="t.type === 'achat' ? 'achat' : 'location'"
+        >
+          {{ t.type === 'achat' ? 'Achat' : 'Location' }}
+        </span>
+      </div>
+
+      <div class="card-body p-3 text-center">
+        <h6 class="fw-bold text-teal mb-2">{{ t.type_bien }}</h6>
+        <p class="fw-semibold mb-2 text-dark">{{ t.adresse }}</p>
+        <p class="text-muted small mb-2">
+          📍 {{ t.ville }}, {{ t.pays }}
+        </p>
+        <p class="fw-bold text-gold mb-2">{{ t.prix | number }} €</p>
+
+        <p class="small text-secondary mb-1" *ngIf="t.date_debut">
+          📅 Du {{ t.date_debut }} au {{ t.date_fin }}
+        </p>
+        <p class="small text-secondary mb-1" *ngIf="t.date_achat">
+          🗓 Acheté le {{ t.date_achat }}
+        </p>
+
+        <a
+          [routerLink]="['/biens', t.bien_id]"
+          class="btn btn-outline-teal btn-sm rounded-pill px-3 mt-2"
+        >
+          Voir le bien
+        </a>
+      </div>
+    </div>
+  </div>
 </div>

@@ -108,7 +108,8 @@ ngOnInit(): void {
       else if (err.status === 404)
         alert("Le logement n'existe plus.");
       else
-        alert("Erreur lors de la suppression du logement.");
+        alert("Cette opération nécessite l'intervention de l'administrateur du site. Vous allez être redirigé vers la page FAQ.");
+        this.router.navigate(['/faq']);
     }
   });
 }

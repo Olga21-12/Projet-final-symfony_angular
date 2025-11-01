@@ -239,6 +239,16 @@ class BienApiController extends AbstractController
     //    }
 
     // Supprimé de la base de données (les photos restent dans /uploads/biens)
+
+        // Suppression des photos liées
+    //foreach ($bien->getPhotos() as $photo) {
+    //    $em->remove($photo);
+    //}
+
+    // ajouter la compensation des réservations et des ventes si nécessaire
+    // foreach ($bien->getReservations() as $res) { $em->remove($res); }
+    // foreach ($bien->getOffresVente() as $vente) { $em->remove($vente); }
+
         $em->remove($bien);
         $em->flush();
 

@@ -46,9 +46,9 @@
                   title="Bien de luxe"
                 />
               </div>
-            
+
             <h5 class="card-title">{{ bien.type }} — {{ bien.activite }}</h5>
-            
+
             <img
               [src]="'https://127.0.0.1:8000' + (bien.photos && bien.photos.length ? bien.photos[0] : '/uploads/biens/sans_photo.png')"
               class="card-img-top"
@@ -56,7 +56,7 @@
             />
 
             <div class="card-body">
-              
+
               <p class="card-text" [innerHTML]="bien.description | truncate: 100 : true : '...' : true"></p>
 
               <p class="mb-1">
@@ -100,7 +100,7 @@
                   title="Bien de luxe"
                 />
               </div>
-          
+
           <div class="bien-photo">
             <img [src]="'https://127.0.0.1:8000' + (bien.photos && bien.photos.length ? bien.photos[0] : '/uploads/biens/sans_photo.png')"
                  alt="Photo du bien" />

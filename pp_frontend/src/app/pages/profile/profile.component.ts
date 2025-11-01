@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit{
 
 loadRecherches() {
   if (!this.user) return;
-  this.rechercheService.getUserRecherchesById(this.user.id).subscribe({
+  this.rechercheService.getByUser(this.user.id).subscribe({
     next: (data) => {
       this.recherches = data;
     },

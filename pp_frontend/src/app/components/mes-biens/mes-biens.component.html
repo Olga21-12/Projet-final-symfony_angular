@@ -1,33 +1,56 @@
-<div *ngIf="loading" class="text-center">Chargement...</div>
+<div *ngIf="loading" class="text-center my-4">Chargement...</div>
 
-<div *ngIf="!loading && biens.length === 0" class="text-center text-muted">
+<div *ngIf="!loading && biens.length === 0" class="text-center text-muted my-4">
   Vous n'avez pas encore ajouté d'annonces.
 </div>
 
 <div *ngIf="!loading && biens.length > 0" class="row justify-content-center">
-  <div *ngFor="let bien of biens" class="col-md-4 mb-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h5 class="card-title">{{ bien.adresse }}</h5>
-        <p><strong>Prix :</strong> {{ bien.prix | number }} €</p>
-        <p><strong>Type :</strong> {{ bien.type?.type_de_bien }}</p>
-        <p><strong>Pays / Ville :</strong> {{ bien.emplacement?.pays }} / {{ bien.emplacement?.ville }}</p>
-        <p><strong>Activité :</strong> {{ bien.typeActivite?.type_activite }}</p>
-        <p>
+  <div *ngFor="let bien of biens" class="col-sm-6 col-md-4 col-lg-3 mb-4">
+    <div class="card bien-card shadow-sm h-100 border-0 rounded-4 position-relative">
+      
+      <!-- 👑 Luxe badge -->
+      <span *ngIf="bien.luxe"
+            class="badge-luxe position-absolute top-0 end-0 m-2 px-2 py-1 rounded-pill">
+        👑 Luxe
+      </span>
+
+      <div class="card-body p-3 text-center">
+        <h6 class="fw-bold text-teal mb-2">{{ bien.type?.type_de_bien }}</h6>
+        <p class="fw-semibold mb-2 text-dark">{{ bien.adresse }}</p>
+        <p class="text-muted small mb-2">
+          📍 {{ bien.emplacement?.ville }}, {{ bien.emplacement?.pays }}
+        </p>
+
+        <p class="fw-bold text-gold mb-2">{{ bien.prix | number }} €</p>
+
+        <p class="small mb-2">
+          <strong>Activité :</strong> {{ bien.typeActivite?.type_activite }}
+        </p>
+
+        <p class="small mb-2">
           <strong>Disponibilité :</strong>
           <span [ngClass]="bien.disponibilite ? 'text-success' : 'text-danger'">
             {{ bien.disponibilite ? 'Disponible' : 'Non disponible' }}
           </span>
         </p>
 
-        <div class="mt-3 d-flex justify-content-between flex-wrap">
-          <button class="btn btn-sm btn-outline-info" (click)="viewBien(bien.id)">
+        <div class="btn-group-custom mt-3 d-flex justify-content-center flex-wrap">
+          <button
+            class="btn btn-sm btn-outline-teal rounded-pill px-3 m-1"
+            (click)="viewBien(bien.id)"
+          >
             👁️ Voir
           </button>
-          <button class="btn btn-sm btn-outline-warning" (click)="editBien(bien.id)">
+          <button
+            class="btn btn-sm btn-outline-gold rounded-pill px-3 m-1"
+            (click)="editBien(bien.id)"
+          >
             ✏️ Modifier
           </button>
-          <button class="btn btn-sm btn-outline-danger" (click)="deleteBien(bien.id)">
+          <button
+            class="btn btn-sm btn-outline-danger rounded-pill px-3 m-1"
+            (click)="deleteBien(bien.id)"
+          >
             🗑️ Supprimer
           </button>
         </div>

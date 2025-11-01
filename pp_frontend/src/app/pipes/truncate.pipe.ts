@@ -5,16 +5,24 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   name: 'truncate'
 })
 export class TruncatePipe implements PipeTransform {
+
   constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: any, limit: number): SafeHtml | string {
-    if (value == null) return '';
-    value = value.toString(); // ✅ correction : conversion en texte
+  transform(value: string, limit: number = 100, completeWords: boolean = true, ellipsis: string = '...', asHtml: boolean = false): string | SafeHtml {
 
-    if (!limit || limit <= 0) return value; // ✅ correction : limite nulle → pas de troncature
-    if (value.length <= limit) return value;
+    if (!value) return '';
+    if (value.length <= limit) return asHtml ? this.sanitizer.bypassSecurityTrustHtml(value) : value;
 
-    const truncated = value.substr(0, limit) + '...';
-    return this.sanitizer.bypassSecurityTrustHtml(truncated);
+    let truncated = value.substr(0, limit);
+
+    if (completeWords) {
+      const lastSpace = truncated.lastIndexOf(' ');
+      if (lastSpace > 0) {
+        truncated = truncated.substr(0, lastSpace);
+      }
+    }
+    const result = truncated + ellipsis;
+
+  return asHtml ? this.sanitizer.bypassSecurityTrustHtml(result) : result;
   }
 }

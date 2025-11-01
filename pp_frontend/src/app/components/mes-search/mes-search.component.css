@@ -1,24 +1,66 @@
-.recherches-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  justify-content: center;
+:root {
+  --teal: #2aa198;
+  --teal-light: #4cc0b0;
+  --gold: #f4c542;
+  --bg-light: #faf8f6;
 }
 
-.recherche-btn {
-  border-radius: 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 0.5rem 1.2rem;
-  transition: all 0.25s ease-in-out;
-  background-color: #f9f9f9;
-  color: teal;
-  border-color: teal;
+.transaction-card {
+  background-color: var(--bg-light);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-size: 0.9rem;
 }
 
-.recherche-btn:hover {
-  background-color: teal;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 128, 128, 0.3);
+.transaction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.img-container {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-type {
+  font-size: 0.75rem;
+  color: white;
+}
+
+.badge-type.achat {
+  background-color: var(--gold);
+}
+
+.badge-type.location {
+  background-color: var(--teal);
+}
+
+.text-teal {
+  color: var(--teal);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.btn-outline-teal {
+  color: var(--teal);
+  border: 1px solid var(--teal);
+}
+
+.btn-outline-teal:hover {
+  background-color: var(--teal);
+  color: white;
+}
+
+@media (max-width: 576px) {
+  .img-container {
+    height: 120px;
+  }
 }
