@@ -9,7 +9,11 @@
 .env
 /.idea/
 var/
+<<<<<<< HEAD
+public/uploads/
+=======
 
+>>>>>>> new-origin/main
 
 # Angular
 pp_frontend/node_modules/
@@ -19,6 +23,9 @@ pp_frontend/coverage/
 
 # System files
 .DS_Store
+<<<<<<< HEAD
+Thumbs.db
+=======
 Thumbs.db
 
 pp_frontend/coverage/
@@ -27,3 +34,4 @@ pp_backend/var/
 
 sauvegarde_historique.bundle
 
+>>>>>>> new-origin/main
