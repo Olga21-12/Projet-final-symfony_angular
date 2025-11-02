@@ -14,4 +14,5 @@ export interface User {
   date_inscription: string;
   date_modification: string;
   photo: string;
+  isVerified?: boolean;
 }

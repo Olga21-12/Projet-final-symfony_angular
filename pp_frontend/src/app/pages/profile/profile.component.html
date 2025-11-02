@@ -1,3 +1,12 @@
+<div class="alert alert-success" *ngIf="user?.isVerified">
+  ✅ Compte vérifié — vous pouvez publier des biens.
+</div>
+
+<div class="alert alert-warning" *ngIf="!user?.isVerified">
+  ⚠️ Votre compte n’a pas encore été vérifié.<br />
+  <small>Veuillez contacter l’administrateur ou vérifier votre e-mail pour activer la publication.</small>
+</div>
+
 <div class="container content-box mt-5 text-center" *ngIf="user; else loading">
   <p *ngIf="message" class="alert alert-success text-center">
     {{ message }}

@@ -19,11 +19,12 @@ export class ProfileComponent implements OnInit{
   user!: User | null;
   message = '';
   activeTab = '';
+  warning = '';
 
   recherches: Recherche[] = [];
 
-  constructor(private userService: UserService, 
-              private router: Router, 
+  constructor(private userService: UserService,
+              private router: Router,
               private http: HttpClient,
               private rechercheService: RechercheService) {}
 
@@ -32,7 +33,7 @@ export class ProfileComponent implements OnInit{
       this.message = '✅ Votre adresse e-mail a été confirmée avec succès !';
       localStorage.removeItem('emailVerified');
     }
-  
+
   const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -53,6 +54,11 @@ export class ProfileComponent implements OnInit{
     next: (data: User) => {
       console.log('Profil reçu:', data);
       this.user = data;
+
+      if (!data.isVerified) {
+          this.warning = '⚠️ Votre compte n’a pas encore été vérifié. Vous ne pouvez pas publier de logement.';
+        }
+
     },
     error: (err) => {
       console.error('Erreur chargement profil:', err);
@@ -97,5 +103,5 @@ loadRecherches() {
         }
       });
     }
-  }  
+  }
 }

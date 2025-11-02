@@ -69,6 +69,7 @@ class UserController extends AbstractController
             'date_inscription' => $user->getCreatedAt()?->format('Y-m-d'),
             'date_modification' => $user->getUpdatedAt()?->format('Y-m-d'),
             'photo' => $user->getImageName() ?? 'sans_photo.png',
+            'isVerified' => $user->isVerified(),
         ];
 
         return $this->json($data);

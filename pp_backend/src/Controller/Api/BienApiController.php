@@ -147,6 +147,19 @@ class BienApiController extends AbstractController
         $data = $request->request->all();
         $files = $request->files->all();
 
+        // 🔐 Получаем пользователя
+    $user = null;
+    if (!empty($data['user_id'])) {
+        $user = $em->getRepository(User::class)->find($data['user_id']);
+    }
+
+    // 🚫 Проверка верификации
+    if (!$user || !$user->isVerified()) {
+        return $this->json([
+            'error' => 'Accès refusé. Seuls les utilisateurs vérifiés peuvent créer un bien.'
+        ], 403);
+    }
+
         // Vérifications basiques
         if (empty($data['adresse']) || empty($data['prix']) || empty($data['surface'])) {
             return $this->json(['error' => 'Champs obligatoires manquants.'], 400);
@@ -159,7 +172,11 @@ class BienApiController extends AbstractController
         $bien->setSurface((float)$data['surface']);
         $bien->setNombreDeChambres((int)($data['nombre_de_chambres'] ?? 1));
         $bien->setDisponibilite((bool)($data['disponibilite'] ?? true));
-        $bien->setLuxe((bool)($data['luxe'] ?? false));
+        $bien->setLuxe(
+            isset($data['luxe'])
+                ? filter_var($data['luxe'], FILTER_VALIDATE_BOOL)
+                : false
+        );
         $bien->setCreatedAt(new \DateTimeImmutable());
         $bien->setUpdatedAt(new \DateTimeImmutable());
 
@@ -267,6 +284,26 @@ class BienApiController extends AbstractController
         $data  = $request->request->all();
         $files = $request->files->all();
 
+        // 🔐 Получаем пользователя
+    $user = null;
+    if (!empty($data['user_id'])) {
+        $user = $em->getRepository(User::class)->find($data['user_id']);
+    }
+
+    // 🚫 Проверка верификации
+    if (!$user || !$user->isVerified()) {
+        return $this->json([
+            'error' => 'Accès refusé. Seuls les utilisateurs vérifiés peuvent créer un bien.'
+        ], 403);
+    }
+
+      // 🚫 Проверяем, что это его жильё
+    if ($bien->getUser()?->getId() !== $user->getId()) {
+        return $this->json([
+            'error' => 'Vous ne pouvez modifier que vos propres biens.'
+        ], 403);
+    }
+
         // --- Champs scalaires ---
         if (isset($data['adresse'])){
             $bien->setAdresse((string)$data['adresse']);
@@ -286,9 +323,10 @@ class BienApiController extends AbstractController
         if (isset($data['disponibilite'])){
             $bien->setDisponibilite(filter_var($data['disponibilite'], FILTER_VALIDATE_BOOL));
         }
-        if (isset($data['luxe'])){
+        if (array_key_exists('luxe', $data)) {
             $bien->setLuxe(filter_var($data['luxe'], FILTER_VALIDATE_BOOL));
         }
+
 
         // --- Relations: Type de bien ---
         if (array_key_exists('type', $data)) {

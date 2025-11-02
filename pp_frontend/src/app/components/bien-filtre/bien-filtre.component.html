@@ -1,3 +1,16 @@
+
+<button
+  class="btn btn-outline-teal w-100 d-md-none mb-3"
+  type="button"
+  data-bs-toggle="collapse"
+  data-bs-target="#mobileFilterCollapse"
+  aria-expanded="false"
+  aria-controls="mobileFilterCollapse">
+  🎛️ Filtres
+</button>
+
+
+<div id="mobileFilterCollapse" class="collapse d-md-block">
 <form (ngSubmit)="onSubmit()" class="filter-form p-3 shadow-sm rounded">
   <!-- 🔍 Recherche -->
   <input
@@ -160,3 +173,4 @@
     <button class="btn btn-primary w-100">🔍 Filtrer</button>
   </div>
 </form>
+</div>
